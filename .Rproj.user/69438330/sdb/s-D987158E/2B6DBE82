@@ -1,0 +1,15 @@
+{
+    "contents" : "#' @include generics.R\nNULL\n\n#' A Class\nsetClass(\n  'mzIDpsm',\n  representation=representation(\n    scans='data.frame',\n    id='data.frame',\n    mapping='list'\n    ),\n  validity=function(object){\n    if(nrow(object@scans) != length(object@mapping) | sum(sapply(object@mapping, length)) != nrow(object@id)){\n      stop('Dimensions must match between elements')\n    }\n  },\n  prototype=prototype(\n    scans=data.frame(),\n    id=data.frame(),\n    mapping=list()\n    )\n  )\nsetMethod(\n  'show', 'mzIDpsm',\n  function(object){\n    if(length(object) == 0){\n      cat('An empty mzIDpsm object\\n')\n    } else {\n      cat('An mzIDpsm object with', nrow(object@scans), 'scans and', nrow(object@id), 'psm\\'s\\n')\n    }\n  }\n  )\nsetMethod(\n  'length', 'mzIDpsm',\n  function(x){\n    nrow(x@id)\n  }\n  )\n\nmzIDpsm <-function(doc, ns){\n  if(missing(doc)){\n    new(Class='mzIDpsm')\n  } else {\n    scans <- data.frame(t(xpathSApply(doc, path=\"/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult\", namespaces=ns, fun=xmlAttrs)), stringsAsFactors=FALSE)\n    id <- t(xpathSApply(doc, path=\"/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem\", namespaces=ns, fun=xmlAttrs))\n    id <- do.call('data.frame', lapply(data.frame(id, stringsAsFactors=FALSE), type.convert, as.is=T))\n    idParam <- t(xpathSApply(doc, path=\"/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:cvParam\", namespaces=ns, fun=xmlAttrs))\n    idParam <- do.call('data.frame', c(lapply(split(idParam[,'value'], idParam[,'name']), type.convert, as.is=TRUE), stringsAsFactors=FALSE))\n    userParam <- t(xpathSApply(doc, path=\"/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:userParam\", namespaces=ns, fun=xmlAttrs))\n    userParam <- do.call('data.frame', c(lapply(split(userParam[,'value'], userParam[,'name']), type.convert, as.is=TRUE), stringsAsFactors=FALSE))\n    idParam <- cbind(id, idParam, userParam)\n    nID <- xpathSApply(doc, path=\"/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult\", namespaces=ns, fun=xmlSize)\n    indMap <- list()\n    indMap[nID > 0] <- split(1:nrow(idParam), rep(1:length(nID), nID))\n    new(Class='mzIDpsm', scans=scans, id=idParam, mapping=indMap)\n  }\n}",
+    "created" : 1365605987199.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "28357856",
+    "id" : "2B6DBE82",
+    "lastKnownWriteTime" : 1365606123,
+    "path" : "~/Dropbox/GitHub/mzID/R/mzIDpsm.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,15 @@
+{
+    "contents" : "Package: mzID\nType: Package\nTitle: An mzIdentML parser for R\nVersion: 0.0-1\nDate: 2013-04-10\nAuthor: Thomas Dybdal Pedersen, Vladislav A Petyuk\nMaintainer: Thomas Dybdal Pedersen <thomasp85@gmail.com>\nDescription: A parser for mzIdentML files implemented using the XML package.\n    The parser tries to be general and able to handle all types of mzIdentML\n    files with the drawback of having less 'pretty' output than a vendor\n    specific parser. Please contact the maintainer with any problems and supply\n    an mzIdentML file so the problems can be fixed quick.\nLicense: GPL (>= 2)\nLazyLoad: yes\nDepends:\n    methods\nImports:\n    XML\nCollate:\n    'generics.R'\n    'mzIDpsm.R'\n    'mzIDpeptides.R'\n    'mzIDparameters.R'\n    'mzIDevidence.R'\n    'mzIDdatabase.R'\n    'mzID.R'\n",
+    "created" : 1365602788457.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "815234259",
+    "id" : "8D19955B",
+    "lastKnownWriteTime" : 1365607973,
+    "path" : "~/Dropbox/GitHub/mzID/DESCRIPTION",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "dcf"
+}
