@@ -1,3 +1,4 @@
 export(mzID)
 exportClasses(mzID)
+import(plyr)
 import(XML)

@@ -4,7 +4,8 @@
 #' 
 #' @author Thomas Dybdal Pedersen
 #' 
-#' @import XML
+#' @import XML plyr
+#' 
 #' @docType package
 #' @name mzID-package
 #' 
