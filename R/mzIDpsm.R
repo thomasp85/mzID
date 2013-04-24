@@ -1,7 +1,37 @@
 #' @include generics.R
+#' @include aaa.R
 NULL
 
-#' A Class
+#' A class to store psm information from an mzIdentML file
+#' 
+#' This class handles parsing and storage of scan info and the related psm's. This information resides in the
+#' /x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult node.
+#' 
+#' The content of the class is stored as two data frames: One containing a row for each scan in the results, and one
+#' containing all psm's in the results. Additionally a list containing indexing from scan to psm is stored.
+#' 
+#' @name mzIDpsm-class
+#' 
+#' @section Objects from the class:
+#' Objects of mzIDpsm are not meant to be created explicitly but as part of the \code{\link{mzID-class}}. Still
+#' object can be created with the constructor \code{\link{mzIDpsm}} (not exported).
+#' 
+#' @section Slots:
+#' \describe{
+#'  \item{\code{scans}:}{A data.frame containing all reference to all scans with at least one psm. The columns gives at least an ID, a spectrumID and a reference to the file used}
+#'  \item{\code{id}:}{A data.frame containing all psm's from the analysis. The columns depend on the file but at least id, chargeState, experimentalMassToCharge, passThreshold and rank must exist according to the mzIdentML specifications}
+#'  \item{\code{mapping}:}{A list with an entry for each row in @@scans. Each entry contains an integer vector pointing to the related rows in @@id}
+#' }
+#' 
+#' @section Methods:
+#' \describe{
+#'  \item{\code{length}:}{Reports the number of psm's}
+#' }
+#' 
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDpsm}}
+#' 
+#' @rdname mzIDpsm-class
+#' 
 setClass(
   'mzIDpsm',
   representation=representation(
@@ -20,6 +50,17 @@ setClass(
     mapping=list()
     )
   )
+
+#' Show method for mzIDpsm objects
+#' 
+#' This function reports general information on the mzIDpsm object. It is called automatically when an object is querried.
+#' 
+#' @param object An mzIDpsm object
+#' 
+#' @return A description of the content of the mzIDpsm object
+#' 
+#' @seealso \code{\link{mzIDpsm-class}}
+#' 
 setMethod(
   'show', 'mzIDpsm',
   function(object){
@@ -30,6 +71,17 @@ setMethod(
     }
   }
   )
+
+#' Report the length of an mzIDpsm object
+#' 
+#' The length of an mzIDpsm object is defined as the number of psm's. An empty object has a length of 0
+#' 
+#' @param x An mzIDpsm object
+#' 
+#' @return A \code{numeric} giving the number of psm's in the mzIDpsm object
+#' 
+#' @seealso \code{\link{mzIDpsm-class}}
+#' 
 setMethod(
   'length', 'mzIDpsm',
   function(x){
@@ -37,21 +89,32 @@ setMethod(
   }
   )
 
+#' A constructor for the mzIDpsm class
+#' 
+#' This function handles parsing of data and construction of an mzIDpsm object. This function is not intended to be called
+#' explicitly but as part of an mzID construction. Thus, the function is not exported.
+#' 
+#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' 
+#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @return An \code{mzIDpsm} object
+#' 
+#' @seealso \code{\link{mzIDpsm-class}}
+#' 
 mzIDpsm <-function(doc, ns){
   if(missing(doc)){
     new(Class='mzIDpsm')
   } else {
-    scans <- data.frame(t(xpathSApply(doc, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult", namespaces=ns, fun=xmlAttrs)), stringsAsFactors=FALSE)
-    id <- t(xpathSApply(doc, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem", namespaces=ns, fun=xmlAttrs))
-    id <- do.call('data.frame', lapply(data.frame(id, stringsAsFactors=FALSE), type.convert, as.is=T))
-    idParam <- t(xpathSApply(doc, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:cvParam", namespaces=ns, fun=xmlAttrs))
-    idParam <- do.call('data.frame', c(lapply(split(idParam[,'value'], idParam[,'name']), type.convert, as.is=TRUE), stringsAsFactors=FALSE))
-    userParam <- t(xpathSApply(doc, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:userParam", namespaces=ns, fun=xmlAttrs))
-    userParam <- do.call('data.frame', c(lapply(split(userParam[,'value'], userParam[,'name']), type.convert, as.is=TRUE), stringsAsFactors=FALSE))
-    idParam <- cbind(id, idParam, userParam)
-    nID <- xpathSApply(doc, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult", namespaces=ns, fun=xmlSize)
+    scans <- attrExtract(doc, ns, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult")
+    id <- attrExtract(doc, ns, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem")
+    idParam <- attrExtractNameValuePair(doc, ns, path='/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem', c('cvParam', 'userParam'))
+    if(!is.null(idParam)){
+      id <- cbind(id, idParam)
+    } else {}
+    nID <- countChildren(doc, ns, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult", 'SpectrumIdentificationItem')
     indMap <- list()
-    indMap[nID > 0] <- split(1:nrow(idParam), rep(1:length(nID), nID))
-    new(Class='mzIDpsm', scans=scans, id=idParam, mapping=indMap)
+    indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
+    new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)
   }
 }

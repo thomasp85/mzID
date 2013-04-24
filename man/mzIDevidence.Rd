@@ -1,8 +1,8 @@
-\name{mzIDpsm}
-\alias{mzIDpsm}
-\title{A constructor for the mzIDpsm class}
+\name{mzIDevidence}
+\alias{mzIDevidence}
+\title{A constructor for the mzIDevidence class}
 \usage{
-  mzIDpsm(doc, ns)
+  mzIDevidence(doc, ns)
 }
 \arguments{
   \item{doc}{an \code{XMLInternalDocument} created using
@@ -12,15 +12,15 @@
   named character vector with the namespace named x}
 }
 \value{
-  An \code{mzIDpsm} object
+  An \code{mzIDevidence} object
 }
 \description{
   This function handles parsing of data and construction of
-  an mzIDpsm object. This function is not intended to be
-  called explicitly but as part of an mzID construction.
+  an mzIDevidence object. This function is not intended to
+  be called explicitly but as part of an mzID construction.
   Thus, the function is not exported.
 }
 \seealso{
-  \code{\link{mzIDpsm-class}}
+  \code{\link{mzIDevidence-class}}
 }
 
