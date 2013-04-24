@@ -110,7 +110,7 @@ mzIDdatabase <- function(doc, ns){
     }
     dbseq <- getNodeSet(doc, '/x:MzIdentML/x:SequenceCollection/x:DBSequence/x:Seq', namespaces=ns)
     if(length(dbseq) > 0){
-      dbseq <- xmlSApply(dbseq, xmlValue)
+      dbseq <- sapply(dbseq, xmlValue)
       hasSeq <- countChildren(doc, ns, path='/x:MzIdentML/x:SequenceCollection/x:DBSequence', 'Seq')
       database$sequence <- NA
       database$sequence[hasSeq != 0] <- dbseq
