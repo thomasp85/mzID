@@ -4,7 +4,8 @@ mzID is a package that allows parsing of mzIdentML files. The mzIdentML file for
 
 ### Main Features
 
-* `r mzID(filename)` parses the mzIdentML file at the location specified by filename into an mzID object
+* `mzID(filename)` parses the mzIdentML file at the location specified by filename into an mzID object
+* `flatten(mzID_object)` flatten the content of the mzID object into a data frame with a row for each psm
 * The parser is written to support the multitude of different ways peptide identification can be performed and thus be recorded in the mzIdentML format
 * Relies heavily on the `XML` package (which uses libxml2) for parsing
 * Respects the fact that peptide identification results are not inherently tabular in format. The mzID class contains several different classes each handling different part of the analysis data
@@ -12,6 +13,5 @@ mzID is a package that allows parsing of mzIdentML files. The mzIdentML file for
 
 ### Roadmap
 
-* A function to flatten the mzID class into a data.frame structure with a row for each psm
 * Make the parser software aware, so that it can create more beautiful output based on the software used in the analysis
 * Paerformance improvements
