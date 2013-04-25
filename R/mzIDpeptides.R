@@ -88,6 +88,23 @@ setMethod(
 		}
 )
 
+#' @rdname flatten-methods
+#' @aliases flatten,mzIDpeptides,ANY-method
+#' 
+setMethod(
+  'flatten', 'mzIDpeptides',
+  function(object){
+    nMod <- sapply(object@modifications[object@peptides$modified], nrow)
+    modPasted <- do.call('rbind', object@modifications)
+    modPasted <- paste(modPasted$monoisotopicMassDelta, ' (', modPasted$location, ')', sep='')
+    modPasted <- sapply(split(modPasted, rep(1:length(nMod), nMod)), paste, collapse=', ')
+    ans <- object@peptides
+    ans$modification <- NA
+    ans$modification[ans$modified] <- modPasted
+    ans
+  }
+)
+
 #' A constructor for the mzIDpeptides class
 #' 
 #' This function handles parsing of data and construction of an mzIDpeptides object. This function is not intended to be called

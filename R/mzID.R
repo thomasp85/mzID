@@ -114,6 +114,24 @@ setMethod(
   }
   )
 
+#' @rdname flatten-methods
+#' @aliases flatten,mzID,ANY-method
+setMethod(
+  'flatten', 'mzID',
+  function(object){
+    flatPSM <- flatten(object@psm)
+    flatEviData <- cbind(object@evidence@evidence, object@database@database[match(object@evidence@evidence$dBSequence_ref, object@database@database$id), ])
+    flatEviData <- flatEviData[,!names(flatEviData) == 'id']
+    flatPep <- flatten(object@peptides)
+    flatPepEviData <- cbind(flatPep, flatEviData[match(flatPep$id, flatEviData$peptide_ref), ])
+    flatAll <- cbind(flatPSM, flatPepEviData[match(flatPSM$peptide_ref, flatPepEviData$id), ])
+    flatAll$spectrumFile <- object@parameters@rawFile$name[match(flatAll$spectraData_ref, object@parameters@rawFile$id)]
+    flatAll$databaseFile <- object@parameters@databaseFile$name[match(flatAll$searchDatabase_ref, object@parameters@databaseFile$id)]
+    flatAll <- flatAll[, !grepl('_ref$', names(flatAll), perl=T) & !names(flatAll) == 'id']
+    flatAll
+  }
+)
+
 #' Parse an mzIdentML file
 #' 
 #' This function takes a single mzIdentML file and parses it into an mzID object.

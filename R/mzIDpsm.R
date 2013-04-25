@@ -89,6 +89,16 @@ setMethod(
   }
   )
 
+#' @rdname flatten-methods
+#' @aliases flatten,mzIDpsm,ANY-method
+#' 
+setMethod(
+  'flatten', 'mzIDpsm',
+  function(object){
+    cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length)),],object@id)
+  }
+)
+
 #' A constructor for the mzIDpsm class
 #' 
 #' This function handles parsing of data and construction of an mzIDpsm object. This function is not intended to be called
