@@ -14,4 +14,4 @@ mzID is a package that allows parsing of mzIdentML files. The mzIdentML file for
 ### Roadmap
 
 * Make the parser software aware, so that it can create more beautiful output based on the software used in the analysis
-* Paerformance improvements
+* Performance improvements
