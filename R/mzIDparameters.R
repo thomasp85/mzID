@@ -195,7 +195,8 @@ getRawFile <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getDatabaseFile <- function(doc, ns){
-  databaseFile <- data.frame(location=as.vector(unlist(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/@location', namespaces=ns))), stringsAsFactors=FALSE)
+  databaseFile <- attrExtract(doc, ns, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase')
+  databaseFile$name <- as.vector(unlist(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/x:DatabaseName/*/@name', namespaces=ns)))
   if(length(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/x:FileFormat', namespaces=ns)) > 0){
     databaseFile$fileFormat=as.vector(unlist(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/x:FileFormat/x:cvParam/@name', namespaces=ns)))
   } else {}
