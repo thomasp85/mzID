@@ -66,7 +66,7 @@ setMethod(
 			if(length(object) == 0){
 				cat('An empty mzIDpeptides object\n')
 			} else {
-				cat('An mzIDpeptides object containing: ', length(unique(object@peptides$pepID)), ' peptides (', sum(object@peptides$modified), ' modified)\n', sep='')
+				cat('An mzIDpeptides object containing: ', length(unique(object@peptides$id)), ' peptides (', sum(object@peptides$modified), ' modified)\n', sep='')
 			}
 		}
 )
