@@ -70,21 +70,23 @@ setMethod(
       cat('An empty mzIDparameters object\n')
     } else {
       cat('An mzIDparameters object:\n\n')
-      cat('Software used:\t', object@software$name[1], ' (version: ', object@software$version[1], ')\n', sep='')
+      cat('Software used:   ', object@software$name[1], ' (version: ', object@software$version[1], ')\n', sep='')
       if(nrow(object@software) > 1){
         for(i in 2:nrow(object@software)){
-          cat('\t\t\t\t', object@software$name[i], ' (version ', object@software$version[i], ')\n', sep='')
+          cat('                 ', object@software$name[i], ' (version ', object@software$version[i], ')\n', sep='')
         }
       } else {}
+      cat('\n')
       if(nrow(object@rawFile) == 1){
-        cat('\nRawfile:\t\t', object@rawFile$location[1], '\n', sep='')        
+        cat('Rawfile:         ', object@rawFile$location[1], '\n', sep='')        
       } else {
-        cat('\nRawfiles:\t\t', object@rawFile$location[1], '\n', sep='')
+        cat('Rawfiles:        ', object@rawFile$location[1], '\n', sep='')
         for(i in 2:nrow(object@rawFile)){
-          cat('\t\t\t\t', object@rawFile$location[i], '\n', sep='')
+          cat('                 ', object@rawFile$location[i], '\n', sep='')
         }
       }
-      cat('\nDatabase:\t\t', object@databaseFile$location, '\n', sep='')
+      cat('\n')
+      cat('Database:        ', object@databaseFile$location, '\n', sep='')
     }
   }
   )
