@@ -1,0 +1,196 @@
+\documentclass[a4paper]{article}\usepackage{graphicx, color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.2, 0.2, 0.2}
+\newcommand{\hlnumber}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlfunctioncall}[1]{\textcolor[rgb]{0.501960784313725,0,0.329411764705882}{\textbf{#1}}}%
+\newcommand{\hlstring}[1]{\textcolor[rgb]{0.6,0.6,1}{#1}}%
+\newcommand{\hlkeyword}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlargument}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlcomment}[1]{\textcolor[rgb]{0.180392156862745,0.6,0.341176470588235}{#1}}%
+\newcommand{\hlroxygencomment}[1]{\textcolor[rgb]{0.43921568627451,0.47843137254902,0.701960784313725}{#1}}%
+\newcommand{\hlformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hleqformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlassignement}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlpackage}[1]{\textcolor[rgb]{0.588235294117647,0.709803921568627,0.145098039215686}{#1}}%
+\newcommand{\hlslot}[1]{\textit{#1}}%
+\newcommand{\hlsymbol}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlprompt}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue}
+
+\title{Parsing mzIdentML files using mzID}
+\author{Thomas Dybdal Pedersen}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+\begin{document}
+
+\maketitle
+
+
+
+mzID is a parser for the mzIdentML file format defined by \href{<http://www.psidev.info/mzidentml>}{HUPO}. The mzIdentML file format is designed to be a standardized way of reporting results from peptide identification analyses used in proteomics. The file format is XML compliant and the parser relies heavily on the \texttt{XML} package.
+
+mzID is designet to be applicable to all instances of mzIdentML files. As there is a multitude of different ways to arrive at a protein identification result, the structure and content of different mzIdentML files can vary greatly. If an mzIdentML file that causes errors during parsing is encountered, please contact the package maintainer in order to get this sorted out.
+
+\section*{The mzID function}
+The meat of the mzID package is the mzID function which takes in a single path to an mzIdentML and reads it into an object of class mzID:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+mzResults <- \hlfunctioncall{mzID}(\hlstring{"http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_NA_example.mzid"})
+mzResults
+\end{alltt}
+\begin{verbatim}
+## An mzID object
+## 
+## Software used:   Mascot (version: 2.2.03)
+##                  Mascot Parser (version 2.3.0.0)
+## 
+## Rawfile:         file:///est_coding_test.mgf
+## 
+## Database:        file:///C:/inetpub/mascot/sequence/EST_mini/current/EST_mini_20080623.fasta
+## 
+## Number of scans: 4
+## Number of PSM's: 4
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The structure of the mzID object is somewhat related to the structure of the mzIdentML XML specification, with slots holding different parts of the information:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlfunctioncall{showClass}(\hlstring{"mzID"})
+\end{alltt}
+\begin{verbatim}
+## Class "mzID" [package "mzID"]
+## 
+## Slots:
+##                                                                   
+## Name:      parameters            psm       peptides       evidence
+## Class: mzIDparameters        mzIDpsm   mzIDpeptides   mzIDevidence
+##                      
+## Name:        database
+## Class:   mzIDdatabase
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The first slot contains a class that holds all information related to how the analysis was carried out - both the location of data files and the parameters used by the software. The psm slot contains a class that stores the scans and the related PSM's. This is usually the meat of the mzID class. The last three slots contains information on the peptides searched for, together with the possible modifications (the peptides slot), the proteins that constituted the database (the database slot) and a link between those two (the evidence slot).
+
+\section*{The flatten function}
+As most people usually think of peptide identifications in a flat tabular format, the \texttt{mzID} package comes with a function to flatten an mzID object into a \texttt{data.frame} with a row for each PSM in the object. This function is aptly named texttt{flatten}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+flatResults <- \hlfunctioncall{flatten}(mzResults)
+\hlfunctioncall{names}(flatResults)
+\end{alltt}
+\begin{verbatim}
+##  [1] "spectrumID"               "calculatedMassToCharge"  
+##  [3] "chargeState"              "experimentalMassToCharge"
+##  [5] "rank"                     "passThreshold"           
+##  [7] "mascot:expectation value" "mascot:score"            
+##  [9] "pepSeq"                   "modified"                
+## [11] "modification"             "start"                   
+## [13] "end"                      "pre"                     
+## [15] "post"                     "frame"                   
+## [17] "isDecoy"                  "length"                  
+## [19] "accession"                "description"             
+## [21] "sequence"                 "databaseFile"
+\end{verbatim}
+\begin{alltt}
+\hlfunctioncall{nrow}(flatResults)
+\end{alltt}
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+\begin{alltt}
+
+\hlcomment{# The length of an mzID object is the number of PSM's}
+\hlfunctioncall{length}(mzResults)
+\end{alltt}
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+As can be seen from the column names of the flattened results, care should be taken when interpreting the different columns, as ambiguity can arise when combining all the information in the object into a flat structure. For instance the column named 'length', could refer to both the length of the peptide sequence and the length of the protein from where it came (or the length of the nucleotide sequence coding for the protein). Inspection of the content reveal that the column indeed refers to the length of the nucleotide sequence coding for the protein.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+flatResults$length
+\end{alltt}
+\begin{verbatim}
+## [1] 163 495 380 495
+\end{verbatim}
+\begin{alltt}
+\hlfunctioncall{nchar}(flatResults$sequence)
+\end{alltt}
+\begin{verbatim}
+## [1] 163 495 380 495
+\end{verbatim}
+\begin{alltt}
+\hlfunctioncall{substr}(flatResults$sequence, 1, 10)
+\end{alltt}
+\begin{verbatim}
+## [1] "CATGTGTCTA" "GTGCACTGAC" "CTTGAAGTTN" "GTGCACTGAC"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+This would also be apparent if one were deeply familiar with the mzIdentML specification and new that length only gets reported for the proteins, but this kind of knowledge is not expected from the regular user. Thus a bit of attention is required when inspecting the results.
+
+\section*{Future work}
+\begin{itemize}
+  \item mzID is intended as a very barebone parser to be used by other packages and the feature list is thus kept short. Together with the mzR package it provides parsing of the two most common file types used in proteomics. The third filetype: mzQuantML (for storing quantitative information from LC-MS/MS analyses) should be supported by a seperate package in the future.
+  \item Automatic extraction of mzR-compatible acquisition number based on the SpectrumID and IDFormat.
+  \item Software awareness so that the parser understood what type of output is expected from e.g. a Mascot search.
+  \item Support for other file types could be neat, but is not a high priority at the moment.
+\end{itemize}
+
+\end{document}
