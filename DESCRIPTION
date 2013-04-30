@@ -12,6 +12,7 @@ Description: A parser for mzIdentML files implemented using the XML package.
     an mzIdentML file so the problems can be fixed quick.
 License: GPL (>= 2)
 LazyLoad: yes
+VignetteBuilder: knitr
 Depends:
     methods,
     XML
