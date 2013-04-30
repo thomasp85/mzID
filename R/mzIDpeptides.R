@@ -94,13 +94,15 @@ setMethod(
 setMethod(
   'flatten', 'mzIDpeptides',
   function(object){
-    nMod <- sapply(object@modifications[object@peptides$modified], nrow)
-    modPasted <- do.call('rbind', object@modifications)
-    modPasted <- paste(modPasted$monoisotopicMassDelta, ' (', modPasted$location, ')', sep='')
-    modPasted <- sapply(split(modPasted, rep(1:length(nMod), nMod)), paste, collapse=', ')
     ans <- object@peptides
     ans$modification <- NA
-    ans$modification[ans$modified] <- modPasted
+    nMod <- sapply(object@modifications[object@peptides$modified], nrow)
+    if(length(nMod) > 0){
+      modPasted <- do.call('rbind', object@modifications)
+      modPasted <- paste(modPasted$monoisotopicMassDelta, ' (', modPasted$location, ')', sep='')
+      modPasted <- sapply(split(modPasted, rep(1:length(nMod), nMod)), paste, collapse=', ')
+      ans$modification[ans$modified] <- modPasted 
+    }
     ans
   }
 )
