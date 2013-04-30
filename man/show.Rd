@@ -61,7 +61,7 @@
 
   \code{\link{mzIDevidence-class}}
 
-  \code{\link{mzIDdatabse-class}}
+  \code{\link{mzIDdatabase-class}}
 
   \code{\link{mzID-class}}
 }

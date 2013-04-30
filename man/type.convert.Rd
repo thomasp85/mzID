@@ -4,6 +4,9 @@
 \usage{
   type.convert(...)
 }
+\arguments{
+  \item{...}{Parameters passed on to \code{type.convert}}
+}
 \description{
   This function is a simple extension to the
   \code{\link[utils]{type.convert}} function. It handles

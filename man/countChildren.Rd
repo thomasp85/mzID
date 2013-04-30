@@ -57,10 +57,11 @@
   If our XML document had the following structure, and
   \code{doc} and \code{ns} was set up correctly
 
-  \code{<node/>\cr __<child1 value='5'/>\cr __<child1
-  value='1'/>\cr __<child2/>\cr </node>\cr <node/>\cr
-  __<child1/>\cr __<child2/>\cr __<child2/>\cr
-  </node>\cr\cr}
+  \code{<node/>}\cr \code{__<child1 value='5'/>}\cr
+  \code{__<child1 value='1'/>}\cr \code{__<child2/>}\cr
+  \code{</node>}\cr \code{<node/>}\cr \code{__<child1/>}\cr
+  \code{__<child2/>}\cr \code{__<child2/>}\cr
+  \code{</node>}\cr\cr
 
   \code{countChildren(doc, ns, path='./x:node',
   child='child1')}

@@ -1,8 +1,11 @@
 \docType{methods}
 \name{flatten}
 \alias{flatten}
+\alias{flatten,mzID-method}
 \alias{flatten,mzID,ANY-method}
+\alias{flatten,mzIDpeptides-method}
 \alias{flatten,mzIDpeptides,ANY-method}
+\alias{flatten,mzIDpsm-method}
 \alias{flatten,mzIDpsm,ANY-method}
 \title{Flatten an mzID related class into a table}
 \arguments{

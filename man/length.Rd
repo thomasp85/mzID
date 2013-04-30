@@ -1,5 +1,11 @@
 \name{length}
 \alias{length}
+\alias{length,mzID-method}
+\alias{length,mzIDdatabase-method}
+\alias{length,mzIDevidence-method}
+\alias{length,mzIDparameters-method}
+\alias{length,mzIDpeptides-method}
+\alias{length,mzIDpsm-method}
 \title{Report the length of an mzIDpsm object}
 \arguments{
   \item{x}{An mzIDpsm object}

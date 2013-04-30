@@ -67,7 +67,7 @@
   Objects of mzIDdatabase are not meant to be created
   explicitly but as part of the \code{\link{mzID-class}}.
   Still object can be created with the constructor
-  \code{\link{mzIDdatabse}} (not exported).
+  \code{\link{mzIDdatabase}} (not exported).
 }
 
 \section{Slots}{
