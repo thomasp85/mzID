@@ -72,6 +72,7 @@ setMethod(
 #' @return A \code{numeric} giving the number of peptide evidences in the mzIDevidence object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
+#' @aliases length,mzIDevidence-method
 #' 
 setMethod(
   'length', 'mzIDevidence',

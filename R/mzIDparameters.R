@@ -100,6 +100,7 @@ setMethod(
 #' @return A \code{numeric} giving the number raw datafiles used in the analysis
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' @aliases length,mzIDparameters-method
 #' 
 setMethod(
   'length', 'mzIDparameters',

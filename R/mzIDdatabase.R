@@ -16,7 +16,7 @@ NULL
 #' 
 #' @section Objects from the class:
 #' Objects of mzIDdatabase are not meant to be created explicitly but as part of the \code{\link{mzID-class}}. Still
-#' object can be created with the constructor \code{\link{mzIDdatabse}} (not exported).
+#' object can be created with the constructor \code{\link{mzIDdatabase}} (not exported).
 #' 
 #' @section Slots:
 #' \describe{
@@ -50,7 +50,7 @@ setClass(
 #' 
 #' @return A description of the content of the mzIDdatabase object
 #' 
-#' @seealso \code{\link{mzIDdatabse-class}}
+#' @seealso \code{\link{mzIDdatabase-class}}
 #' 
 setMethod(
   'show', 'mzIDdatabase',
@@ -72,6 +72,7 @@ setMethod(
 #' @return A \code{numeric} giving the number of entries in the mzIDdatabase object
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
+#' @aliases length,mzIDdatabase-method
 #' 
 setMethod(
   'length', 'mzIDdatabase',

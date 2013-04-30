@@ -80,6 +80,7 @@ setMethod(
 #' @return A \code{numeric} giving the number of peptides in the mzIDpeptides object
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
+#' @aliases length,mzIDpeptides-method
 #' 
 setMethod(
 		'length', 'mzIDpeptides',
@@ -90,6 +91,7 @@ setMethod(
 
 #' @rdname flatten-methods
 #' @aliases flatten,mzIDpeptides,ANY-method
+#' @aliases flatten,mzIDpeptides-method
 #' 
 setMethod(
   'flatten', 'mzIDpeptides',

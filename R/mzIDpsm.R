@@ -81,6 +81,7 @@ setMethod(
 #' @return A \code{numeric} giving the number of psm's in the mzIDpsm object
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
+#' @aliases length,mzIDpsm-method
 #' 
 setMethod(
   'length', 'mzIDpsm',
@@ -91,6 +92,7 @@ setMethod(
 
 #' @rdname flatten-methods
 #' @aliases flatten,mzIDpsm,ANY-method
+#' @aliases flatten,mzIDpsm-method
 #' 
 setMethod(
   'flatten', 'mzIDpsm',

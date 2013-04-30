@@ -108,16 +108,19 @@ setMethod(
 #' @return A \code{numeric} giving the number of PSMs in the mzID object
 #' 
 #' @seealso \code{\link{mzID-class}}
+#' @aliases length,mzID-method
 #' 
 setMethod(
   'length', 'mzID',
   function(x){
-    length(x@parameters)
+    length(x@psm)
   }
   )
 
 #' @rdname flatten-methods
 #' @aliases flatten,mzID,ANY-method
+#' @aliases flatten,mzID-method
+#' 
 setMethod(
   'flatten', 'mzID',
   function(object){
