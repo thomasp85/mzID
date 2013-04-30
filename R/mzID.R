@@ -76,23 +76,25 @@ setMethod(
       cat('An empty mzID object\n')
     } else {
       cat('An mzID object\n\n')
-      cat('Software used:\t', object@parameters@software$name[1], ' (version: ', object@parameters@software$version[1], ')\n', sep='')
+      cat('Software used:   ', object@parameters@software$name[1], ' (version: ', object@parameters@software$version[1], ')\n', sep='')
       if(nrow(object@parameters@software) > 1){
         for(i in 2:nrow(object@parameters@software)){
-          cat('\t\t\t\t', object@parameters@software$name[i], ' (version ', object@parameters@software$version[i], ')\n', sep='')
+          cat('                 ', object@parameters@software$name[i], ' (version ', object@parameters@software$version[i], ')\n', sep='')
         }
       } else {}
+      cat('\n')
       if(nrow(object@parameters@rawFile) == 1){
-        cat('Rawfile:\t\t', object@parameters@rawFile$location[1], '\n', sep='')        
+        cat('Rawfile:         ', object@parameters@rawFile$location[1], '\n', sep='')        
       } else {
-        cat('Rawfiles:\t\t', object@parameters@rawFile$location[1], '\n', sep='')
+        cat('Rawfiles:        ', object@parameters@rawFile$location[1], '\n', sep='')
         for(i in 2:nrow(object@parameters@rawFile)){
-          cat('\t\t\t\t', object@parameters@rawFile$location[i], '\n', sep='')
+          cat('                 ', object@parameters@rawFile$location[i], '\n', sep='')
         }
       }
-      cat('Database:\t\t', object@parameters@databaseFile$location, '\n\n', sep='')
-      cat('Number of scans:', nrow(object@psm@scans), '\n')
-      cat('Number of PSM\'s:', nrow(object@psm@id), '\n')
+      cat('\n')
+      cat('Database:        ', object@parameters@databaseFile$location, '\n\n', sep='')
+      cat('Number of scans: ', nrow(object@psm@scans), '\n', sep='')
+      cat('Number of PSM\'s: ', nrow(object@psm@id), '\n', sep='')
     }
   }
   )
