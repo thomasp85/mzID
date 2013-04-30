@@ -3,6 +3,8 @@
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, urlcolor=blue}
 
+%\VignetteIndexEntry{Using mzID}
+
 \title{Parsing mzIdentML files using mzID}
 \author{Thomas Dybdal Pedersen}
 
