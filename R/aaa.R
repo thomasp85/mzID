@@ -192,3 +192,24 @@ attrExtractNameValuePair <- function(doc, ns, path, child){
   ans <- ans[!sapply(ans, is.null)]
   do.call('cbind', ans)
 }
+
+#' Check that the version is supported
+#' 
+#' Currently only version 1.1.x is supported with planned support for 1.0.x. The version of 'x' should not affect compitability.
+#' 
+#' @param version A textstring giving the version to check in the format x.y.z
+#' 
+#' @return NULL if the version is supported, and throws an error if not
+#' 
+versionCheck <- function(version){
+  versionSplit <- strsplit(version, '.', fixed=T)[[1]]
+  unSupport <- FALSE
+  if(versionSplit[1] != 1){
+    unSupport <- TRUE
+  } else if(versionSplit[2] != 1){
+    unSupport <- TRUE
+  } else {}
+  if(unSupport){
+    stop(paste('Version: ', version, ' is not supported...', sep=''))
+  } else {}
+}
