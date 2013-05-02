@@ -5,7 +5,7 @@ NULL
 #' A class to store peptide evidence information from an mzIdentML file
 #' 
 #' This class handles parsing and storage of peptide evidence information from mzIDentML files, residing at the
-#' /x:MzIdentML/x:SequenceCollection/x:PeptideEvidence node.
+#' /*/x:SequenceCollection/x:PeptideEvidence node.
 #' 
 #' The content of the class is stored in a data.frame with columns depending on the content of the mzIdentML
 #' file. Columns represent the attribute values of for each PeptideEvidence node. For files conforming to the HUPO
@@ -98,7 +98,10 @@ mzIDevidence <- function(doc, ns){
   if(missing(doc)){
     new(Class='mzIDevidence')
   } else {
-    evidence <- attrExtract(doc, ns, '/x:MzIdentML/x:SequenceCollection/x:PeptideEvidence')
+    evidence <- attrExtract(doc, ns, '/*/x:SequenceCollection/x:PeptideEvidence')
+    if(nrow(evidence) == 0){
+      evidence <- attrExtract(doc, ns, '/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence')
+    }
     new(Class='mzIDevidence', evidence=evidence)
   }
 }
