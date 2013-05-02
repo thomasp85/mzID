@@ -354,16 +354,19 @@ getFragmentTolerance <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getModifications <- function(doc, ns){
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams', namespaces=ns)) > 0){
-    ModificationParams <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification')
-    if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:cvParam/@name', namespaces=ns)) > 0){
-      ModificationParams$name <- unlist(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:cvParam/@name', namespaces=ns))      
-    } else {}
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams', namespaces=ns)) > 0){
+    ModificationParams <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification')
+    if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:cvParam/@name', namespaces=ns)) > 0){
+      ModificationParams$name <- unlist(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:cvParam/@name', namespaces=ns))
+    } else if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:ModParam', namespaces=ns)) > 0){
+      ModificationParams <- cbind(ModificationParams, attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:ModParam'))
+      ModificationParams$name <- unlist(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:ModParam/x:cvParam/@name', namespaces=ns))
+    }
     ModificationParams$Specificity <- 'any'
-    if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules', namespaces=ns)) > 0){
-      specificity <- unlist(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules/x:cvParam/@name', namespaces=ns))
-      specificityCount <- countChildren(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules', 'cvParam')
-      specificityExist <- countChildren(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification', 'SpecificityRules')
+    if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules', namespaces=ns)) > 0){
+      specificity <- unlist(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules/x:cvParam/@name', namespaces=ns))
+      specificityCount <- countChildren(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules', 'cvParam')
+      specificityExist <- countChildren(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification', 'SpecificityRules')
       ModificationParams$Specificity[as.logical(specificityExist)] <- sapply(split(specificity, rep(1:length(specificityCount), specificityCount)), function(x) paste(x, collapse=','))
     } else {}
     ModificationParams
