@@ -178,7 +178,10 @@ mzID <- function(file){
     new(Class='mzID')
   } else {
     doc = xmlInternalTreeParse(file)
-    ns=c(x="http://psidev.info/psi/pi/mzIdentML/1.1")
+    namespaceDef=getDefaultNamespace(doc)
+    ns <- c(x=namespaceDef[[1]]$uri)
+    docInfo <- attrExtract(doc, ns, path='/x:MzIdentML')
+    versionCheck(docInfo$version)
     new(Class='mzID',
         parameters=mzIDparameters(doc, ns),
         psm=mzIDpsm(doc, ns),
