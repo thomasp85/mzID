@@ -180,7 +180,7 @@ mzID <- function(file){
     doc = xmlInternalTreeParse(file)
     namespaceDef=getDefaultNamespace(doc)
     ns <- c(x=namespaceDef[[1]]$uri)
-    docInfo <- attrExtract(doc, ns, path='/x:MzIdentML')
+    docInfo <- attrExtract(doc, ns, path='/*')
     versionCheck(docInfo$version)
     new(Class='mzID',
         parameters=mzIDparameters(doc, ns),

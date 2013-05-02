@@ -126,12 +126,12 @@ mzIDpeptides <- function(doc, ns){
   if(missing(doc)){
     new(Class='mzIDpeptides')
   } else {
-    pepID <- attrExtract(doc, ns, path="/x:MzIdentML/x:SequenceCollection/x:Peptide")
-    pepSeq <- xpathSApply(doc, path="/x:MzIdentML/x:SequenceCollection/x:Peptide", namespaces=ns, fun=xmlValue)
-    modDF <- attrExtract(doc, ns, path="/x:MzIdentML/x:SequenceCollection/x:Peptide/x:Modification")
+    pepID <- attrExtract(doc, ns, path="/*/x:SequenceCollection/x:Peptide")
+    pepSeq <- xpathSApply(doc, path="/*/x:SequenceCollection/x:Peptide", namespaces=ns, fun=xmlValue)
+    modDF <- attrExtract(doc, ns, path="/*/x:SequenceCollection/x:Peptide/x:Modification")
     if(nrow(modDF) > 0){
       modName <- xpathSApply(doc, path="/x:MzIdentML/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam", namespaces=ns, fun=xmlAttrs)['name', ]
-      nModPepID <- countChildren(doc, ns, path="/x:MzIdentML/x:SequenceCollection/x:Peptide", 'Modification')
+      nModPepID <- countChildren(doc, ns, path="/*/x:SequenceCollection/x:Peptide", 'Modification')
       pepDF <- data.frame(pepID, pepSeq, modified=nModPepID > 0, stringsAsFactors=FALSE)
       modList <- list()
       modList[nModPepID > 0] <- split(modDF, rep(1:length(nModPepID), nModPepID))

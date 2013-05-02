@@ -5,7 +5,7 @@ NULL
 #' A class to store psm information from an mzIdentML file
 #' 
 #' This class handles parsing and storage of scan info and the related psm's. This information resides in the
-#' /x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult node.
+#' /*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult node.
 #' 
 #' The content of the class is stored as two data frames: One containing a row for each scan in the results, and one
 #' containing all psm's in the results. Additionally a list containing indexing from scan to psm is stored.
@@ -118,13 +118,13 @@ mzIDpsm <-function(doc, ns){
   if(missing(doc)){
     new(Class='mzIDpsm')
   } else {
-    scans <- attrExtract(doc, ns, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult")
-    id <- attrExtract(doc, ns, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem")
-    idParam <- attrExtractNameValuePair(doc, ns, path='/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem', c('cvParam', 'userParam'))
+    scans <- attrExtract(doc, ns, path="/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult")
+    id <- attrExtract(doc, ns, path="/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem")
+    idParam <- attrExtractNameValuePair(doc, ns, path='/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem', c('cvParam', 'userParam'))
     if(!is.null(idParam)){
       id <- cbind(id, idParam)
     } else {}
-    nID <- countChildren(doc, ns, path="/x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult", 'SpectrumIdentificationItem')
+    nID <- countChildren(doc, ns, path="/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult", 'SpectrumIdentificationItem')
     indMap <- list()
     indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
     new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)

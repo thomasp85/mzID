@@ -98,21 +98,21 @@ mzIDdatabase <- function(doc, ns){
   if(missing(doc)){
     new(Class='mzIDdatabase')
   } else {
-    database <- attrExtract(doc, ns, '/x:MzIdentML/x:SequenceCollection/x:DBSequence')
-    dbnames <- getNodeSet(doc, '/x:MzIdentML/x:SequenceCollection/x:DBSequence/x:cvParam/@name', namespaces=ns)
+    database <- attrExtract(doc, ns, '/*/x:SequenceCollection/x:DBSequence')
+    dbnames <- getNodeSet(doc, '/*/x:SequenceCollection/x:DBSequence/x:cvParam/@name', namespaces=ns)
     if(length(dbnames) > 0){
-      dbnames1 <- unlist(getNodeSet(doc, '/x:MzIdentML/x:SequenceCollection/x:DBSequence/x:cvParam/@value', namespaces=ns))[dbnames == 'protein description']
-      hasName <- countChildren(doc, ns, path='/x:MzIdentML/x:SequenceCollection/x:DBSequence', 'cvParam', 'name')
+      dbnames1 <- unlist(getNodeSet(doc, '/*/x:SequenceCollection/x:DBSequence/x:cvParam/@value', namespaces=ns))[dbnames == 'protein description']
+      hasName <- countChildren(doc, ns, path='/*/x:SequenceCollection/x:DBSequence', 'cvParam', 'name')
       hasRightName <- as.logical(hasName)
       hasRightName[hasRightName] <- sapply(split(dbnames == 'protein description', rep(seq(along=hasName), hasName)), any)
       dbnames1 <- mapply(sub, paste('^\\Q',database$accession[hasRightName], '\\E', ' ', sep=''), '', dbnames1)
       database$description <- NA
       database$description[hasRightName] <- dbnames1
     }
-    dbseq <- getNodeSet(doc, '/x:MzIdentML/x:SequenceCollection/x:DBSequence/x:Seq', namespaces=ns)
+    dbseq <- getNodeSet(doc, '/*/x:SequenceCollection/x:DBSequence/x:Seq', namespaces=ns)
     if(length(dbseq) > 0){
       dbseq <- sapply(dbseq, xmlValue)
-      hasSeq <- countChildren(doc, ns, path='/x:MzIdentML/x:SequenceCollection/x:DBSequence', 'Seq')
+      hasSeq <- countChildren(doc, ns, path='/*/x:SequenceCollection/x:DBSequence', 'Seq')
       database$sequence <- NA
       database$sequence[hasSeq != 0] <- dbseq
     }

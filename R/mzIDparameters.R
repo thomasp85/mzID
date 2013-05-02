@@ -159,8 +159,8 @@ mzIDparameters <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getSoftware <- function(doc, ns){
-  software <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisSoftwareList/x:AnalysisSoftware')
-  software$name <- as.vector(unlist(getNodeSet(doc, path='/x:MzIdentML/x:AnalysisSoftwareList/x:AnalysisSoftware/x:SoftwareName/x:cvParam/@name', namespaces=ns)))
+  software <- attrExtract(doc, ns, '/*/x:AnalysisSoftwareList/x:AnalysisSoftware')
+  software$name <- as.vector(unlist(getNodeSet(doc, path='/*/x:AnalysisSoftwareList/x:AnalysisSoftware/x:SoftwareName/x:cvParam/@name', namespaces=ns)))
   if(is.null(software$version)){
     software$version <- as.character(NA)
   }
@@ -180,8 +180,8 @@ getSoftware <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getRawFile <- function(doc, ns){
-  rawFile <- attrExtract(doc, ns, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SpectraData')
-  rawFile$IDFormat <- as.vector(unlist(getNodeSet(doc, path='/x:MzIdentML/x:DataCollection/x:Inputs/x:SpectraData/x:SpectrumIDFormat/x:cvParam/@name', namespaces=ns)))
+  rawFile <- attrExtract(doc, ns, '/*/x:DataCollection/x:Inputs/x:SpectraData')
+  rawFile$IDFormat <- as.vector(unlist(getNodeSet(doc, path='/*/x:DataCollection/x:Inputs/x:SpectraData/x:SpectrumIDFormat/x:cvParam/@name', namespaces=ns)))
   rawFile
 }
 
@@ -198,10 +198,10 @@ getRawFile <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getDatabaseFile <- function(doc, ns){
-  databaseFile <- attrExtract(doc, ns, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase')
-  databaseFile$name <- as.vector(unlist(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/x:DatabaseName/*/@name', namespaces=ns)))
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/x:FileFormat', namespaces=ns)) > 0){
-    databaseFile$fileFormat=as.vector(unlist(getNodeSet(doc, '/x:MzIdentML/x:DataCollection/x:Inputs/x:SearchDatabase/x:FileFormat/x:cvParam/@name', namespaces=ns)))
+  databaseFile <- attrExtract(doc, ns, '/*/x:DataCollection/x:Inputs/x:SearchDatabase')
+  databaseFile$name <- as.vector(unlist(getNodeSet(doc, '/*/x:DataCollection/x:Inputs/x:SearchDatabase/x:DatabaseName/*/@name', namespaces=ns)))
+  if(length(getNodeSet(doc, '/*/x:DataCollection/x:Inputs/x:SearchDatabase/x:FileFormat', namespaces=ns)) > 0){
+    databaseFile$fileFormat=as.vector(unlist(getNodeSet(doc, '/*/x:DataCollection/x:Inputs/x:SearchDatabase/x:FileFormat/x:cvParam/@name', namespaces=ns)))
   } else {}
   databaseFile
 }
@@ -219,7 +219,7 @@ getDatabaseFile <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getSearchType <- function(doc, ns){
-  as.vector(unlist(getNodeSet(doc, path='/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:SearchType/x:cvParam/@name', namespaces=ns)))
+  as.vector(unlist(getNodeSet(doc, path='/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:SearchType/x:cvParam/@name', namespaces=ns)))
 }
 
 #' Finds the psm threshold used in the file
@@ -235,7 +235,7 @@ getSearchType <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getThreshold <- function(doc, ns){
-  threshold <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Threshold/*')
+  threshold <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Threshold/*')
   threshold <- threshold[, names(threshold) %in% c('name', 'value'), drop=FALSE]
   threshold
 }
@@ -254,17 +254,17 @@ getThreshold <- function(doc, ns){
 #' 
 getAdditionalPar <- function(doc, ns){
   addPar <- list()
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:userParam', namespaces=ns)) > 0){
-    userPar <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:userParam')
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:userParam', namespaces=ns)) > 0){
+    userPar <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:userParam')
     par <- split(userPar$value, 1:length(userPar$value))
     names(par) <- userPar$name
     par <- lapply(par, type.convert)
     addPar <- c(addPar, par)
   } else {}
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:cvParam', namespaces=ns)) > 0){
-    cvPar <- xpathApply(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:cvParam', namespaces=ns, fun=xmlAttrs)
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:cvParam', namespaces=ns)) > 0){
+    cvPar <- xpathApply(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:AdditionalSearchParams/x:cvParam', namespaces=ns, fun=xmlAttrs)
     parNames <- unlist(cvPar)[names(unlist(cvPar)) == 'name']
-    cvPar <- lapply(cvPar, function(x) if(any(names(x) == 'value')) type.convert(x['value']) else TRUE)
+    cvPar <- lapply(cvPar, function(x) if(any(names(x) == 'value')) type.convert(x['value'], as.is=TRUE) else TRUE)
     names(cvPar) <- parNames
     addPar <- c(addPar, cvPar)
   } else {}
@@ -284,9 +284,9 @@ getAdditionalPar <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getEnzymes <- function(doc, ns){
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Enzymes', namespaces=ns)) > 0){
-    enzymes <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Enzymes/x:Enzyme/x:EnzymeName/x:cvParam')
-    enzymeName <- getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Enzymes/x:Enzyme/x:EnzymeName/@name', namespaces=ns)
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Enzymes', namespaces=ns)) > 0){
+    enzymes <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Enzymes/x:Enzyme/x:EnzymeName/x:cvParam')
+    enzymeName <- getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:Enzymes/x:Enzyme/x:EnzymeName/@name', namespaces=ns)
     if(length(enzymeName > 0)){
       enzymes$name <- enzymeName
     } else {}
@@ -310,8 +310,8 @@ getEnzymes <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getParentTolerance <- function(doc, ns){
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ParentTolerance', namespaces=ns)) > 0){
-    ParentTolerance <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ParentTolerance/x:cvParam')
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ParentTolerance', namespaces=ns)) > 0){
+    ParentTolerance <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ParentTolerance/x:cvParam')
     ParentTolerance
   } else {
     NULL
@@ -332,8 +332,8 @@ getParentTolerance <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getFragmentTolerance <- function(doc, ns){
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:FragmentTolerance', namespaces=ns)) > 0){
-    FragmentTolerance <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:FragmentTolerance/x:cvParam')
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:FragmentTolerance', namespaces=ns)) > 0){
+    FragmentTolerance <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:FragmentTolerance/x:cvParam')
     FragmentTolerance
   } else {
     NULL
@@ -386,10 +386,10 @@ getModifications <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getMassTable <- function(doc, ns){
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable', namespaces=ns)) > 0){
-    MassTable <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable/x:Residue')
-    msLevel <- unlist(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable/@msLevel', namespaces=ns))
-    tableCount <- countChildren(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable', 'Residue')
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable', namespaces=ns)) > 0){
+    MassTable <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable/x:Residue')
+    msLevel <- unlist(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable/@msLevel', namespaces=ns))
+    tableCount <- countChildren(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:MassTable', 'Residue')
     MassTable$msLevel <- msLevel[rep(1:length(tableCount), tableCount)]
     MassTable
   } else {
@@ -411,14 +411,14 @@ getMassTable <- function(doc, ns){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 getDatabaseTranslation <- function(doc, ns){
-  if(length(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation', namespaces=ns)) > 0){
-    tables <- attrExtract(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/x:TranslationTable/x:cvParam')
+  if(length(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation', namespaces=ns)) > 0){
+    tables <- attrExtract(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/x:TranslationTable/x:cvParam')
     tables <- tables[, names(tables) %in% c('name', 'value')]
-    tableNames <- unlist(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/x:TranslationTable/@name', namespaces=ns))
-    tableCount <- countChildren(doc, ns, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/x:TranslationTable', 'cvParam')
+    tableNames <- unlist(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/x:TranslationTable/@name', namespaces=ns))
+    tableCount <- countChildren(doc, ns, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/x:TranslationTable', 'cvParam')
     tables <- split(tables, rep(1:length(tableCount), tableCount))
     tables <- lapply(1:length(tables), function(x) list(tableName=as.vector(tableNames[x]), table=tables[[x]]$value[translationTable=tables[[x]]$name == 'translation table'], startCodons=tables[[x]]$value[translationTable=tables[[x]]$name == 'translation start codons'], description=tables[[x]]$value[translationTable=tables[[x]]$name == 'translation table description']))
-    frames <- as.vector(unlist(getNodeSet(doc, '/x:MzIdentML/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/@frame', namespaces=ns)))
+    frames <- as.vector(unlist(getNodeSet(doc, '/*/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:DatabaseTranslation/@frame', namespaces=ns)))
     if(is.null(frames)) {
       frames <- as.character(NA)
     } else {}
