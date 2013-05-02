@@ -210,6 +210,6 @@ versionCheck <- function(version){
     unSupport <- TRUE
   } else {}
   if(unSupport){
-    stop(paste('Version: ', version, ' is not supported...', sep=''))
+    warning(paste('Version: ', version, ' is not supported...', sep=''))
   } else {}
 }
