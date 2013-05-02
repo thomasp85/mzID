@@ -130,7 +130,6 @@ mzIDpeptides <- function(doc, ns){
     pepSeq <- xpathSApply(doc, path="/*/x:SequenceCollection/x:Peptide", namespaces=ns, fun=xmlValue)
     modDF <- attrExtract(doc, ns, path="/*/x:SequenceCollection/x:Peptide/x:Modification")
     if(nrow(modDF) > 0){
-      modName <- xpathSApply(doc, path="/x:MzIdentML/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam", namespaces=ns, fun=xmlAttrs)['name', ]
       nModPepID <- countChildren(doc, ns, path="/*/x:SequenceCollection/x:Peptide", 'Modification')
       pepDF <- data.frame(pepID, pepSeq, modified=nModPepID > 0, stringsAsFactors=FALSE)
       modList <- list()
