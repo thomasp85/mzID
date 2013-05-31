@@ -115,22 +115,28 @@ setMethod(
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
 mzIDpsm <-function(doc, ns) {
-    .path <- getPath(ns)
     if (missing(doc)) {
         new(Class='mzIDpsm')
     } else {
+        .path <- getPath(ns)
         scans <-
             attrExtract(doc, ns,
-                        path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"))
+                        path=paste0(.path,
+                            "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"))
         id <-
-            attrExtract(doc, ns, path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"))
+            attrExtract(doc, ns,
+                        path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"))
         idParam <-
-            attrExtractNameValuePair(doc, ns, path=paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem'), c('cvParam', 'userParam'))
+            attrExtractNameValuePair(doc, ns,
+                                     path=paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem'),
+                                     c('cvParam', 'userParam'))
         if (!is.null(idParam)) {
             id <- cbind(id, idParam)
         } ## else {}
         nID <-
-            countChildren(doc, ns, path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
+            countChildren(doc, ns,
+                          path=paste0(.path,
+                              "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
     indMap <- list()
     indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
     new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)

@@ -95,10 +95,10 @@ setMethod(
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
 mzIDdatabase <- function(doc, ns){
-    .path <- getPath(ns)
     if (missing(doc)) {
         new(Class = 'mzIDdatabase')
     } else {
+        .path <- getPath(ns)
         database <- attrExtract(doc, ns, paste0(.path, '/x:SequenceCollection/x:DBSequence'))
         dbnames <- getNodeSet(doc,
                               paste0(.path, '/x:SequenceCollection/x:DBSequence/x:cvParam/@name'),

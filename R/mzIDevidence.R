@@ -95,11 +95,11 @@ setMethod(
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
 mzIDevidence <- function(doc, ns) {
-    .version <- getVersion(ns)
-    .path <- getPath(ns)
     if (missing(doc)) {
         new(Class='mzIDevidence')
     } else {
+        .version <- getVersion(ns)
+        .path <- getPath(ns)
         if (.version == "1.1") { 
             evidence <- attrExtract(doc, ns,
                                     paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'))

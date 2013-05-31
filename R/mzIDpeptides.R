@@ -125,10 +125,10 @@ setMethod(
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
 mzIDpeptides <- function(doc, ns) {
-    .path <- getPath(ns)
     if (missing(doc)) {
         new(Class='mzIDpeptides')
     } else {
+        .path <- getPath(ns)
         pepID <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"))
         pepSeq <- xpathSApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
                               namespaces=ns, fun=xmlValue)
