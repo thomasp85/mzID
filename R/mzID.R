@@ -173,21 +173,20 @@ setMethod(
 #' 
 #' @export
 #' 
-mzID <- function(file){
-  if(missing(file)){
-    new(Class='mzID')
-  } else {
-    doc = xmlInternalTreeParse(file)
-    namespaceDef=getDefaultNamespace(doc)
-    ns <- c(x=namespaceDef[[1]]$uri)
-    ## docInfo <- attrExtract(doc, ns, path = path)
-    ## versionCheck(docInfo$version)
-    new(Class='mzID',
-        parameters=mzIDparameters(doc, ns),
-        psm=mzIDpsm(doc, ns),
-        peptides=mzIDpeptides(doc, ns),
-        evidence=mzIDevidence(doc, ns),
-        database=mzIDdatabase(doc, ns)
-        )
-  }
+mzID <- function(file) {
+    if (missing(file)) {
+        new(Class='mzID')
+    } else {
+        doc = xmlInternalTreeParse(file)
+        namespaceDef=getDefaultNamespace(doc)
+        ns <- c(x=namespaceDef[[1]]$uri)
+        ## docInfo <- attrExtract(doc, ns, path = path)
+        ## versionCheck(docInfo$version)
+        new(Class = 'mzID',
+            parameters = mzIDparameters(doc, ns),
+            psm = mzIDpsm(doc, ns),
+            peptides = mzIDpeptides(doc, ns),
+            evidence = mzIDevidence(doc, ns),
+            database = mzIDdatabase(doc, ns))
+    }
 }

@@ -95,8 +95,8 @@ setMethod(
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
 mzIDevidence <- function(doc, ns) {
-    .path <- getPath(ns)
     .version <- getVersion(ns)
+    .path <- getPath(ns)
     if (missing(doc)) {
         new(Class='mzIDevidence')
     } else {
