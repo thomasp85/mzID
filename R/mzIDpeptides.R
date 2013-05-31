@@ -34,21 +34,21 @@ NULL
 #' @rdname mzIDpeptides-class
 #'
 setClass(
-		'mzIDpeptides',
-		representation=representation(
-				peptides = 'data.frame',
-				modifications = 'list'
-		),
-		validity=function(object){
-			if(nrow(object@peptides) != length(object@modifications) & length(object@modifications) != 0){
-				stop('Dimensions must match between elements')
-			}
-		},
-		prototype=prototype(
-				peptides = data.frame(),
-				modifications = list()
-		)
-)
+    'mzIDpeptides',
+    representation=representation(
+        peptides = 'data.frame',
+        modifications = 'list'
+        ),
+    validity=function(object){
+        if(nrow(object@peptides) != length(object@modifications) & length(object@modifications) != 0){
+            stop('Dimensions must match between elements')
+        }
+    },
+    prototype=prototype(
+        peptides = data.frame(),
+        modifications = list()
+        )
+    )
 
 #' Show method for mzIDpeptides objects
 #' 
@@ -61,14 +61,16 @@ setClass(
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
 setMethod(
-		'show', 'mzIDpeptides',
-		function(object){
-			if(length(object) == 0){
-				cat('An empty mzIDpeptides object\n')
-			} else {
-				cat('An mzIDpeptides object containing: ', length(unique(object@peptides$id)), ' peptides (', sum(object@peptides$modified), ' modified)\n', sep='')
-			}
-		}
+    'show', 'mzIDpeptides',
+    function(object){
+        if(length(object) == 0){
+            cat('An empty mzIDpeptides object\n')
+        } else {
+            cat('An mzIDpeptides object containing: ',
+                length(unique(object@peptides$id)),
+                ' peptides (', sum(object@peptides$modified), ' modified)\n', sep='')
+        }
+    }
 )
 
 #' Report the length of an mzIDpeptides object
@@ -122,22 +124,30 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
-mzIDpeptides <- function(doc, ns){
-  if(missing(doc)){
-    new(Class='mzIDpeptides')
-  } else {
-    pepID <- attrExtract(doc, ns, path="/*/x:SequenceCollection/x:Peptide")
-    pepSeq <- xpathSApply(doc, path="/*/x:SequenceCollection/x:Peptide", namespaces=ns, fun=xmlValue)
-    modDF <- attrExtract(doc, ns, path="/*/x:SequenceCollection/x:Peptide/x:Modification")
-    if(nrow(modDF) > 0){
-      nModPepID <- countChildren(doc, ns, path="/*/x:SequenceCollection/x:Peptide", 'Modification')
-      pepDF <- data.frame(pepID, pepSeq, modified=nModPepID > 0, stringsAsFactors=FALSE)
-      modList <- list()
-      modList[nModPepID > 0] <- split(modDF, rep(1:length(nModPepID), nModPepID))
+mzIDpeptides <- function(doc, ns) {
+    if (missing(doc)) {
+        new(Class='mzIDpeptides')
     } else {
-      pepDF <- data.frame(pepID, pepSeq, modified=FALSE, stringsAsFactors=FALSE)
-      modList <- list()
+        .path <- getPath(ns)
+        pepID <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"))
+        pepSeq <- xpathSApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
+                              namespaces=ns, fun=xmlValue)
+        modDF <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification"))
+        if (nrow(modDF) > 0) {
+            ## not using xpathSApply, as does not always simplify
+            ## -> using list and extract 'names' element 
+            modName <-
+                xpathApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam"),
+                           namespaces=ns, fun=xmlAttrs)
+            modName <- sapply(modName, "[", "name")
+            nModPepID <- countChildren(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"), 'Modification')
+            pepDF <- data.frame(pepID, pepSeq, modified=nModPepID > 0, stringsAsFactors=FALSE)
+            modList <- list()
+            modList[nModPepID > 0] <- split(modDF, rep(1:length(nModPepID), nModPepID))
+        } else {
+            pepDF <- data.frame(pepID, pepSeq, modified=FALSE, stringsAsFactors=FALSE)
+            modList <- list()
+        }
+        new(Class='mzIDpeptides',peptides=pepDF, modifications=modList)
     }
-    new(Class='mzIDpeptides',peptides=pepDF, modifications=modList)
-  }
 }

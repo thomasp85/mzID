@@ -95,27 +95,35 @@ setMethod(
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
 mzIDdatabase <- function(doc, ns){
-  if(missing(doc)){
-    new(Class='mzIDdatabase')
-  } else {
-    database <- attrExtract(doc, ns, '/*/x:SequenceCollection/x:DBSequence')
-    dbnames <- getNodeSet(doc, '/*/x:SequenceCollection/x:DBSequence/x:cvParam/@name', namespaces=ns)
-    if(length(dbnames) > 0){
-      dbnames1 <- unlist(getNodeSet(doc, '/*/x:SequenceCollection/x:DBSequence/x:cvParam/@value', namespaces=ns))[dbnames == 'protein description']
-      hasName <- countChildren(doc, ns, path='/*/x:SequenceCollection/x:DBSequence', 'cvParam', 'name')
-      hasRightName <- as.logical(hasName)
-      hasRightName[hasRightName] <- sapply(split(dbnames == 'protein description', rep(seq(along=hasName), hasName)), any)
-      dbnames1 <- mapply(sub, paste('^\\Q',database$accession[hasRightName], '\\E', ' ', sep=''), '', dbnames1)
-      database$description <- NA
-      database$description[hasRightName] <- dbnames1
+    if (missing(doc)) {
+        new(Class = 'mzIDdatabase')
+    } else {
+        .path <- getPath(ns)
+        database <- attrExtract(doc, ns, paste0(.path, '/x:SequenceCollection/x:DBSequence'))
+        dbnames <- getNodeSet(doc,
+                              paste0(.path, '/x:SequenceCollection/x:DBSequence/x:cvParam/@name'),
+                              namespaces = ns)
+        if(length(dbnames) > 0){
+            dbnames1 <- unlist(getNodeSet(doc,
+                                          paste0(.path, '/x:SequenceCollection/x:DBSequence/x:cvParam/@value'),
+                                          namespaces=ns))[dbnames == 'protein description']
+            hasName <- countChildren(doc, ns,
+                                     path=paste0(.path, '/x:SequenceCollection/x:DBSequence'),
+                                     'cvParam', 'name')
+            hasRightName <- as.logical(hasName)
+            hasRightName[hasRightName] <-
+                sapply(split(dbnames == 'protein description', rep(seq(along=hasName), hasName)), any)
+            dbnames1 <- mapply(sub, paste('^\\Q',database$accession[hasRightName], '\\E', ' ', sep=''), '', dbnames1)
+            database$description <- NA
+            database$description[hasRightName] <- dbnames1
+        }
+        dbseq <- getNodeSet(doc, paste0(.path, '/x:SequenceCollection/x:DBSequence/x:Seq'), namespaces = ns)
+        if (length(dbseq) > 0) {
+            dbseq <- sapply(dbseq, xmlValue)
+            hasSeq <- countChildren(doc, ns, path=paste0(.path, '/x:SequenceCollection/x:DBSequence'), 'Seq')
+            database$sequence <- NA
+            database$sequence[hasSeq != 0] <- dbseq
+        }
+        new(Class = 'mzIDdatabase', database =database)
     }
-    dbseq <- getNodeSet(doc, '/*/x:SequenceCollection/x:DBSequence/x:Seq', namespaces=ns)
-    if(length(dbseq) > 0){
-      dbseq <- sapply(dbseq, xmlValue)
-      hasSeq <- countChildren(doc, ns, path='/*/x:SequenceCollection/x:DBSequence', 'Seq')
-      database$sequence <- NA
-      database$sequence[hasSeq != 0] <- dbseq
-    }
-    new(Class='mzIDdatabase', database=database)
-  }
 }

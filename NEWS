@@ -2,7 +2,7 @@ Version 0.3.0
 ------------------------------------------------------------------------------
 
 NEW FEATURES AND FUNCTIONS
-* Parser now supports 1.0.0 schema
+* Support for mzIdentML v1.0 (thanks Laurent Gatto)
 
 Version 0.2.1
 ------------------------------------------------------------------------------

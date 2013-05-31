@@ -56,7 +56,7 @@ setMethod(
   'show', 'mzIDevidence',
   function(object){
     if(length(object) == 0){
-      cat('An empty mzIDevidence object')
+      cat('An empty mzIDevidence object\n')
     } else {
       cat('An mzIDevidence object with', length(object), 'entries\n')
     }
@@ -94,14 +94,19 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
-mzIDevidence <- function(doc, ns){
-  if(missing(doc)){
-    new(Class='mzIDevidence')
-  } else {
-    evidence <- attrExtract(doc, ns, '/*/x:SequenceCollection/x:PeptideEvidence')
-    if(nrow(evidence) == 0){
-      evidence <- attrExtract(doc, ns, '/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence')
+mzIDevidence <- function(doc, ns) {
+    if (missing(doc)) {
+        new(Class='mzIDevidence')
+    } else {
+        .version <- getVersion(ns)
+        .path <- getPath(ns)
+        if (.version == "1.1") { 
+            evidence <- attrExtract(doc, ns,
+                                    paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'))
+        } else { ## "1.0"
+            evidence <- attrExtract(doc, ns,
+                                    paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'))
+        }        
+        new(Class='mzIDevidence', evidence=evidence)
     }
-    new(Class='mzIDevidence', evidence=evidence)
-  }
 }

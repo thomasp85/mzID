@@ -41,22 +41,19 @@ NULL
 #' @exportClass mzID
 #' @rdname mzID-class
 #' 
-setClass(
-	'mzID',
-	representation=representation(
-		parameters='mzIDparameters',
-    psm='mzIDpsm',
-    peptides='mzIDpeptides',
-    evidence='mzIDevidence',
-    database='mzIDdatabase'
-    ),
-  prototype=prototype(
-    parameters=mzIDparameters(),
-    psm=mzIDpsm(),
-    peptides=mzIDpeptides(),
-    evidence=mzIDevidence(),
-    database=mzIDdatabase()
-    )
+setClass('mzID',
+         representation = representation(
+             parameters = 'mzIDparameters',
+             psm = 'mzIDpsm',
+             peptides = 'mzIDpeptides',
+             evidence = 'mzIDevidence',
+             database = 'mzIDdatabase'),
+         prototype = prototype(
+             parameters = mzIDparameters(),
+             psm = mzIDpsm(),
+             peptides = mzIDpeptides(),
+             evidence = mzIDevidence(),
+             database = mzIDdatabase())
   )
 
 #' Show method for mzID objects
@@ -69,35 +66,35 @@ setClass(
 #' 
 #' @seealso \code{\link{mzID-class}}
 #' 
-setMethod(
-  'show', 'mzID',
-  function(object){
-    if(length(object) == 0){
-      cat('An empty mzID object\n')
-    } else {
-      cat('An mzID object\n\n')
-      cat('Software used:   ', object@parameters@software$name[1], ' (version: ', object@parameters@software$version[1], ')\n', sep='')
-      if(nrow(object@parameters@software) > 1){
-        for(i in 2:nrow(object@parameters@software)){
-          cat('                 ', object@parameters@software$name[i], ' (version ', object@parameters@software$version[i], ')\n', sep='')
-        }
-      } else {}
-      cat('\n')
-      if(nrow(object@parameters@rawFile) == 1){
-        cat('Rawfile:         ', object@parameters@rawFile$location[1], '\n', sep='')        
-      } else {
-        cat('Rawfiles:        ', object@parameters@rawFile$location[1], '\n', sep='')
-        for(i in 2:nrow(object@parameters@rawFile)){
-          cat('                 ', object@parameters@rawFile$location[i], '\n', sep='')
-        }
-      }
-      cat('\n')
-      cat('Database:        ', object@parameters@databaseFile$location, '\n\n', sep='')
-      cat('Number of scans: ', nrow(object@psm@scans), '\n', sep='')
-      cat('Number of PSM\'s: ', nrow(object@psm@id), '\n', sep='')
-    }
-  }
-  )
+setMethod('show', 'mzID',
+          function(object) {
+              if (length(object) == 0) {
+                  cat('An empty mzID object\n')
+              } else {
+                  cat('An mzID object\n\n')
+                  cat('Software used:   ', object@parameters@software$name[1],
+                      ' (version: ', object@parameters@software$version[1], ')\n', sep='')
+                  if (nrow(object@parameters@software) > 1) {
+                      for(i in 2:nrow(object@parameters@software)) {
+                          cat('                 ', object@parameters@software$name[i],
+                              ' (version ', object@parameters@software$version[i], ')\n', sep='')
+                      }
+                  } else {}
+                  cat('\n')
+                  if(nrow(object@parameters@rawFile) == 1){
+                      cat('Rawfile:         ', object@parameters@rawFile$location[1], '\n', sep='')        
+                  } else {
+                      cat('Rawfiles:        ', object@parameters@rawFile$location[1], '\n', sep='')
+                      for(i in 2:nrow(object@parameters@rawFile)){
+                          cat('                 ', object@parameters@rawFile$location[i], '\n', sep='')
+                      }
+                  }
+                  cat('\n')
+                  cat('Database:        ', object@parameters@databaseFile$location, '\n\n', sep='')
+                  cat('Number of scans: ', nrow(object@psm@scans), '\n', sep='')
+                  cat('Number of PSM\'s: ', nrow(object@psm@id), '\n', sep='')
+              }
+          })
 
 #' Report the length of an mzID object
 #' 
@@ -111,31 +108,34 @@ setMethod(
 #' @aliases length,mzID-method
 #' 
 setMethod(
-  'length', 'mzID',
-  function(x){
-    length(x@psm)
-  }
-  )
+    'length', 'mzID',
+    function(x){
+        length(x@psm)
+    })
 
 #' @rdname flatten-methods
 #' @aliases flatten,mzID,ANY-method
 #' @aliases flatten,mzID-method
 #' 
 setMethod(
-  'flatten', 'mzID',
-  function(object){
-    flatPSM <- flatten(object@psm)
-    flatEviData <- cbind(object@evidence@evidence, object@database@database[match(object@evidence@evidence$dBSequence_ref, object@database@database$id), ])
-    flatEviData <- flatEviData[,!names(flatEviData) == 'id']
-    flatPep <- flatten(object@peptides)
-    flatPepEviData <- cbind(flatPep, flatEviData[match(flatPep$id, flatEviData$peptide_ref), ])
-    flatAll <- cbind(flatPSM, flatPepEviData[match(flatPSM$peptide_ref, flatPepEviData$id), ])
-    flatAll$spectrumFile <- object@parameters@rawFile$name[match(flatAll$spectraData_ref, object@parameters@rawFile$id)]
-    flatAll$databaseFile <- object@parameters@databaseFile$name[match(flatAll$searchDatabase_ref, object@parameters@databaseFile$id)]
-    flatAll <- flatAll[, !grepl('_ref$', names(flatAll), perl=T) & !names(flatAll) == 'id']
-    flatAll
-  }
-)
+    'flatten', 'mzID',
+    function(object) {
+        flatPSM <- flatten(object@psm)
+        flatEviData <- cbind(object@evidence@evidence,
+                             object@database@database[match(object@evidence@evidence$dBSequence_ref,
+                                                            object@database@database$id), ])
+        flatEviData <- flatEviData[,!names(flatEviData) == 'id']
+        flatPep <- flatten(object@peptides)
+        flatPepEviData <- cbind(flatPep, flatEviData[match(flatPep$id, flatEviData$peptide_ref), ])
+        flatAll <- cbind(flatPSM, flatPepEviData[match(flatPSM$peptide_ref, flatPepEviData$id), ])
+        flatAll$spectrumFile <- object@parameters@rawFile$name[match(flatAll$spectraData_ref,
+                                                                     object@parameters@rawFile$id)]
+        flatAll$databaseFile <- object@parameters@databaseFile$name[match(flatAll$searchDatabase_ref,
+                                                                          object@parameters@databaseFile$id)]
+        flatAll <- flatAll[, !grepl('_ref$', names(flatAll), perl=T) & !names(flatAll) == 'id']
+        flatAll
+    })
+
 
 #' Parse an mzIdentML file
 #' 
@@ -170,24 +170,24 @@ setMethod(
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/mascot_pmf_example.mzid")
 #' 
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Sequest_example_ver1.1.mzid")
-#' 
+#'
+#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid")
+#'
+#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
 #' @export
 #' 
-mzID <- function(file){
-  if(missing(file)){
-    new(Class='mzID')
-  } else {
-    doc = xmlInternalTreeParse(file)
-    namespaceDef=getDefaultNamespace(doc)
-    ns <- c(x=namespaceDef[[1]]$uri)
-    docInfo <- attrExtract(doc, ns, path='/*')
-    versionCheck(docInfo$version)
-    new(Class='mzID',
-        parameters=mzIDparameters(doc, ns),
-        psm=mzIDpsm(doc, ns),
-        peptides=mzIDpeptides(doc, ns),
-        evidence=mzIDevidence(doc, ns),
-        database=mzIDdatabase(doc, ns)
-        )
-  }
+mzID <- function(file) {
+    if (missing(file)) {
+        new(Class='mzID')
+    } else {
+        doc <- xmlInternalTreeParse(file)
+        namespaceDef <- getDefaultNamespace(doc)
+        ns <- c(x=namespaceDef[[1]]$uri)
+        new(Class = 'mzID',
+            parameters = mzIDparameters(doc, ns),
+            psm = mzIDpsm(doc, ns),
+            peptides = mzIDpeptides(doc, ns),
+            evidence = mzIDevidence(doc, ns),
+            database = mzIDdatabase(doc, ns))
+    }
 }
