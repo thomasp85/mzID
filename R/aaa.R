@@ -225,7 +225,7 @@ getVersion <- function(ns) {
 }
 
 
-## returns proper path for given namespace
+## returns proper path for a given namespace
 getPath <- function(ns) {
     v <- getVersion(ns)
     if (v == "1.0") {
