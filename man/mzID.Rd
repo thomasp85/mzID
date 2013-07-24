@@ -40,6 +40,10 @@ mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/MPC_example_Mu
 mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/mascot_pmf_example.mzid")
 
 mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Sequest_example_ver1.1.mzid")
+
+mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid")
+
+mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
 }
 \seealso{
   \code{\link{mzID-class}}

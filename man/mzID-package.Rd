@@ -7,6 +7,7 @@
   parse mzIdentML files into an mzID class instance.
 }
 \author{
-  Thomas Dybdal Pedersen
+  Thomas Dybdal Pedersen with contributions from Laurent
+  Gatto
 }
 

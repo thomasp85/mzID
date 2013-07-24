@@ -4,7 +4,7 @@
 \description{
   This class handles parsing and storage of scan info and
   the related psm's. This information resides in the
-  /x:MzIdentML/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult
+  /*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult
   node.
 }
 \details{

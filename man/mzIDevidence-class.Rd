@@ -4,8 +4,7 @@
 \description{
   This class handles parsing and storage of peptide
   evidence information from mzIDentML files, residing at
-  the /x:MzIdentML/x:SequenceCollection/x:PeptideEvidence
-  node.
+  the /*/x:SequenceCollection/x:PeptideEvidence node.
 }
 \details{
   The content of the class is stored in a data.frame with
