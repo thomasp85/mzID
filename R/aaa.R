@@ -193,23 +193,45 @@ attrExtractNameValuePair <- function(doc, ns, path, child){
   do.call('cbind', ans)
 }
 
-#' Check that the version is supported
-#' 
-#' Currently only version 1.1.x is supported with planned support for 1.0.x. The version of 'x' should not affect compitability.
-#' 
-#' @param version A textstring giving the version to check in the format x.y.z
-#' 
-#' @return NULL if the version is supported, and throws an error if not
-#' 
-versionCheck <- function(version){
-  versionSplit <- strsplit(version, '.', fixed=T)[[1]]
-  unSupport <- FALSE
-  if(versionSplit[1] != 1){
-    unSupport <- TRUE
-  } else if(versionSplit[2] != 1){
-    unSupport <- TRUE
-  } else {}
-  if(unSupport){
-    warning(paste('Version: ', version, ' is not supported...', sep=''))
-  } else {}
+## #' Check that the version is supported
+## #' 
+## #' Currently only version 1.1.x is supported with planned support for 1.0.x. The version of 'x' should not affect compatability.
+## #' 
+## #' @param version A textstring giving the version to check in the format x.y.z
+## #' 
+## #' @return NULL if the version is supported, and throws an error if not
+## #' 
+## versionCheck <- function(version){
+##   versionSplit <- strsplit(version, '.', fixed=TRUE)[[1]]
+##   unSupport <- FALSE
+##   if(versionSplit[1] != 1){
+##     unSupport <- TRUE
+##   } else if(versionSplit[2] != 1){
+##     unSupport <- TRUE
+##   } else {}
+##   if(unSupport){
+##     warning(paste('Version: ', version, ' is not supported...', sep=''))
+##   } else {}
+## }
+
+
+## extracts version from xml namespace
+getVersion <- function(ns) {
+    v <- strsplit(ns, "/")[[1]]
+    v <- v[length(v)]
+    if (!v %in% c("1.0", "1.1"))
+        stop("Version ", v, " unknown: only 1.0 and 1.1 supported.") 
+    return(v)
+}
+
+
+## returns proper path for a given namespace
+getPath <- function(ns) {
+    v <- getVersion(ns)
+    if (v == "1.0") {
+        path <- '/x:mzIdentML'
+    } else {  ## v == "1.1"
+        path <- '/x:MzIdentML'
+    } 
+    return(path)
 }
