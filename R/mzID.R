@@ -119,7 +119,7 @@ setMethod(
 #' 
 setMethod(
     'flatten', 'mzID',
-    function(object) {
+    function(object, no.redundancy=TRUE) {
        flatPSM <- flatten(object@psm)
        flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
        flatEviData <- 
