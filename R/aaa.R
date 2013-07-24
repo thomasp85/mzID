@@ -193,14 +193,7 @@ attrExtractNameValuePair <- function(doc, ns, path, child){
   do.call('cbind', ans)
 }
 
-## #' Check that the version is supported
-## #' 
-## #' Currently only version 1.1.x is supported with planned support for 1.0.x. The version of 'x' should not affect compatability.
-## #' 
-## #' @param version A textstring giving the version to check in the format x.y.z
-## #' 
-## #' @return NULL if the version is supported, and throws an error if not
-## #' 
+
 ## versionCheck <- function(version){
 ##   versionSplit <- strsplit(version, '.', fixed=TRUE)[[1]]
 ##   unSupport <- FALSE
@@ -215,7 +208,15 @@ attrExtractNameValuePair <- function(doc, ns, path, child){
 ## }
 
 
-## extracts version from xml namespace
+#' Get the mzIdentML version and check that the version is supported
+#' 
+#' Currently version 1.1 and 1.0 are supported.
+#' 
+#' @param ns The namespace of the mzIdentML file
+#' 
+#' @return A textstring giving the version of the mzIdentML file if it is supported. In case of missing support 
+#' it throws an error.
+#' 
 getVersion <- function(ns) {
     v <- strsplit(ns, "/")[[1]]
     v <- v[length(v)]
@@ -225,7 +226,14 @@ getVersion <- function(ns) {
 }
 
 
-## returns proper path for a given namespace
+#' Get the correct namespace path depending on version
+#' 
+#' This function resolves an inconsistancy between version 1.0 and 1.1 where the namespace is changed in case.
+#' 
+#' @param ns The namespace of the mzIdentML file
+#' 
+#' @return A textstring with the top parent node of the DOM
+#' 
 getPath <- function(ns) {
     v <- getVersion(ns)
     if (v == "1.0") {
