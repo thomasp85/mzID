@@ -11,6 +11,7 @@
 \author{Thomas Dybdal Pedersen}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 \maketitle
 
