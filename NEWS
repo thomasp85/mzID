@@ -1,0 +1,50 @@
+Version 0.3.1
+--------------------------------------------------------------------------------
+* Comment unused functions <2013-07-05 Fri>
+* Minor typos in vignette  <2013-07-05 Fri>
+
+Version 0.3.0
+--------------------------------------------------------------------------------
+
+NEW FEATURES AND FUNCTIONS
+* Support for mzIdentML v1.0 (thanks Laurent Gatto)
+
+Version 0.2.1
+--------------------------------------------------------------------------------
+
+NEW FEATURES AND FUNCTIONS
+* Version counter now in BioConductor style
+* Namespace now extracted from file instead of hardcoded in the constructor
+* mzID constructor now checks the mzIdentML version before parsing (only 1.1.0
+  supported atm)
+
+
+Version 0.1-1
+--------------------------------------------------------------------------------
+
+NEW FEATURES AND FUNCTIONS
+* Added function `flatten` to create tabular representation of results
+
+Version 0.0-2
+--------------------------------------------------------------------------------
+
+NEW FEATURES AND FUNCTIONS
+* The package is now fully documented
+* created helper functions: `countChildren`, `attrExtract` and
+  `attrExtractNameValuePair`
+* Added NEWS file
+* Added README.md file
+* The parser now succesfully imports all test files on the HUPO mzIdentML page
+
+PERFORMANCE
+* Improvements in the mzIDpsm constructor makes it ~2-3x faster depending on the
+  file size (thanks to `countChildren`, `attrExtract` and
+  `attrExtractNameValuePair`)
+
+Version 0.0-1
+--------------------------------------------------------------------------------
+
+NEW FEATURES AND FUNCTIONS
+* First build of the package
+* Introduction of the classes: `mzID`, `mzIDdatabase`, `mzIDevidence`,
+  `mzIDparameters`, `mzIDpeptides` and `mzIDpsm` with related constructors

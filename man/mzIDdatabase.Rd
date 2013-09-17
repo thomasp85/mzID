@@ -1,0 +1,26 @@
+\name{mzIDdatabase}
+\alias{mzIDdatabase}
+\title{A constructor for the mzIDdatabase class}
+\usage{
+  mzIDdatabase(doc, ns)
+}
+\arguments{
+  \item{doc}{an \code{XMLInternalDocument} created using
+  \code{\link[XML]{xmlInternalTreeParse}}}
+
+  \item{ns}{The appropriate namespace for the doc, as a
+  named character vector with the namespace named x}
+}
+\value{
+  An \code{mzIDdatabase} object
+}
+\description{
+  This function handles parsing of data and construction of
+  an mzIDdatabase object. This function is not intended to
+  be called explicitly but as part of an mzID construction.
+  Thus, the function is not exported.
+}
+\seealso{
+  \code{\link{mzIDdatabase-class}}
+}
+
