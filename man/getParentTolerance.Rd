@@ -1,0 +1,26 @@
+\name{getParentTolerance}
+\alias{getParentTolerance}
+\title{Looks for presence of parent tolerance settings and reports these if found}
+\usage{
+  getParentTolerance(doc, ns)
+}
+\arguments{
+  \item{doc}{an \code{XMLInternalDocument} created using
+  \code{\link[XML]{xmlInternalTreeParse}}}
+
+  \item{ns}{The appropriate namespace for the doc, as a
+  named character vector with the namespace named x}
+}
+\value{
+  A \code{data.frame} with the settings used for parent
+  tolerance or \code{NULL} if none exists
+}
+\description{
+  This function checks for the existence of
+  /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ParentTolerance
+  and if found reports these.
+}
+\seealso{
+  \code{\link{mzIDparameters-class}}
+}
+
