@@ -33,14 +33,14 @@ NULL
 #' @rdname mzIDdatabase-class
 #' 
 setClass(
-  'mzIDdatabase',
-  representation=representation(
-    database='data.frame'
+    'mzIDdatabase',
+    representation=representation(
+        database='data.frame'
     ),
-  prototype=prototype(
-    database=data.frame()
+    prototype=prototype(
+        database=data.frame()
     )
-  )
+)
 
 #' Show method for mzIDdatabase objects
 #' 
@@ -53,15 +53,15 @@ setClass(
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
 setMethod(
-  'show', 'mzIDdatabase',
-  function(object){
-    if(length(object) == 0){
-      cat('An empty mzIDdatabase object\n')
-    } else {
-      cat('An mzIDdatabase object with', length(object), 'entries\n')
+    'show', 'mzIDdatabase',
+    function(object){
+        if(length(object) == 0){
+            cat('An empty mzIDdatabase object\n')
+        } else {
+            cat('An mzIDdatabase object with', length(object), 'entries\n')
+        }
     }
-  }
-  )
+)
 
 #' Report the length of an mzIDdatabase object
 #' 
@@ -75,11 +75,11 @@ setMethod(
 #' @aliases length,mzIDdatabase-method
 #' 
 setMethod(
-  'length', 'mzIDdatabase',
-  function(x){
-    nrow(x@database)
-  }
-  )
+    'length', 'mzIDdatabase',
+    function(x){
+        nrow(x@database)
+    }
+)
 
 #' A constructor for the mzIDdatabase class
 #' 
@@ -93,6 +93,8 @@ setMethod(
 #' @return An \code{mzIDdatabase} object
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
+#' 
+#' @importFrom XML getNodeSet xmlValue
 #' 
 mzIDdatabase <- function(doc, ns){
     if (missing(doc)) {

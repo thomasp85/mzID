@@ -33,23 +33,23 @@ NULL
 #' @rdname mzIDpsm-class
 #' 
 setClass(
-  'mzIDpsm',
-  representation=representation(
-    scans='data.frame',
-    id='data.frame',
-    mapping='list'
+    'mzIDpsm',
+    representation=representation(
+        scans='data.frame',
+        id='data.frame',
+        mapping='list'
     ),
-  validity=function(object){
-    if(nrow(object@scans) != length(object@mapping) | sum(sapply(object@mapping, length)) != nrow(object@id)){
-      stop('Dimensions must match between elements')
-    }
-  },
-  prototype=prototype(
-    scans=data.frame(),
-    id=data.frame(),
-    mapping=list()
+    validity=function(object){
+        if(nrow(object@scans) != length(object@mapping) | sum(sapply(object@mapping, length)) != nrow(object@id)){
+            stop('Dimensions must match between elements')
+        }
+    },
+    prototype=prototype(
+        scans=data.frame(),
+        id=data.frame(),
+        mapping=list()
     )
-  )
+)
 
 #' Show method for mzIDpsm objects
 #' 
@@ -62,15 +62,15 @@ setClass(
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
 setMethod(
-  'show', 'mzIDpsm',
-  function(object){
-    if(length(object) == 0){
-      cat('An empty mzIDpsm object\n')
-    } else {
-      cat('An mzIDpsm object with', nrow(object@scans), 'scans and', nrow(object@id), 'psm\'s\n')
+    'show', 'mzIDpsm',
+    function(object){
+        if(length(object) == 0){
+            cat('An empty mzIDpsm object\n')
+        } else {
+            cat('An mzIDpsm object with', nrow(object@scans), 'scans and', nrow(object@id), 'psm\'s\n')
+        }
     }
-  }
-  )
+)
 
 #' Report the length of an mzIDpsm object
 #' 
@@ -84,21 +84,21 @@ setMethod(
 #' @aliases length,mzIDpsm-method
 #' 
 setMethod(
-  'length', 'mzIDpsm',
-  function(x){
-    nrow(x@id)
-  }
-  )
+    'length', 'mzIDpsm',
+    function(x){
+        nrow(x@id)
+    }
+)
 
 #' @rdname flatten-methods
 #' @aliases flatten,mzIDpsm,ANY-method
 #' @aliases flatten,mzIDpsm-method
 #' 
 setMethod(
-  'flatten', 'mzIDpsm',
-  function(object){
-    cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length)),],object@id)
-  }
+    'flatten', 'mzIDpsm',
+    function(object){
+        cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length)),],object@id)
+    }
 )
 
 #' A constructor for the mzIDpsm class
@@ -122,7 +122,7 @@ mzIDpsm <-function(doc, ns) {
         scans <-
             attrExtract(doc, ns,
                         path=paste0(.path,
-                            "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"))
+                                    "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"))
         id <-
             attrExtract(doc, ns,
                         path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"))
@@ -132,13 +132,15 @@ mzIDpsm <-function(doc, ns) {
                                      c('cvParam', 'userParam'))
         if (!is.null(idParam)) {
             id <- cbind(id, idParam)
-        } ## else {}
+        } 
         nID <-
             countChildren(doc, ns,
                           path=paste0(.path,
-                              "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
-    indMap <- list()
-    indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
-    new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)
-  }
+                                      "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
+        if (nID == 0)
+            return(new("mzIDpsm"))
+        indMap <- list()
+        indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
+        new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)
+    }
 }

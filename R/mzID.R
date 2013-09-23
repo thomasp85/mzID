@@ -54,7 +54,7 @@ setClass('mzID',
              peptides = mzIDpeptides(),
              evidence = mzIDevidence(),
              database = mzIDdatabase())
-  )
+)
 
 #' Show method for mzID objects
 #' 
@@ -119,65 +119,39 @@ setMethod(
 #' 
 setMethod(
     'flatten', 'mzID',
-    function(object, no.redundancy=FALSE) {
-       flatPSM <- flatten(object@psm)
-       flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
-       flatEviData <- 
-          cbind(object@evidence@evidence,
-                object@database@database[
-                   match(object@evidence@evidence$dBSequence_ref,
-                         object@database@database$id), ])
-       flatEviData <- flatEviData[,!names(flatEviData) == 'id']
-       flatPep <- flatten(object@peptides)
-       flatPepEviData <- 
-          merge( flatPep, flatEviData, 
-                 by.x="id", by.y="peptide_ref", all=TRUE)
-       if(no.redundancy){
-          flatPepEviData <- 
-             flatPepEviData[!duplicated(flatPepEviData[,'id']),]
-       }
-       flatAll <- merge(flatPSM, flatPepEviData, 
-                        by.x='peptide_ref', by.y='id', all=TRUE)
-       flatAll$spectrumFile <- 
-          object@parameters@rawFile$name[
-             match(flatAll$spectraData_ref,
-                   object@parameters@rawFile$id)]
-       flatAll$databaseFile <- 
-          object@parameters@databaseFile$name[
-             match(flatAll$searchDatabase_ref,
-                   object@parameters@databaseFile$id)]
-       flatAll <- flatAll[, !grepl('_ref$', 
-                                   names(flatAll), 
-                                   perl=T) & 
-                             !names(flatAll) == 'id']
-       return(flatAll)
+    function(object, no.redundancy=TRUE) {
+        flatPSM <- flatten(object@psm)
+        flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
+        flatEviData <- 
+            cbind(object@evidence@evidence,
+                  object@database@database[
+                      match(object@evidence@evidence$dBSequence_ref,
+                            object@database@database$id), ])
+        flatEviData <- flatEviData[,!names(flatEviData) == 'id']
+        flatPep <- flatten(object@peptides)
+        flatPepEviData <- 
+            merge( flatPep, flatEviData, 
+                   by.x="id", by.y="peptide_ref", all=TRUE)
+        if(no.redundancy){
+            flatPepEviData <- 
+                flatPepEviData[!duplicated(flatPepEviData[,'id']),]
+        }
+        flatAll <- merge(flatPSM, flatPepEviData, 
+                         by.x='peptide_ref', by.y='id', all=TRUE)
+        flatAll$spectrumFile <- 
+            object@parameters@rawFile$name[
+                match(flatAll$spectraData_ref,
+                      object@parameters@rawFile$id)]
+        flatAll$databaseFile <- 
+            object@parameters@databaseFile$name[
+                match(flatAll$searchDatabase_ref,
+                      object@parameters@databaseFile$id)]
+        flatAll <- flatAll[, !grepl('_ref$', 
+                                    names(flatAll), 
+                                    perl=T) & 
+                               !names(flatAll) == 'id']
+        return(flatAll)
     })
-
-
-
-# setMethod(
-#    'flatten', 'mzID',
-#    function(object) {
-#       flatPSM <- flatten(object@psm)
-#       flatEviData <- cbind(object@evidence@evidence,
-#                            object@database@database[match(object@evidence@evidence$dBSequence_ref,
-#                                                           object@database@database$id), ])
-#       flatEviData <- flatEviData[,!names(flatEviData) == 'id']
-#       flatPep <- flatten(object@peptides)
-#       flatPepEviData <- cbind(flatPep, flatEviData[match(flatPep$id, flatEviData$peptide_ref), ])
-#       flatAll <- cbind(flatPSM, flatPepEviData[match(flatPSM$peptide_ref, flatPepEviData$id), ])
-#       flatAll$spectrumFile <- object@parameters@rawFile$name[match(flatAll$spectraData_ref,
-#                                                                    object@parameters@rawFile$id)]
-#       flatAll$databaseFile <- object@parameters@databaseFile$name[match(flatAll$searchDatabase_ref,
-#                                                                         object@parameters@databaseFile$id)]
-#       flatAll <- flatAll[, !grepl('_ref$', names(flatAll), perl=T) & !names(flatAll) == 'id']
-#       flatAll
-#    })
-
-
-
-
-
 
 #' Parse an mzIdentML file
 #' 
@@ -217,6 +191,8 @@ setMethod(
 #'
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
 #' @export
+#' 
+#' @importFrom XML xmlInternalTreeParse getDefaultNamespace
 #' 
 mzID <- function(file) {
     if (missing(file)) {
