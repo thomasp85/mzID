@@ -132,11 +132,13 @@ mzIDpsm <-function(doc, ns) {
                                      c('cvParam', 'userParam'))
         if (!is.null(idParam)) {
             id <- cbind(id, idParam)
-        } else {}
+        } 
         nID <-
             countChildren(doc, ns,
                           path=paste0(.path,
                                       "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
+        if (nID == 0)
+            return(new("mzIDpsm"))
         indMap <- list()
         indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
         new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)
