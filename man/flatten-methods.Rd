@@ -10,7 +10,7 @@
 \title{Flatten an mzID related class into a table}
 \arguments{
   \item{object}{The object to be flattened}
-  \item{no.redundancy}{logical; Controls peptide to protein mapping redundancy if the method called on \code{\link{mzID-class}} object. If TRUE then only one protein matching a peptide is reported. If FALSE (default) then all proteins containing a given peptide sequence present in the output.} 
+
   \item{...}{Additional parameters (currently unused)}
 }
 \value{

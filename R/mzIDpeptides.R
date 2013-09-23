@@ -38,7 +38,7 @@ setClass(
     representation=representation(
         peptides = 'data.frame',
         modifications = 'list'
-        ),
+    ),
     validity=function(object){
         if(nrow(object@peptides) != length(object@modifications) & length(object@modifications) != 0){
             stop('Dimensions must match between elements')
@@ -47,8 +47,8 @@ setClass(
     prototype=prototype(
         peptides = data.frame(),
         modifications = list()
-        )
     )
+)
 
 #' Show method for mzIDpeptides objects
 #' 
@@ -85,10 +85,10 @@ setMethod(
 #' @aliases length,mzIDpeptides-method
 #' 
 setMethod(
-		'length', 'mzIDpeptides',
-		function(x){
-			nrow(x@peptides)
-		}
+    'length', 'mzIDpeptides',
+    function(x){
+        nrow(x@peptides)
+    }
 )
 
 #' @rdname flatten-methods
@@ -96,19 +96,19 @@ setMethod(
 #' @aliases flatten,mzIDpeptides-method
 #' 
 setMethod(
-  'flatten', 'mzIDpeptides',
-  function(object){
-    ans <- object@peptides
-    ans$modification <- NA
-    nMod <- sapply(object@modifications[object@peptides$modified], nrow)
-    if(length(nMod) > 0){
-      modPasted <- do.call('rbind', object@modifications)
-      modPasted <- paste(modPasted$monoisotopicMassDelta, ' (', modPasted$location, ')', sep='')
-      modPasted <- sapply(split(modPasted, rep(1:length(nMod), nMod)), paste, collapse=', ')
-      ans$modification[ans$modified] <- modPasted 
+    'flatten', 'mzIDpeptides',
+    function(object){
+        ans <- object@peptides
+        ans$modification <- NA
+        nMod <- sapply(object@modifications[object@peptides$modified], nrow)
+        if(length(nMod) > 0){
+            modPasted <- do.call('rbind', object@modifications)
+            modPasted <- paste(modPasted$monoisotopicMassDelta, ' (', modPasted$location, ')', sep='')
+            modPasted <- sapply(split(modPasted, rep(1:length(nMod), nMod)), paste, collapse=', ')
+            ans$modification[ans$modified] <- modPasted 
+        }
+        ans
     }
-    ans
-  }
 )
 
 #' A constructor for the mzIDpeptides class
@@ -124,6 +124,8 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
+#' @importFrom XML xpathSApply xpathApply
+#' 
 mzIDpeptides <- function(doc, ns) {
     if (missing(doc)) {
         new(Class='mzIDpeptides')
@@ -133,12 +135,11 @@ mzIDpeptides <- function(doc, ns) {
         pepSeq <- xpathSApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
                               namespaces=ns, fun=xmlValue)
         modDF <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification"))
-        if (nrow(modDF) > 0) {
+        if (!is.null(modDF)) {
             ## not using xpathSApply, as does not always simplify
             ## -> using list and extract 'names' element 
-            modName <-
-                xpathApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam"),
-                           namespaces=ns, fun=xmlAttrs)
+            modName <- xpathApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam"),
+                                  namespaces=ns, fun=xmlAttrs)
             modName <- sapply(modName, "[", "name")
             nModPepID <- countChildren(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"), 'Modification')
             pepDF <- data.frame(pepID, pepSeq, modified=nModPepID > 0, stringsAsFactors=FALSE)
@@ -148,6 +149,6 @@ mzIDpeptides <- function(doc, ns) {
             pepDF <- data.frame(pepID, pepSeq, modified=FALSE, stringsAsFactors=FALSE)
             modList <- list()
         }
-        new(Class='mzIDpeptides',peptides=pepDF, modifications=modList)
+        new(Class='mzIDpeptides', peptides=pepDF, modifications=modList)
     }
 }

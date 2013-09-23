@@ -33,14 +33,14 @@ NULL
 #' @rdname mzIDevidence-class
 #' 
 setClass(
-  'mzIDevidence',
-  representation=representation(
-    evidence='data.frame'
+    'mzIDevidence',
+    representation=representation(
+        evidence='data.frame'
     ),
-  prototype=prototype(
-    evidence=data.frame()
+    prototype=prototype(
+        evidence=data.frame()
     )
-  )
+)
 
 #' Show method for mzIDevidence objects
 #' 
@@ -53,15 +53,15 @@ setClass(
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
 setMethod(
-  'show', 'mzIDevidence',
-  function(object){
-    if(length(object) == 0){
-      cat('An empty mzIDevidence object\n')
-    } else {
-      cat('An mzIDevidence object with', length(object), 'entries\n')
+    'show', 'mzIDevidence',
+    function(object){
+        if(length(object) == 0){
+            cat('An empty mzIDevidence object\n')
+        } else {
+            cat('An mzIDevidence object with', length(object), 'entries\n')
+        }
     }
-  }
-  )
+)
 
 #' Report the length of an mzIDevidence object
 #' 
@@ -75,11 +75,11 @@ setMethod(
 #' @aliases length,mzIDevidence-method
 #' 
 setMethod(
-  'length', 'mzIDevidence',
-  function(x){
-    nrow(x@evidence)
-  }
-  )
+    'length', 'mzIDevidence',
+    function(x){
+        nrow(x@evidence)
+    }
+)
 
 #' A constructor for the mzIDevidence class
 #' 
