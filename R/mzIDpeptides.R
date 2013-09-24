@@ -132,10 +132,13 @@ mzIDpeptides <- function(doc, ns) {
     } else {
         .path <- getPath(ns)
         pepID <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"))
+        if (nrow(pepID) == 0) {
+            return(new('mzIDpeptides'))
+        }
         pepSeq <- xpathSApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
                               namespaces=ns, fun=xmlValue)
         modDF <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification"))
-        if (!is.null(modDF)) {
+        if (nrow(modDF) != 0) {
             ## not using xpathSApply, as does not always simplify
             ## -> using list and extract 'names' element 
             modName <- xpathApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam"),
