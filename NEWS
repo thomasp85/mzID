@@ -1,3 +1,8 @@
+Version 0.99.4
+--------------------------------------------------------------------------------
+* Proper fix for issue #6. It now correctly parses files with empty AnalysisData
+  nodes as empty mzID objects.
+
 Version 0.99.3
 --------------------------------------------------------------------------------
 * Tentative fix for issue #6 <2013-09-23 Mon>
