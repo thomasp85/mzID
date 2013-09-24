@@ -67,26 +67,41 @@
 #' per node. If \code{length(child) > 1} or \code{simplify == FALSE} a named list with an element per
 #' child argument containing a vector giving the number of matches per node.
 #' 
+#' @importFrom XML xpathApply xmlAttrs 
+#' 
 countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE){
-  children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren)
-  ans <- list()
-  for(i in 1:length(child)){
-    childrenMatch <- names(unlist(children)) == child[i]
-    if(!missing(withPar)){
-      attrs <- xpathApply(doc, path=paste(path, '/x:', child, sep=''), namespaces=ns, xmlAttrs)
-      nodeLength <- sapply(attrs, length)
-      hasName <- sapply(split(names(unlist(attrs)) == withPar, rep(seq(along=nodeLength), nodeLength)), any)
-      childrenMatch[childrenMatch] <- hasName
-    } else {}
-    nChildren <- sapply(children, length)
-    nChildren[nChildren != 0] <- sapply(split(childrenMatch, rep(seq(along=nChildren), nChildren)), sum)
-    ans[[i]] <- nChildren
-  }
-  names(ans) <- child
-  if(simplify && length(child) == 1){
-    ans <- ans[[1]]
-  } else {}
-  ans
+    children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren)
+    if(length(children) == 0){
+        warning('The specified XPATH expression is empty')
+        ansErr <- rep(0, length(child))
+        names(ansErr) <- child
+        if(simplify && length(child) == 1){
+            ansErr <- ansErr[[1]]
+        } else {}
+        ansErr
+    } else {
+        ans <- list()
+        for(i in 1:length(child)){
+            childrenMatch <- names(unlist(children)) == child[i]
+            if(!missing(withPar)){
+                attrs <- lapply(unlist(children), xmlAttrs)[childrenMatch]
+                names(attrs) <- NULL
+#                attrs <- xpathApply(doc, path=paste(path, '/x:', child, sep=''), namespaces=ns, xmlAttrs)[childrenMatch]
+                attrs[sapply(attrs, is.null)] <- NA
+                nodeLength <- sapply(attrs, length)
+                hasName <- sapply(split(names(unlist(attrs)) == withPar, rep(seq(along=nodeLength), nodeLength)), any)
+                childrenMatch[childrenMatch] <- hasName
+            } else {}
+            nChildren <- sapply(children, length)
+            nChildren[nChildren != 0] <- sapply(split(childrenMatch, rep(seq(along=nChildren), nChildren)), sum)
+            ans[[i]] <- nChildren
+        }
+        names(ans) <- child
+        if(simplify && length(child) == 1){
+            ans <- ans[[1]]
+        } else {}
+        ans
+    }
 }
 
 #' An extension of type.convert() to handle XML like logicals (lower case)
@@ -100,11 +115,11 @@ countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE){
 #' @seealso \code{\link[utils]{type.convert}}
 #' 
 type.convert <- function(...){
-  x <- utils::type.convert(...)
-  if(all(unique(x) %in% c('true', 'false'))){
-    x <- as.logical(x)
-  } else {}
-  x
+    x <- utils::type.convert(...)
+    if(all(unique(x) %in% c('true', 'false'))){
+        x <- as.logical(x)
+    } else {}
+    x
 }
 
 #' Extract and properly format node attributes
@@ -124,32 +139,40 @@ type.convert <- function(...){
 #' the value in each node. If \code{length(child) > 1} a named list containing a data.frame for each child.
 #' NA values are inserted if an attribute is missing from a node.
 #' 
+#' @importFrom XML xpathSApply xmlAttrs
+#' @importFrom plyr rbind.fill.matrix
+#' 
 attrExtract <- function(doc, ns, path, child){
-  if(missing(child)){
-    attr <- xpathSApply(doc, path=path, namespaces=ns, fun=xmlAttrs)
-    if(is.list(attr)){
-      attr <- rbind.fill.matrix(lapply(attr, t))
-    } else if(length(attr) == 0){
-      attr <- matrix()
-    } else if(is.matrix(attr)){
-      attr <- t(attr)
+    if(missing(child)){
+        attr <- xpathSApply(doc, path=path, namespaces=ns, fun=xmlAttrs)
+        if(is.list(attr)){
+            isNULL <- sapply(attr, is.null)
+            attr <- attr[!isNULL]
+            attr <- rbind.fill.matrix(lapply(attr, function(x) if(!is.null(x)) t(x) else matrix()))
+            colnames <- colnames(attr)
+            attr <- replace(matrix(NA, length(isNULL), ncol(attr)), !isNULL, attr)
+            colnames(attr) <- colnames
+        } else if(length(attr) == 0){
+            attr <- matrix()
+        } else if(is.matrix(attr)){
+            attr <- t(attr)
+        } else {
+            attrName <- unique(names(attr))
+            attr <- data.frame(attr, stringsAsFactors=FALSE)
+            names(attr) <- attrName
+        }
+        attr <- data.frame(attr, stringsAsFactors=FALSE)
+        attr <- data.frame(lapply(attr, type.convert, as.is=TRUE), stringsAsFactors=FALSE)
+        attr
     } else {
-      attrName <- unique(names(attr))
-      attr <- data.frame(attr, stringsAsFactors=FALSE)
-      names(attr) <- attrName
+        attr <- list()
+        for(i in 1:length(child)){
+            pathChild <- paste(path, '/x:', child[i], sep='')
+            attr[[i]] <- attrExtract(doc, ns, pathChild)
+        }
+        names(attr) <- child
+        attr
     }
-    attr <- data.frame(attr, stringsAsFactors=FALSE)
-    attr <- data.frame(lapply(attr, type.convert, as.is=TRUE), stringsAsFactors=FALSE)
-    attr
-  } else {
-    attr <- list()
-    for(i in 1:length(child)){
-      pathChild <- paste(path, '/x:', child[i], sep='')
-      attr[[i]] <- attrExtract(doc, ns, pathChild)
-    }
-    names(attr) <- child
-    attr
-  }
 }
 
 #' Extract and format attributes from nodes with name and value attributes
@@ -173,39 +196,25 @@ attrExtract <- function(doc, ns, path, child){
 #' children.
 #' 
 attrExtractNameValuePair <- function(doc, ns, path, child){
-  lengthOut <- getNodeSet(doc, namespaces=ns, path=paste('count(', path, ')', sep=''))
-  attr <- attrExtract(doc, ns, path, child)
-  nAttrChild <- countChildren(doc, ns, path, child)
-  ans <- list()
-  for(i in 1:length(child)){
-    if(all(c('value', 'name') %in% names(attr[[i]]))){
-      attrSplit <- split(attr[[i]]$value, attr[[i]]$name)
-      attrIndex <- split(rep(1:length(nAttrChild[[i]]), nAttrChild[[i]]), attr[[i]]$name)
-      attrFinal <- data.frame(matrix(NA, ncol=length(attrSplit), nrow=lengthOut))
-      names(attrFinal) <- names(attrSplit)
-      for(j in 1:length(attrSplit)){
-        attrFinal[attrIndex[[j]], j] <- attrSplit[[j]]
-      }
-      ans[[i]] <- attrFinal
-    } else {}
-  }
-  ans <- ans[!sapply(ans, is.null)]
-  do.call('cbind', ans)
+    lengthOut <- getNodeSet(doc, namespaces=ns, path=paste('count(', path, ')', sep=''))
+    attr <- attrExtract(doc, ns, path, child)
+    nAttrChild <- countChildren(doc, ns, path, child, simplify=FALSE)
+    ans <- list()
+    for(i in 1:length(attr)){
+        if(all(c('value', 'name') %in% names(attr[[i]]))){
+            attrSplit <- split(attr[[i]]$value, attr[[i]]$name)
+            attrIndex <- split(rep(1:length(nAttrChild[[i]]), nAttrChild[[i]]), attr[[i]]$name)
+            attrFinal <- data.frame(matrix(NA, ncol=length(attrSplit), nrow=lengthOut))
+            names(attrFinal) <- names(attrSplit)
+            for(j in 1:length(attrSplit)){
+                attrFinal[attrIndex[[j]], j] <- attrSplit[[j]]
+            }
+            ans[[i]] <- attrFinal
+        } else {}
+    }
+    ans <- ans[!sapply(ans, is.null)]
+    do.call('cbind', ans)
 }
-
-
-## versionCheck <- function(version){
-##   versionSplit <- strsplit(version, '.', fixed=TRUE)[[1]]
-##   unSupport <- FALSE
-##   if(versionSplit[1] != 1){
-##     unSupport <- TRUE
-##   } else if(versionSplit[2] != 1){
-##     unSupport <- TRUE
-##   } else {}
-##   if(unSupport){
-##     warning(paste('Version: ', version, ' is not supported...', sep=''))
-##   } else {}
-## }
 
 
 #' Get the mzIdentML version and check that the version is supported
@@ -238,8 +247,10 @@ getPath <- function(ns) {
     v <- getVersion(ns)
     if (v == "1.0") {
         path <- '/x:mzIdentML'
-    } else {  ## v == "1.1"
+    } else if(v == "1.1"){
         path <- '/x:MzIdentML'
-    } 
+    } else {
+        stop("Version ", v, " unknown: only 1.0 and 1.1 supported.")
+    }
     return(path)
 }
