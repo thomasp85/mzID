@@ -106,7 +106,11 @@ mzIDevidence <- function(doc, ns) {
         } else { ## "1.0"
             evidence <- attrExtract(doc, ns,
                                     paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'))
+            evidence$peptide_ref <-
+                sub("PE", "peptide",
+                    substr(evidence$id, 1, 6))
         }        
-        new(Class='mzIDevidence', evidence=evidence)
+        new(Class = 'mzIDevidence',
+            evidence = colNamesToLower(evidence))
     }
 }

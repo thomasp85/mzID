@@ -142,6 +142,9 @@ mzIDpsm <-function(doc, ns) {
                                       "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
         indMap <- list()
         indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
-        new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)
+        new(Class = 'mzIDpsm',
+            scans = colNamesToLower(scans),
+            id = colNamesToLower(id),
+            mapping = indMap)
     }
 }
