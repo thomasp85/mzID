@@ -126,6 +126,7 @@ mzIDdatabase <- function(doc, ns){
             database$sequence <- NA
             database$sequence[hasSeq != 0] <- dbseq
         }
-        new(Class = 'mzIDdatabase', database =database)
+        new(Class = 'mzIDdatabase',
+            database = colNamesToLower(database))
     }
 }

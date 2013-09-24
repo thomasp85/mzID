@@ -254,3 +254,8 @@ getPath <- function(ns) {
     }
     return(path)
 }
+
+colNamesToLower <- function(x) {
+    colnames(x) <- casefold(colnames(x), upper=FALSE)
+    x
+}

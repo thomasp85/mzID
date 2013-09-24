@@ -152,6 +152,8 @@ mzIDpeptides <- function(doc, ns) {
             pepDF <- data.frame(pepID, pepSeq, modified=FALSE, stringsAsFactors=FALSE)
             modList <- list()
         }
-        new(Class='mzIDpeptides', peptides=pepDF, modifications=modList)
+        new(Class='mzIDpeptides',
+            peptides=colNamesToLower(pepDF),
+            modifications=modList)
     }
 }

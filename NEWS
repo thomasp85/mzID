@@ -2,6 +2,7 @@ Version 0.99.3
 --------------------------------------------------------------------------------
 * Fix for issue #6. It now correctly parses files with empty AnalysisData
   nodes as empty mzID objects.
+* Full support for mzIdentML v1.0 and v1.1 
 
 Version 0.99.2
 --------------------------------------------------------------------------------
