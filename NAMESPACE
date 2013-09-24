@@ -1,6 +1,7 @@
 export(mzID)
 exportClasses(mzID)
 exportMethods(flatten)
+import(methods)
 importFrom(plyr,rbind.fill.matrix)
 importFrom(XML,getDefaultNamespace)
 importFrom(XML,getNodeSet)
