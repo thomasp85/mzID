@@ -123,6 +123,9 @@ mzIDpsm <-function(doc, ns) {
             attrExtract(doc, ns,
                         path=paste0(.path,
                                     "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"))
+        if (nrow(scans) == 0) {
+            return(new("mzIDpsm"))
+        }
         id <-
             attrExtract(doc, ns,
                         path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"))
@@ -137,10 +140,6 @@ mzIDpsm <-function(doc, ns) {
             countChildren(doc, ns,
                           path=paste0(.path,
                                       "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
-
-        if (nID == 0) {
-            return(new("mzIDpsm"))
-        }
         indMap <- list()
         indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
         new(Class='mzIDpsm', scans=scans, id=id, mapping=indMap)
