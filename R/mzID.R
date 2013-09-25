@@ -125,14 +125,14 @@ setMethod(
         flatEviData <- 
             cbind(object@evidence@evidence,
                   object@database@database[
-                      match(object@evidence@evidence$dBSequence_ref,
+                      match(object@evidence@evidence$dbsequence_ref,
                             object@database@database$id), ])
         flatEviData <- flatEviData[,!names(flatEviData) == 'id']
         flatPep <- flatten(object@peptides)
         flatPepEviData <- 
             merge( flatPep, flatEviData, 
                    by.x="id", by.y="peptide_ref", all=TRUE)
-        if(no.redundancy){
+        if (no.redundancy) {
             flatPepEviData <- 
                 flatPepEviData[!duplicated(flatPepEviData[,'id']),]
         }
@@ -140,11 +140,11 @@ setMethod(
                          by.x='peptide_ref', by.y='id', all=TRUE)
         flatAll$spectrumFile <- 
             object@parameters@rawFile$name[
-                match(flatAll$spectraData_ref,
+                match(flatAll$spectradata_ref,
                       object@parameters@rawFile$id)]
         flatAll$databaseFile <- 
             object@parameters@databaseFile$name[
-                match(flatAll$searchDatabase_ref,
+1                match(flatAll$searchdatabase_ref,
                       object@parameters@databaseFile$id)]
         flatAll <- flatAll[, !grepl('_ref$', 
                                     names(flatAll), 
