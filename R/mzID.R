@@ -144,7 +144,7 @@ setMethod(
                       object@parameters@rawFile$id)]
         flatAll$databaseFile <- 
             object@parameters@databaseFile$name[
-1                match(flatAll$searchdatabase_ref,
+                match(flatAll$searchdatabase_ref,
                       object@parameters@databaseFile$id)]
         flatAll <- flatAll[, !grepl('_ref$', 
                                     names(flatAll), 
