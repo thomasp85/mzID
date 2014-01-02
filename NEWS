@@ -1,3 +1,12 @@
+Version 1.1.1
+--------------------------------------------------------------------------------
+* Fixed bug where multiple names in the modification rules would crash the
+  parsing. Multiple names gets collapsed with '/'
+
+Version 1.0.0
+--------------------------------------------------------------------------------
+* Accepted in Bioconductor
+
 Version 0.99.3
 --------------------------------------------------------------------------------
 * Fix for issue #6. It now correctly parses files with empty AnalysisData
