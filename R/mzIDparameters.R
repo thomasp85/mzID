@@ -441,11 +441,9 @@ getModifications <- function(doc, ns) {
         nset <- getNodeSet(doc,
                            paste0(.path, '/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:cvParam/@name'), namespaces=ns)
         if (length(nset) > 0) {
-            ModificationParams$name <- unlist(getNodeSet(doc, 
-                                                         paste0(.path, 
-                                                                '/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:cvParam/@name'), 
-                                                         namespaces=ns)
-            )
+            nNames <- countChildren(doc=doc, path=paste0(.path, '/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification'), ns=ns, child='cvParam',withPar='name')
+            modName <- split(unlist(nset), rep(1:nrow(ModificationParams), nNames))
+            ModificationParams$name <- sapply(modName, paste, collapse='/')
         } else {}
         ModificationParams$Specificity <- 'any'
         nset <- getNodeSet(doc, paste0(.path, '/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules'), namespaces=ns)
