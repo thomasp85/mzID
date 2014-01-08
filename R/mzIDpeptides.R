@@ -126,25 +126,38 @@ setMethod(
 #' 
 #' @importFrom XML xpathSApply xpathApply
 #' 
-mzIDpeptides <- function(doc, ns) {
+mzIDpeptides <- function(doc, ns, addFinalizer=FALSE) {
     if (missing(doc)) {
         new(Class='mzIDpeptides')
     } else {
         .path <- getPath(ns)
-        pepID <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"))
+        pepID <- attrExtract(doc, ns,
+                             path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
+                             addFinalizer=addFinalizer)
         if (nrow(pepID) == 0) {
             return(new('mzIDpeptides'))
         }
-        pepSeq <- xpathSApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
-                              namespaces=ns, fun=xmlValue)
-        modDF <- attrExtract(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification"))
+        pepSeq <- xpathSApply(doc,
+                              path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
+                              namespaces=ns,
+                              fun=xmlValue,
+                              addFinalizer=addFinalizer)
+        modDF <- attrExtract(doc, ns,
+                             path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification"),
+                             addFinalizer=addFinalizer)
         if (nrow(modDF) != 0) {
             ## not using xpathSApply, as does not always simplify
             ## -> using list and extract 'names' element 
-            modName <- xpathApply(doc, path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam"),
-                                  namespaces=ns, fun=xmlAttrs)
+            modName <- xpathApply(doc,
+                                  path=paste0(.path, "/x:SequenceCollection/x:Peptide/x:Modification/x:cvParam"),
+                                  namespaces=ns,
+                                  fun=xmlAttrs,
+                                  addFinalizer=addFinalizer)
             modName <- sapply(modName, "[", "name")
-            nModPepID <- countChildren(doc, ns, path=paste0(.path, "/x:SequenceCollection/x:Peptide"), 'Modification')
+            nModPepID <- countChildren(doc, ns,
+                                       path=paste0(.path, "/x:SequenceCollection/x:Peptide"),
+                                       'Modification',
+                                       addFinalizer=addFinalizer)
             pepDF <- data.frame(pepID, pepSeq, modified=nModPepID > 0, stringsAsFactors=FALSE)
             modList <- list()
             modList[nModPepID > 0] <- split(modDF, rep(1:length(nModPepID), nModPepID))

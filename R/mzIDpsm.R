@@ -114,7 +114,7 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
-mzIDpsm <-function(doc, ns) {
+mzIDpsm <-function(doc, ns, addFinalizer=FALSE) {
     if (missing(doc)) {
         new(Class='mzIDpsm')
     } else {
@@ -122,24 +122,27 @@ mzIDpsm <-function(doc, ns) {
         scans <-
             attrExtract(doc, ns,
                         path=paste0(.path,
-                                    "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"))
+                                    "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
+                        addFinalizer=addFinalizer)
         if (nrow(scans) == 0) {
             return(new("mzIDpsm"))
         }
-        id <-
-            attrExtract(doc, ns,
-                        path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"))
-        idParam <-
-            attrExtractNameValuePair(doc, ns,
+        id <- attrExtract(doc, ns,
+                        path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"),
+                        addFinalizer=addFinalizer)
+        idParam <- attrExtractNameValuePair(doc, ns,
                                      path=paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem'),
-                                     c('cvParam', 'userParam'))
+                                     c('cvParam', 'userParam'),
+                                     addFinalizer=addFinalizer)
         if (!is.null(idParam)) {
             id <- cbind(id, idParam)
         } else {}
         nID <-
             countChildren(doc, ns,
                           path=paste0(.path,
-                                      "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 'SpectrumIdentificationItem')
+                                      "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
+                          'SpectrumIdentificationItem',
+                          addFinalizer=addFinalizer)
         indMap <- list()
         indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
         new(Class = 'mzIDpsm',

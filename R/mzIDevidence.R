@@ -94,7 +94,7 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
-mzIDevidence <- function(doc, ns) {
+mzIDevidence <- function(doc, ns, addFinalizer=FALSE) {
     if (missing(doc)) {
         new(Class='mzIDevidence')
     } else {
@@ -102,10 +102,12 @@ mzIDevidence <- function(doc, ns) {
         .path <- getPath(ns)
         if (.version == "1.1") { 
             evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'))
+                                    paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'),
+                                    addFinalizer=addFinalizer)
         } else { ## "1.0"
             evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'))
+                                    paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'),
+                                    addFinalizer=addFinalizer)
             evidence$peptide_ref <-
                 sub("PE", "peptide",
                     substr(evidence$id, 1, 6))
