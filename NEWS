@@ -1,3 +1,8 @@
+Version 1.1.2
+--------------------------------------------------------------------------------
+* Added the possibility to create the different 'sub'classes of mzID directly
+  from a file without first having an internal xml representation and namespace
+
 Version 1.1.1
 --------------------------------------------------------------------------------
 * Fixed bug where multiple names in the modification rules would crash the
