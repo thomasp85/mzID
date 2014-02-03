@@ -81,7 +81,6 @@ setMethod(
 #' @return A \code{numeric} giving the number of psm's in the mzIDpsm object
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
-#' @aliases length,mzIDpsm-method
 #' 
 setMethod(
     'length', 'mzIDpsm',
@@ -91,8 +90,6 @@ setMethod(
 )
 
 #' @rdname flatten-methods
-#' @aliases flatten,mzIDpsm,ANY-method
-#' @aliases flatten,mzIDpsm-method
 #' 
 setMethod(
     'flatten', 'mzIDpsm',
@@ -109,6 +106,10 @@ setMethod(
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDpsm} object
 #' 

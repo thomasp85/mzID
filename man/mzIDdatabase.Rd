@@ -2,7 +2,7 @@
 \alias{mzIDdatabase}
 \title{A constructor for the mzIDdatabase class}
 \usage{
-  mzIDdatabase(doc, ns)
+mzIDdatabase(doc, ns, addFinalizer = FALSE, path)
 }
 \arguments{
   \item{doc}{an \code{XMLInternalDocument} created using
@@ -10,17 +10,23 @@
 
   \item{ns}{The appropriate namespace for the doc, as a
   named character vector with the namespace named x}
+
+  \item{addFinalizer}{\code{Logical} Sets whether reference
+  counting should be turned on}
+
+  \item{path}{If doc is missing the file specified here
+  will be parsed}
 }
 \value{
-  An \code{mzIDdatabase} object
+An \code{mzIDdatabase} object
 }
 \description{
-  This function handles parsing of data and construction of
-  an mzIDdatabase object. This function is not intended to
-  be called explicitly but as part of an mzID construction.
-  Thus, the function is not exported.
+This function handles parsing of data and construction of
+an mzIDdatabase object. This function is not intended to be
+called explicitly but as part of an mzID construction.
+Thus, the function is not exported.
 }
 \seealso{
-  \code{\link{mzIDdatabase-class}}
+\code{\link{mzIDdatabase-class}}
 }
 

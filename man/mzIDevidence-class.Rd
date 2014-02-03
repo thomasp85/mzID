@@ -1,20 +1,21 @@
+\docType{class}
 \name{mzIDevidence-class}
 \alias{mzIDevidence-class}
 \title{A class to store peptide evidence information from an mzIdentML file}
 \description{
-  This class handles parsing and storage of peptide
-  evidence information from mzIDentML files, residing at
-  the /*/x:SequenceCollection/x:PeptideEvidence node.
+This class handles parsing and storage of peptide evidence
+information from mzIDentML files, residing at the
+/*/x:SequenceCollection/x:PeptideEvidence node.
 }
 \details{
-  The content of the class is stored in a data.frame with
-  columns depending on the content of the mzIdentML file.
-  Columns represent the attribute values of for each
-  PeptideEvidence node. For files conforming to the HUPO
-  standard, dbSequence_ref, id and peptide_ref is required
-  while start, end, pre, post, name, isDecoy, frame and
-  translationTable_ref are optional. Information residing
-  in cvParam and userParam children are not parsed.
+The content of the class is stored in a data.frame with
+columns depending on the content of the mzIdentML file.
+Columns represent the attribute values of for each
+PeptideEvidence node. For files conforming to the HUPO
+standard, dbSequence_ref, id and peptide_ref is required
+while start, end, pre, post, name, isDecoy, frame and
+translationTable_ref are optional. Information residing in
+cvParam and userParam children are not parsed.
 }
 \section{Objects from the class}{
   Objects of mzIDevidence are not meant to be created
@@ -34,6 +35,6 @@
   peptide evidences} }
 }
 \seealso{
-  \code{\link{mzID-class}} \code{\link{mzIDevidence}}
+\code{\link{mzID-class}} \code{\link{mzIDevidence}}
 }
 

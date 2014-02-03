@@ -82,7 +82,6 @@ setMethod(
 #' @return A \code{numeric} giving the number of peptides in the mzIDpeptides object
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
-#' @aliases length,mzIDpeptides-method
 #' 
 setMethod(
     'length', 'mzIDpeptides',
@@ -92,8 +91,6 @@ setMethod(
 )
 
 #' @rdname flatten-methods
-#' @aliases flatten,mzIDpeptides,ANY-method
-#' @aliases flatten,mzIDpeptides-method
 #' 
 setMethod(
     'flatten', 'mzIDpeptides',
@@ -119,6 +116,10 @@ setMethod(
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDpeptides} object
 #' 

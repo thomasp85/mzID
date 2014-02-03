@@ -72,7 +72,6 @@ setMethod(
 #' @return A \code{numeric} giving the number of entries in the mzIDdatabase object
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
-#' @aliases length,mzIDdatabase-method
 #' 
 setMethod(
     'length', 'mzIDdatabase',
@@ -89,6 +88,10 @@ setMethod(
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDdatabase} object
 #' 

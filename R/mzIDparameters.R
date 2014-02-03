@@ -100,7 +100,6 @@ setMethod(
 #' @return A \code{numeric} giving the number raw datafiles used in the analysis
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
-#' @aliases length,mzIDparameters-method
 #' 
 setMethod(
     'length', 'mzIDparameters',
@@ -118,6 +117,10 @@ setMethod(
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDparameters} object
 #' 
@@ -164,6 +167,8 @@ mzIDparameters <- function(doc, ns, addFinalizer=FALSE, path){
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with a row for each software used, and columns with at least name and id of the software
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -192,6 +197,8 @@ getSoftware <- function(doc, ns, addFinalizer=FALSE){
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with a row for each raw data file used in the analysis and at least a column for the location and the ID format of the file. 
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -217,6 +224,8 @@ getRawFile <- function(doc, ns, addFinalizer=FALSE){
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @return A \code{data.frame} with a at least the location of the database stored
 #' 
@@ -252,6 +261,8 @@ getDatabaseFile <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{character} with the name of the search type (e.g. 'ms-ms search' or 'de novo search')
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -275,6 +286,8 @@ getSearchType <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with columns 'name' and 'value' storing the tresholds used
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -295,6 +308,8 @@ getThreshold <- function(doc, ns, addFinalizer=FALSE) {
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @return A \code{list} with names corresponding to the name attribute of the node, and content corresponding to the value attribute. If the node haven't got a a value attribute the content is set to TRUE
 #' 
@@ -347,6 +362,8 @@ getAdditionalPar <- function(doc, ns, addFinalizer=FALSE){
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with names of the enzymes as well as other settings related to the cleavage of proteins or \code{NULL} if no information is present
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -385,6 +402,8 @@ getEnzymes <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with the settings used for parent tolerance or \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -417,6 +436,8 @@ getParentTolerance <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with the settings used for fragment tolerance or \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -448,6 +469,8 @@ getFragmentTolerance <- function(doc, ns, addFinalizer=FALSE) {
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @return A \code{data.frame} with information on the modification settings in the search or \code{NULL} if none exists
 #' 
@@ -510,6 +533,8 @@ getModifications <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A \code{data.frame} with the masses used for each amino acid at the different ms levels \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
@@ -549,6 +574,8 @@ getMassTable <- function(doc, ns, addFinalizer=FALSE) {
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @return A \code{data.frame} with a translation table or \code{NULL} if none exists
 #' 
@@ -602,6 +629,8 @@ getDatabaseTranslation <- function(doc, ns, addFinalizer=FALSE) {
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @return \code{NULL}
 #' 

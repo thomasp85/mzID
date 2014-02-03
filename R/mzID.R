@@ -105,7 +105,6 @@ setMethod('show', 'mzID',
 #' @return A \code{numeric} giving the number of PSMs in the mzID object
 #' 
 #' @seealso \code{\link{mzID-class}}
-#' @aliases length,mzID-method
 #' 
 setMethod(
     'length', 'mzID',
@@ -114,12 +113,12 @@ setMethod(
     })
 
 #' @rdname flatten-methods
-#' @aliases flatten,mzID,ANY-method
-#' @aliases flatten,mzID-method
+#' 
+#' @param no.redundancy \code{Logical} Should duplicate peptides be removed. Default is \code{FALSE} as identical peptides from different proteins should normally be kept.
 #' 
 setMethod(
     'flatten', 'mzID',
-    function(object, no.redundancy=TRUE) {
+    function(object, no.redundancy=FALSE) {
         flatPSM <- flatten(object@psm)
         flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
         flatEviData <- 

@@ -63,6 +63,8 @@
 #' @param simplify (default=TRUE) A logical value giving whether the output should be returned as a
 #' dataframe if only one child is given
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return If \code{length(child) == 1} and \code{simplify == TRUE} a vector giving the number of matches
 #' per node. If \code{length(child) > 1} or \code{simplify == FALSE} a named list with an element per
 #' child argument containing a vector giving the number of matches per node.
@@ -135,6 +137,8 @@ type.convert <- function(...){
 #' 
 #' @param child A character vector giving the name of the children to search for
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return If \code{length(child) == 1} a data.frame with a column for each attribute name and rows giving
 #' the value in each node. If \code{length(child) > 1} a named list containing a data.frame for each child.
 #' NA values are inserted if an attribute is missing from a node.
@@ -190,6 +194,8 @@ attrExtract <- function(doc, ns, path, child, addFinalizer=FALSE){
 #' @param path An xpath expression giving the nodes to search in
 #' 
 #' @param child A character vector giving the name of the children to search for
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @return A data.frame with columns for each unique value in the name attribute of the nodes search in.
 #' The data.frame will have rows for each node in the path expression, regardless of whether it contains
