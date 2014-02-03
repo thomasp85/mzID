@@ -195,13 +195,13 @@ setMethod(
 #' @importFrom XML xmlInternalTreeParse getDefaultNamespace
 #' 
 mzID <- function(file) {
-    addFinalizer = FALSE
+    addFinalizer = TRUE
     if (missing(file)) {
         new(Class='mzID')
     } else {
-        doc <- xmlInternalTreeParse(file, addFinalizer=addFinalizer)
-        namespaceDef <- getDefaultNamespace(doc)
-        ns <- c(x=namespaceDef[[1]]$uri)
+        xml <- prepareXML(file)
+        doc <- xml$doc
+        ns <- xml$ns
         data <- new(Class = 'mzID',
             parameters = mzIDparameters(doc, ns, addFinalizer=addFinalizer),
             psm = mzIDpsm(doc, ns, addFinalizer=addFinalizer),
@@ -209,7 +209,8 @@ mzID <- function(file) {
             evidence = mzIDevidence(doc, ns, addFinalizer=addFinalizer),
             database = mzIDdatabase(doc, ns, addFinalizer=addFinalizer))
         free(doc)
-        rm(doc, namespaceDef, ns)
+        free(xml$doc)
+        rm(doc, ns, xml)
         gc()
         data
     }

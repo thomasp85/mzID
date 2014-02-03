@@ -94,25 +94,30 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
-mzIDevidence <- function(doc, ns, addFinalizer=FALSE) {
+mzIDevidence <- function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {
-        new(Class='mzIDevidence')
-    } else {
-        .version <- getVersion(ns)
-        .path <- getPath(ns)
-        if (.version == "1.1") { 
-            evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'),
-                                    addFinalizer=addFinalizer)
-        } else { ## "1.0"
-            evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'),
-                                    addFinalizer=addFinalizer)
-            evidence$peptide_ref <-
-                sub("PE", "peptide",
-                    substr(evidence$id, 1, 6))
-        }        
-        new(Class = 'mzIDevidence',
-            evidence = colNamesToLower(evidence))
+        if (missing(path)) {
+            return(new(Class = 'mzIDevidence'))
+        } else {
+            xml <- prepareXML(path)
+            doc <- xml$doc
+            ns <- xml$ns
+        }
     }
+    .version <- getVersion(ns)
+    .path <- getPath(ns)
+    if (.version == "1.1") { 
+        evidence <- attrExtract(doc, ns,
+                                paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'),
+                                addFinalizer=addFinalizer)
+    } else { ## "1.0"
+        evidence <- attrExtract(doc, ns,
+                                paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'),
+                                addFinalizer=addFinalizer)
+        evidence$peptide_ref <-
+            sub("PE", "peptide",
+                substr(evidence$id, 1, 6))
+    }        
+    new(Class = 'mzIDevidence',
+        evidence = colNamesToLower(evidence))
 }

@@ -259,3 +259,19 @@ colNamesToLower <- function(x) {
     colnames(x) <- casefold(colnames(x), upper=FALSE)
     x
 }
+
+#' Parses an xml file and defines the namespace
+#' 
+#' @param path The path to the xml file
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @return A list with the named elements: doc: the results of xmlInternalTreeParse and ns: the namespace as a vector.
+#' 
+#' @importFrom XML xmlInternalTreeParse
+prepareXML <- function(path, addFinalizer=FALSE) {
+    doc <- xmlInternalTreeParse(path, addFinalizer=addFinalizer)
+    namespaceDef <- getDefaultNamespace(doc)
+    ns <- c(x=namespaceDef[[1]]$uri)
+    list(doc=doc, ns=ns)
+}

@@ -114,40 +114,45 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
-mzIDpsm <-function(doc, ns, addFinalizer=FALSE) {
+mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {
-        new(Class='mzIDpsm')
-    } else {
-        .path <- getPath(ns)
-        scans <-
-            attrExtract(doc, ns,
-                        path=paste0(.path,
-                                    "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
-                        addFinalizer=addFinalizer)
-        if (nrow(scans) == 0) {
-            return(new("mzIDpsm"))
+        if (missing(path)) {
+            return(new(Class = 'mzIDpsm'))
+        } else {
+            xml <- prepareXML(path)
+            doc <- xml$doc
+            ns <- xml$ns
         }
-        id <- attrExtract(doc, ns,
-                        path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"),
-                        addFinalizer=addFinalizer)
-        idParam <- attrExtractNameValuePair(doc, ns,
-                                     path=paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem'),
-                                     c('cvParam', 'userParam'),
-                                     addFinalizer=addFinalizer)
-        if (!is.null(idParam)) {
-            id <- cbind(id, idParam)
-        } else {}
-        nID <-
-            countChildren(doc, ns,
-                          path=paste0(.path,
-                                      "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
-                          'SpectrumIdentificationItem',
-                          addFinalizer=addFinalizer)
-        indMap <- list()
-        indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
-        new(Class = 'mzIDpsm',
-            scans = colNamesToLower(scans),
-            id = colNamesToLower(id),
-            mapping = indMap)
     }
+    .path <- getPath(ns)
+    scans <-
+        attrExtract(doc, ns,
+                    path=paste0(.path,
+                                "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
+                    addFinalizer=addFinalizer)
+    if (nrow(scans) == 0) {
+        return(new("mzIDpsm"))
+    }
+    id <- attrExtract(doc, ns,
+                    path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"),
+                    addFinalizer=addFinalizer)
+    idParam <- attrExtractNameValuePair(doc, ns,
+                                 path=paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem'),
+                                 c('cvParam', 'userParam'),
+                                 addFinalizer=addFinalizer)
+    if (!is.null(idParam)) {
+        id <- cbind(id, idParam)
+    } else {}
+    nID <-
+        countChildren(doc, ns,
+                      path=paste0(.path,
+                                  "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
+                      'SpectrumIdentificationItem',
+                      addFinalizer=addFinalizer)
+    indMap <- list()
+    indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
+    new(Class = 'mzIDpsm',
+        scans = colNamesToLower(scans),
+        id = colNamesToLower(id),
+        mapping = indMap)
 }

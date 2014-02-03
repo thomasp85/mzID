@@ -123,32 +123,37 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
-mzIDparameters <- function(doc, ns, addFinalizer=FALSE){
+mzIDparameters <- function(doc, ns, addFinalizer=FALSE, path){
     if (missing(doc)) {
-        new(Class='mzIDparameters')
-    } else {
-        software <- getSoftware(doc, ns, addFinalizer=addFinalizer)
-        idFile <- docName(doc, addFinalizer=addFinalizer)
-        rawFile <- getRawFile(doc, ns, addFinalizer=addFinalizer)
-        databaseFile <- getDatabaseFile(doc, ns, addFinalizer=addFinalizer)
-        parameters <- list()
-        parameters$searchType <- getSearchType(doc, ns, addFinalizer=addFinalizer)
-        parameters$threshold <- getThreshold(doc, ns, addFinalizer=addFinalizer)
-        parameters <- c(parameters, getAdditionalPar(doc, ns, addFinalizer=addFinalizer))
-        parameters$enzymes <- getEnzymes(doc, ns, addFinalizer=addFinalizer)
-        parameters$ParentTolerance <- getParentTolerance(doc, ns, addFinalizer=addFinalizer)
-        parameters$FragmentTolerance <- getFragmentTolerance(doc, ns, addFinalizer=addFinalizer)
-        parameters$ModificationRules <- getModifications(doc, ns, addFinalizer=addFinalizer)
-        parameters$MassTable <- getMassTable(doc, ns, addFinalizer=addFinalizer)
-        parameters$TranslationTable <- getDatabaseTranslation(doc, ns, addFinalizer=addFinalizer)
-        parameters$DatabaseFilter <- getDatabaseFilter(doc, ns, addFinalizer=addFinalizer)
-        new(Class='mzIDparameters',
-            software=software,
-            rawFile=rawFile,
-            databaseFile=databaseFile,
-            idFile=idFile,
-            parameters=parameters)
+        if (missing(path)) {
+            return(new(Class = 'mzIDparameters'))
+        } else {
+            xml <- prepareXML(path)
+            doc <- xml$doc
+            ns <- xml$ns
+        }
     }
+    software <- getSoftware(doc, ns, addFinalizer=addFinalizer)
+    idFile <- docName(doc, addFinalizer=addFinalizer)
+    rawFile <- getRawFile(doc, ns, addFinalizer=addFinalizer)
+    databaseFile <- getDatabaseFile(doc, ns, addFinalizer=addFinalizer)
+    parameters <- list()
+    parameters$searchType <- getSearchType(doc, ns, addFinalizer=addFinalizer)
+    parameters$threshold <- getThreshold(doc, ns, addFinalizer=addFinalizer)
+    parameters <- c(parameters, getAdditionalPar(doc, ns, addFinalizer=addFinalizer))
+    parameters$enzymes <- getEnzymes(doc, ns, addFinalizer=addFinalizer)
+    parameters$ParentTolerance <- getParentTolerance(doc, ns, addFinalizer=addFinalizer)
+    parameters$FragmentTolerance <- getFragmentTolerance(doc, ns, addFinalizer=addFinalizer)
+    parameters$ModificationRules <- getModifications(doc, ns, addFinalizer=addFinalizer)
+    parameters$MassTable <- getMassTable(doc, ns, addFinalizer=addFinalizer)
+    parameters$TranslationTable <- getDatabaseTranslation(doc, ns, addFinalizer=addFinalizer)
+    parameters$DatabaseFilter <- getDatabaseFilter(doc, ns, addFinalizer=addFinalizer)
+    new(Class='mzIDparameters',
+        software=software,
+        rawFile=rawFile,
+        databaseFile=databaseFile,
+        idFile=idFile,
+        parameters=parameters)
 }
 
 #' Retrive information on the software used in the analysis
