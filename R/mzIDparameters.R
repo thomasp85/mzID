@@ -419,7 +419,7 @@ getParentTolerance <- function(doc, ns, addFinalizer=FALSE) {
                    addFinalizer=addFinalizer)
     if (length(nset) > 0) {
         ParentTolerance <- attrExtract(doc, ns,
-                                       paste0('/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ParentTolerance/x:cvParam'),
+                                       paste0(.path, '/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ParentTolerance/x:cvParam'),
                                        addFinalizer=addFinalizer)
         ParentTolerance
     } else {
