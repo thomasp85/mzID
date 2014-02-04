@@ -96,6 +96,7 @@ setMethod(
 #' @return An \code{mzIDevidence} object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
+#' @export
 #' 
 mzIDevidence <- function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {

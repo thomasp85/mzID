@@ -125,6 +125,7 @@ setMethod(
 #' @return An \code{mzIDparameters} object
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' @export
 #' 
 mzIDparameters <- function(doc, ns, addFinalizer=FALSE, path){
     if (missing(doc)) {

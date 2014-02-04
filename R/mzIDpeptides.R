@@ -126,6 +126,7 @@ setMethod(
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
 #' @importFrom XML xpathSApply xpathApply
+#' @export
 #' 
 mzIDpeptides <- function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {

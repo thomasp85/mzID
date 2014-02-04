@@ -98,6 +98,7 @@ setMethod(
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
 #' @importFrom XML getNodeSet xmlValue
+#' @export
 #' 
 mzIDdatabase <- function(doc, ns, addFinalizer=FALSE, path){
     if (missing(doc)) {

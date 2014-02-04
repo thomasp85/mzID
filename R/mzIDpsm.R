@@ -114,6 +114,7 @@ setMethod(
 #' @return An \code{mzIDpsm} object
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
+#' @export
 #' 
 mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {
