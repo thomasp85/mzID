@@ -148,7 +148,7 @@ type.convert <- function(...){
 #' 
 attrExtract <- function(doc, ns, path, child, addFinalizer=FALSE){
     if(missing(child)){
-        attr <- do.call('rbind', lapply(xpathApply(doc, path=path, namespaces=ns, fun=xmlAttrs, addFinalizer=addFinalizer), function(x) data.frame(lapply(x, type.convert))))
+        attr <- xpathApply(doc, path=path, namespaces=ns, fun=xmlAttrs, addFinalizer=addFinalizer)
         if(is.list(attr)){
             isNULL <- sapply(attr, is.null)
             attr <- attr[!isNULL]
