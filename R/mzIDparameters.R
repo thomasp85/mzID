@@ -126,6 +126,7 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' @export
+#' @importFrom XML docName
 #' 
 mzIDparameters <- function(doc, ns, addFinalizer=FALSE, path){
     if (missing(doc)) {
