@@ -1,4 +1,6 @@
 #' @include mzID.R
+#' @include generics.R
+#' @include aaa.R
 NULL
 
 #' @exportClass mzIDCollection
