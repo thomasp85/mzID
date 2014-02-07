@@ -19,11 +19,14 @@ Depends:
     methods,
     XML
 Imports:
-    plyr
+    plyr,
+    parallel,
+    doParallel,
+    foreach,
+    iterators
 Collate:
     'aaa.R'
     'generics.R'
-    'mzID-package.R'
     'mzIDpsm.R'
     'mzIDpeptides.R'
     'mzIDparameters.R'
@@ -31,3 +34,5 @@ Collate:
     'mzIDdatabase.R'
     'mzID.R'
     'mzIDCollection.R'
+    'mzID-constructor.R'
+    'mzID-package.R'
