@@ -51,10 +51,10 @@ NULL
 #' @export
 #' 
 #' @importFrom XML xmlInternalTreeParse getDefaultNamespace
-# ' @importFrom parallel makeCluster stopCluster
-# ' @importFrom iterators icount
-# ' @importFrom doParallel registerDoParallel
-# ' @importFrom foreach foreach %dopar%
+#' @importFrom parallel makeCluster stopCluster
+#' @importFrom iterators icount
+#' @importFrom doParallel registerDoParallel
+#' @importFrom foreach foreach %dopar%
 #' 
 mzID <- function(file, verbose=TRUE) {
     addFinalizer = TRUE
