@@ -11,7 +11,7 @@ setClass('mzIDCollection',
              .lookup = 'matrix'
          ),
          validity = function(object) {
-             if(!all(sapply(object@collection, function(x) {class(x) == 'mzID'}))) {
+             if(!all(sapply(object@data, function(x) {class(x) == 'mzID'}))) {
                  return('All elements must be mzID objects')
              }
              if(length(object) != 0 && length(object) != length(ls(object@data))) {
