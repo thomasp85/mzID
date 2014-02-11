@@ -40,6 +40,15 @@ setMethod('length', 'mzIDCollection',
               nrow(x@.lookup)
           }
 )
+setAs('mzIDCollection', 'list',
+      function(from) {
+          theList <- lapply(names(from), function(x) {from@data[[keyFor(from, x)]]})
+          names(theList) <- names(from)
+          theList
+      }
+    
+)
+as.list.mzIDCollection <- function(object) {as(object, 'list')}
 
 setMethod('increment', 'mzIDCollection',
           function(object) {
