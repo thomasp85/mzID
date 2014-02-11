@@ -140,14 +140,12 @@ setMethod('flatten', 'mzIDCollection',
 #' @export
 #' 
 mzIDCollection <- function(...) {
-    collection <- new(Class='mzIDCollection')
-    data <- list(...)
+    collection <- new(Class='mzIDCollection', data=new.env())
+    data <- eval(substitute(alist(...)))
     if(length(data) != 0) {
-        snames <- sapply(list(...), function(x){sub("\\.[^.]*$", "", basename(x@parameters@idFile))})
-        for(i in 1:length(snames)) {
-            varName <- paste0('key', increment(collection))
-            collection@.lookup <- rbind(collection@.lookup, c(snames[i], varName))
-            assign(varName, data[[i]], pos=collection@data)
+        for(i in 1:length(data)) {
+            obj <- data[[i]]
+            collection <- c(collection, eval.parent(obj))
         }
     }
     collection
