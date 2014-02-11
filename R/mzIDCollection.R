@@ -129,6 +129,14 @@ setMethod('c', 'mzIDCollection',
               
           }
 )
+
+
+setMethod('flatten', 'mzIDCollection',
+          function(object, no.redundancy=FALSE) {
+              rbind.fill(lapply(as.list(object), flatten, no.redundancy=no.redundancy))
+          }
+)
+
 #' @export
 #' 
 mzIDCollection <- function(...) {
