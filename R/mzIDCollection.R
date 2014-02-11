@@ -83,6 +83,43 @@ setMethod('[[', c('mzIDCollection', 'character', 'missing'),
           }
 )
 
+setMethod('c', 'mzID', 
+          function(x, y, ..., recursive=FALSE) {
+              if(missing(y)) {
+                  mzIDCollection(x)
+              } else if(class(y) == 'mzID') {
+                  x <- mzIDCollection(x, y)
+                  c(x, ...)
+              } else if(class(y) == 'mzIDCollection') {
+                  x <- c(y, x)
+                  x@.lookup <- x@.lookup[c(length(x), 1:(length(x)-1)),]
+                  c(x, ...)
+              } else {
+                  stop('Cannot combine mzID with objects of type', class(y))
+              }
+          }
+)
+setMethod('c', 'mzIDCollection', 
+          function(x, y, ..., recursive=FALSE) {
+              if(missing(y)) {
+                  x
+              } else if(class(y) == 'mzID') {
+                  sname <- sub("\\.[^.]*$", "", basename(y@parameters@idFile))
+                  varName <- paste0('key', increment(x))
+                  x@.lookup <- rbind(x@.lookup, c(sname, varName))
+                  assign(varName, y, pos=x@data)
+                  c(x, ...)
+              } else if(class(y) == 'mzIDCollection') {
+                  for(i in names(y)) {
+                      x <- c(x, y[[i]])
+                  }
+                  c(x, ...)
+              } else {
+                  stop('Cannot combine mzIDCollection with objects of type', class(y))
+              }
+              
+          }
+)
 #' @export
 #' 
 mzIDCollection <- function(...) {
