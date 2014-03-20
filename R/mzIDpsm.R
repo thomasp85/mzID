@@ -110,13 +110,15 @@ setMethod(
 #' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
 #' 
 #' @param path If doc is missing the file specified here will be parsed
+#'
+#' @param translateNativeIDs \code{logical} Should nativeIDs be replaced by their scan number? Default is \code{TRUE}
 #' 
 #' @return An \code{mzIDpsm} object
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' @export
 #' 
-mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
+mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path, translateNativeIDs=TRUE) {
     if (missing(doc)) {
         if (missing(path)) {
             return(new(Class = 'mzIDpsm'))
@@ -135,6 +137,11 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
     if (nrow(scans) == 0) {
         return(new("mzIDpsm"))
     }
+
+    if (translateNativeIDs) {
+      scans$spectrumID <- as.numeric(sub("^.*=([[:digit:]]+)$", "\\1", scans$spectrumID))
+    }
+
     id <- attrExtract(doc, ns,
                     path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"),
                     addFinalizer=addFinalizer)
