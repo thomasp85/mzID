@@ -139,7 +139,7 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path, translateNativeIDs=TRUE) {
     }
 
     if (translateNativeIDs) {
-      scans$spectrumID <- sub("^.*=([[:digit:]]+)$", "\\1", scans$spectrumID)
+      scans$spectrumID <- as.numeric(sub("^.*=([[:digit:]]+)$", "\\1", scans$spectrumID))
     }
 
     id <- attrExtract(doc, ns,
