@@ -20,6 +20,8 @@ NULL
 #' 
 #' @param file A character string giving the location of the mzIdentML file to be parsed
 #' 
+#' @param translateNativeIDs \code{logical} Should nativeIDs be replaced by their scan number? Default is \code{TRUE}
+#'
 #' @param verbose \code{Logical} Should information be printed to the console? Default is \code{TRUE}
 #' 
 #' @return An mzID object
@@ -56,7 +58,7 @@ NULL
 #' @importFrom doParallel registerDoParallel
 #' @importFrom foreach foreach %dopar%
 #' 
-mzID <- function(file, verbose=TRUE) {
+mzID <- function(file, translateNativeIDs=TRUE, verbose=TRUE) {
     addFinalizer = TRUE
     if (missing(file)) {
         new(Class='mzID')
@@ -67,7 +69,7 @@ mzID <- function(file, verbose=TRUE) {
         registerDoParallel(cl)
         res <- foreach( i=icount(length(file)), .packages=c("mzID"), .errorhandling='remove') %dopar% {
                 cat('reading ', basename(file[i]), '...\n', sep='')
-                ans <- mzID(file[i], verbose=FALSE)
+                ans <- mzID(file[i], translateNativeIDs=translateNativeIDs, verbose=FALSE)
                 cat(basename(file[i]), 'DONE!\n')
                 gc()
                 ans
@@ -84,7 +86,7 @@ mzID <- function(file, verbose=TRUE) {
         ns <- xml$ns
         data <- new(Class = 'mzID',
                     parameters = mzIDparameters(doc, ns, addFinalizer=addFinalizer),
-                    psm = mzIDpsm(doc, ns, addFinalizer=addFinalizer),
+                    psm = mzIDpsm(doc, ns, addFinalizer=addFinalizer, translateNativeIDs=translateNativeIDs),
                     peptides = mzIDpeptides(doc, ns, addFinalizer=addFinalizer),
                     evidence = mzIDevidence(doc, ns, addFinalizer=addFinalizer),
                     database = mzIDdatabase(doc, ns, addFinalizer=addFinalizer))
