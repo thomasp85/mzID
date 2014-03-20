@@ -135,6 +135,10 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
     if (nrow(scans) == 0) {
         return(new("mzIDpsm"))
     }
+    
+    ## create mzR compatible acquisitionNum column
+    scans$acquisitionNum <- as.numeric(sub("^.*=([[:digit:]]+)$", "\\1", scans$spectrumID))
+
     id <- attrExtract(doc, ns,
                     path=paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem"),
                     addFinalizer=addFinalizer)
