@@ -94,7 +94,7 @@ setMethod(
 setMethod(
     'flatten', 'mzIDpsm',
     function(object){
-        cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length)),],object@id)
+        cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length))[match(1:nrow(object@id),unlist(object@mapping))],],object@id)
     }
 )
 
