@@ -51,7 +51,7 @@ NULL
 #' @export
 #' 
 #' @importFrom XML xmlInternalTreeParse getDefaultNamespace
-#' @importFrom parallel makeCluster stopCluster
+#' @importFrom parallel makeCluster stopCluster detectCores()
 #' @importFrom iterators icount
 #' @importFrom doParallel registerDoParallel
 #' @importFrom foreach foreach %dopar%
