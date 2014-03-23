@@ -2,7 +2,7 @@
 \alias{mzIDevidence}
 \title{A constructor for the mzIDevidence class}
 \usage{
-  mzIDevidence(doc, ns)
+mzIDevidence(doc, ns, addFinalizer = FALSE, path)
 }
 \arguments{
   \item{doc}{an \code{XMLInternalDocument} created using
@@ -10,17 +10,23 @@
 
   \item{ns}{The appropriate namespace for the doc, as a
   named character vector with the namespace named x}
+
+  \item{addFinalizer}{\code{Logical} Sets whether reference
+  counting should be turned on}
+
+  \item{path}{If doc is missing the file specified here
+  will be parsed}
 }
 \value{
-  An \code{mzIDevidence} object
+An \code{mzIDevidence} object
 }
 \description{
-  This function handles parsing of data and construction of
-  an mzIDevidence object. This function is not intended to
-  be called explicitly but as part of an mzID construction.
-  Thus, the function is not exported.
+This function handles parsing of data and construction of
+an mzIDevidence object. This function is not intended to be
+called explicitly but as part of an mzID construction.
+Thus, the function is not exported.
 }
 \seealso{
-  \code{\link{mzIDevidence-class}}
+\code{\link{mzIDevidence-class}}
 }
 

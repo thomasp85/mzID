@@ -33,14 +33,14 @@ NULL
 #' @rdname mzIDevidence-class
 #' 
 setClass(
-  'mzIDevidence',
-  representation=representation(
-    evidence='data.frame'
+    'mzIDevidence',
+    representation=representation(
+        evidence='data.frame'
     ),
-  prototype=prototype(
-    evidence=data.frame()
+    prototype=prototype(
+        evidence=data.frame()
     )
-  )
+)
 
 #' Show method for mzIDevidence objects
 #' 
@@ -53,15 +53,15 @@ setClass(
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
 setMethod(
-  'show', 'mzIDevidence',
-  function(object){
-    if(length(object) == 0){
-      cat('An empty mzIDevidence object\n')
-    } else {
-      cat('An mzIDevidence object with', length(object), 'entries\n')
+    'show', 'mzIDevidence',
+    function(object){
+        if(length(object) == 0){
+            cat('An empty mzIDevidence object\n')
+        } else {
+            cat('An mzIDevidence object with', length(object), 'entries\n')
+        }
     }
-  }
-  )
+)
 
 #' Report the length of an mzIDevidence object
 #' 
@@ -72,14 +72,13 @@ setMethod(
 #' @return A \code{numeric} giving the number of peptide evidences in the mzIDevidence object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
-#' @aliases length,mzIDevidence-method
 #' 
 setMethod(
-  'length', 'mzIDevidence',
-  function(x){
-    nrow(x@evidence)
-  }
-  )
+    'length', 'mzIDevidence',
+    function(x){
+        nrow(x@evidence)
+    }
+)
 
 #' A constructor for the mzIDevidence class
 #' 
@@ -89,24 +88,40 @@ setMethod(
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#'
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDevidence} object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
+#' @export
 #' 
-mzIDevidence <- function(doc, ns) {
+mzIDevidence <- function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {
-        new(Class='mzIDevidence')
-    } else {
-        .version <- getVersion(ns)
-        .path <- getPath(ns)
-        if (.version == "1.1") { 
-            evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'))
-        } else { ## "1.0"
-            evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'))
-        }        
-        new(Class='mzIDevidence', evidence=evidence)
+        if (missing(path)) {
+            return(new(Class = 'mzIDevidence'))
+        } else {
+            xml <- prepareXML(path)
+            doc <- xml$doc
+            ns <- xml$ns
+        }
     }
+    .version <- getVersion(ns)
+    .path <- getPath(ns)
+    if (.version == "1.1") { 
+        evidence <- attrExtract(doc, ns,
+                                paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'),
+                                addFinalizer=addFinalizer)
+    } else { ## "1.0"
+        evidence <- attrExtract(doc, ns,
+                                paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'),
+                                addFinalizer=addFinalizer)
+        evidence$peptide_ref <-
+            sub("PE", "peptide",
+                substr(evidence$id, 1, 6))
+    }        
+    new(Class = 'mzIDevidence',
+        evidence = colNamesToLower(evidence))
 }

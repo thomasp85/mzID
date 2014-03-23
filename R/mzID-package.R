@@ -4,8 +4,7 @@
 #' 
 #' @author Thomas Dybdal Pedersen with contributions from Laurent Gatto
 #' 
-#' @import XML plyr
-#' 
+#' @import methods
 #' @docType package
 #' @name mzID-package
 #' 

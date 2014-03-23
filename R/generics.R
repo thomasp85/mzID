@@ -20,6 +20,16 @@
 #' head(flatten(mzResults))
 #' 
 setGeneric(
-  'flatten', 
-  def=function(object, ...){standardGeneric('flatten')}
-  )
+    'flatten', 
+    def=function(object, ...){standardGeneric('flatten')}
+)
+
+
+setGeneric(
+    'increment', 
+    def=function(object){standardGeneric('increment')}
+)
+setGeneric(
+    'keyFor', 
+    def=function(object, name){standardGeneric('keyFor')}
+)

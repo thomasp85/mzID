@@ -1,17 +1,18 @@
+\docType{class}
 \name{mzIDpsm-class}
 \alias{mzIDpsm-class}
 \title{A class to store psm information from an mzIdentML file}
 \description{
-  This class handles parsing and storage of scan info and
-  the related psm's. This information resides in the
-  /*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult
-  node.
+This class handles parsing and storage of scan info and the
+related psm's. This information resides in the
+/*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult
+node.
 }
 \details{
-  The content of the class is stored as two data frames:
-  One containing a row for each scan in the results, and
-  one containing all psm's in the results. Additionally a
-  list containing indexing from scan to psm is stored.
+The content of the class is stored as two data frames: One
+containing a row for each scan in the results, and one
+containing all psm's in the results. Additionally a list
+containing indexing from scan to psm is stored.
 }
 \section{Objects from the class}{
   Objects of mzIDpsm are not meant to be created explicitly
@@ -39,6 +40,6 @@
   psm's} }
 }
 \seealso{
-  \code{\link{mzID-class}} \code{\link{mzIDpsm}}
+\code{\link{mzID-class}} \code{\link{mzIDpsm}}
 }
 
