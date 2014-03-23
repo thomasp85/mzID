@@ -79,7 +79,7 @@ mzID <- function(file, verbose=TRUE) {
         return(do.call('mzIDCollection', res))
     } else {
         if(verbose) cat('reading ', basename(file), '...', sep='')
-        if(!isRemote(file) & !file.exists(file)) stop('file ', sQuote(file), ' does not exist!')
+        if(!isRemote(file) && !file.exists(file)) stop('file ', sQuote(file), ' does not exist!')
         xml <- prepareXML(file)
         doc <- xml$doc
         ns <- xml$ns
