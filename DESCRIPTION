@@ -16,9 +16,9 @@ LazyLoad: yes
 biocViews: DataImport, MassSpectrometry, Proteomics
 VignetteBuilder: knitr
 Depends:
-    methods,
-    XML
+    methods
 Imports:
+    XML,
     plyr,
     parallel,
     doParallel,

@@ -69,7 +69,7 @@
 #' per node. If \code{length(child) > 1} or \code{simplify == FALSE} a named list with an element per
 #' child argument containing a vector giving the number of matches per node.
 #' 
-#' @importFrom XML xpathApply xmlAttrs 
+#' @importFrom XML xpathApply xmlAttrs xmlChildren
 #' 
 countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE, addFinalizer=FALSE){
     children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren, addFinalizer=addFinalizer)
