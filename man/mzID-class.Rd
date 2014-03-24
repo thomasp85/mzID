@@ -1,15 +1,16 @@
+\docType{class}
 \name{mzID-class}
 \alias{mzID-class}
 \title{A class to contain data from mzIdentML-files}
 \description{
-  This class stores all parsed information from mzIdentML
-  files
+This class stores all parsed information from mzIdentML
+files
 }
 \details{
-  The mzID class stores information in a subset of classes,
-  each class having its own slot. While These classes
-  should not need to be accessed directly, but descriptions
-  of their content is delegated to each respective class.
+The mzID class stores information in a subset of classes,
+each class having its own slot. While These classes should
+not need to be accessed directly, but descriptions of their
+content is delegated to each respective class.
 }
 \section{Objects from the class}{
   Objects can be created using the \code{\link{mzID}}
@@ -44,13 +45,13 @@
   \item{\code{\link{flatten}}:}{...} }
 }
 \references{
-  \url{http://www.psidev.info/mzidentml}
+\url{http://www.psidev.info/mzidentml}
 }
 \seealso{
-  \code{\link{mzID}} \code{\link{mzIDparameters-class}}
-  \code{\link{mzIDpsm-class}}
-  \code{\link{mzIDpeptides-class}}
-  \code{\link{mzIDevidence-class}}
-  \code{\link{mzIDdatabase-class}}
+\code{\link{mzID}} \code{\link{mzIDparameters-class}}
+\code{\link{mzIDpsm-class}}
+\code{\link{mzIDpeptides-class}}
+\code{\link{mzIDevidence-class}}
+\code{\link{mzIDdatabase-class}}
 }
 

@@ -72,7 +72,6 @@ setMethod(
 #' @return A \code{numeric} giving the number of peptide evidences in the mzIDevidence object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
-#' @aliases length,mzIDevidence-method
 #' 
 setMethod(
     'length', 'mzIDevidence',
@@ -89,24 +88,40 @@ setMethod(
 #' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
 #' 
 #' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#'
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDevidence} object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
+#' @export
 #' 
-mzIDevidence <- function(doc, ns) {
+mzIDevidence <- function(doc, ns, addFinalizer=FALSE, path) {
     if (missing(doc)) {
-        new(Class='mzIDevidence')
-    } else {
-        .version <- getVersion(ns)
-        .path <- getPath(ns)
-        if (.version == "1.1") { 
-            evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'))
-        } else { ## "1.0"
-            evidence <- attrExtract(doc, ns,
-                                    paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'))
-        }        
-        new(Class='mzIDevidence', evidence=evidence)
+        if (missing(path)) {
+            return(new(Class = 'mzIDevidence'))
+        } else {
+            xml <- prepareXML(path)
+            doc <- xml$doc
+            ns <- xml$ns
+        }
     }
+    .version <- getVersion(ns)
+    .path <- getPath(ns)
+    if (.version == "1.1") { 
+        evidence <- attrExtract(doc, ns,
+                                paste0(.path, '/x:SequenceCollection/x:PeptideEvidence'),
+                                addFinalizer=addFinalizer)
+    } else { ## "1.0"
+        evidence <- attrExtract(doc, ns,
+                                paste0(.path, '/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult/x:SpectrumIdentificationItem/x:PeptideEvidence'),
+                                addFinalizer=addFinalizer)
+        evidence$peptide_ref <-
+            sub("PE", "peptide",
+                substr(evidence$id, 1, 6))
+    }        
+    new(Class = 'mzIDevidence',
+        evidence = colNamesToLower(evidence))
 }

@@ -1,20 +1,21 @@
+\docType{class}
 \name{mzIDpeptides-class}
 \alias{mzIDpeptides-class}
 \title{A class to store peptide information from an mzIdentML file}
 \description{
-  This class handles parsing and storage of peptide
-  information from mzIDentML files, residing at the
-  /x:MzIdentML/x:SequenceCollection/x:Peptide node.
+This class handles parsing and storage of peptide
+information from mzIDentML files, residing at the
+/x:MzIdentML/x:SequenceCollection/x:Peptide node.
 }
 \details{
-  The information is stored in a dataframe with an id, an
-  optinal name and the amino acid sequence of the peptide.
-  Alongside a list is stored with modification information
-  of each peptide. Each row in the dataframe has a
-  corresponding entry en the list. If no modification of
-  the peptide is present the entry is NULL, if a
-  modification is present the entry is a dataframe, listing
-  the different modifications of the peptide.
+The information is stored in a dataframe with an id, an
+optinal name and the amino acid sequence of the peptide.
+Alongside a list is stored with modification information of
+each peptide. Each row in the dataframe has a corresponding
+entry en the list. If no modification of the peptide is
+present the entry is NULL, if a modification is present the
+entry is a dataframe, listing the different modifications
+of the peptide.
 }
 \section{Objects from the class}{
   Objects of mzIDpeptides are not meant to be created
@@ -35,6 +36,6 @@
   peptides} }
 }
 \seealso{
-  \code{\link{mzID-class}} \code{\link{mzIDpeptides}}
+\code{\link{mzID-class}} \code{\link{mzIDpeptides}}
 }
 

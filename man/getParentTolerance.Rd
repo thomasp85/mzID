@@ -2,7 +2,7 @@
 \alias{getParentTolerance}
 \title{Looks for presence of parent tolerance settings and reports these if found}
 \usage{
-  getParentTolerance(doc, ns)
+getParentTolerance(doc, ns, addFinalizer = FALSE)
 }
 \arguments{
   \item{doc}{an \code{XMLInternalDocument} created using
@@ -10,17 +10,20 @@
 
   \item{ns}{The appropriate namespace for the doc, as a
   named character vector with the namespace named x}
+
+  \item{addFinalizer}{\code{Logical} Sets whether reference
+  counting should be turned on}
 }
 \value{
-  A \code{data.frame} with the settings used for parent
-  tolerance or \code{NULL} if none exists
+A \code{data.frame} with the settings used for parent
+tolerance or \code{NULL} if none exists
 }
 \description{
-  This function checks for the existence of
-  /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ParentTolerance
-  and if found reports these.
+This function checks for the existence of
+/MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ParentTolerance
+and if found reports these.
 }
 \seealso{
-  \code{\link{mzIDparameters-class}}
+\code{\link{mzIDparameters-class}}
 }
 

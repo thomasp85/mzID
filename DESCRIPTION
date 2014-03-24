@@ -1,10 +1,10 @@
 Package: mzID
 Type: Package
 Title: An mzIdentML parser for R
-Version: 1.1.0
+Version: 1.1.4
 Date: 2013-04-22
 Author: Thomas Dybdal Pedersen, Vladislav A Petyuk with contributions from
-    Laurent Gatto.
+    Laurent Gatto and Sebastian Gibb.
 Maintainer: Thomas Dybdal Pedersen <thomasp85@gmail.com>
 Description: A parser for mzIdentML files implemented using the XML package.
     The parser tries to be general and able to handle all types of mzIdentML
@@ -15,8 +15,24 @@ License: GPL (>= 2)
 LazyLoad: yes
 biocViews: DataImport, MassSpectrometry, Proteomics
 VignetteBuilder: knitr
-Depends: methods, XML
-Imports: plyr
-Collate: 'aaa.R' 'generics.R' 'mzIDpsm.R' 'mzIDpeptides.R'
-        'mzIDparameters.R' 'mzIDevidence.R' 'mzIDdatabase.R' 'mzID.R'
-        'mzID-package.R'
+Depends:
+    methods,
+    XML
+Imports:
+    plyr,
+    parallel,
+    doParallel,
+    foreach,
+    iterators
+Collate:
+    'aaa.R'
+    'generics.R'
+    'mzIDpsm.R'
+    'mzIDpeptides.R'
+    'mzIDparameters.R'
+    'mzIDevidence.R'
+    'mzIDdatabase.R'
+    'mzID.R'
+    'mzIDCollection.R'
+    'mzID-constructor.R'
+    'mzID-package.R'

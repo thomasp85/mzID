@@ -1,0 +1,22 @@
+.Rproj.user
+.Rhistory
+.Rapp.history
+.RData
+.Rbuildignore
+mzID.Rproj
+*.pper
+.Rproj.user/69438330/persistent-state
+.Rproj.user/69438330/sdb/prop/INDEX
+.Rproj.user/69438330/sdb/prop/INDEX
+
+.Rbuildignore
+
+.Rbuildignore
+
+mzID.Rproj
+
+*.Rproj
+=======
+vignettes/HOWTO_mzID.pdf
+
+>>>>>>> 9bfa0db2a61f140007048e5202ce1304de36e279

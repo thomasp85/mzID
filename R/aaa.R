@@ -63,14 +63,16 @@
 #' @param simplify (default=TRUE) A logical value giving whether the output should be returned as a
 #' dataframe if only one child is given
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return If \code{length(child) == 1} and \code{simplify == TRUE} a vector giving the number of matches
 #' per node. If \code{length(child) > 1} or \code{simplify == FALSE} a named list with an element per
 #' child argument containing a vector giving the number of matches per node.
 #' 
 #' @importFrom XML xpathApply xmlAttrs 
 #' 
-countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE){
-    children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren)
+countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE, addFinalizer=FALSE){
+    children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren, addFinalizer=addFinalizer)
     if(length(children) == 0){
         warning('The specified XPATH expression is empty')
         ansErr <- rep(0, length(child))
@@ -135,6 +137,8 @@ type.convert <- function(...){
 #' 
 #' @param child A character vector giving the name of the children to search for
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return If \code{length(child) == 1} a data.frame with a column for each attribute name and rows giving
 #' the value in each node. If \code{length(child) > 1} a named list containing a data.frame for each child.
 #' NA values are inserted if an attribute is missing from a node.
@@ -142,9 +146,9 @@ type.convert <- function(...){
 #' @importFrom XML xpathSApply xmlAttrs
 #' @importFrom plyr rbind.fill.matrix
 #' 
-attrExtract <- function(doc, ns, path, child){
+attrExtract <- function(doc, ns, path, child, addFinalizer=FALSE){
     if(missing(child)){
-        attr <- xpathSApply(doc, path=path, namespaces=ns, fun=xmlAttrs)
+        attr <- xpathApply(doc, path=path, namespaces=ns, fun=xmlAttrs, addFinalizer=addFinalizer)
         if(is.list(attr)){
             isNULL <- sapply(attr, is.null)
             attr <- attr[!isNULL]
@@ -168,7 +172,7 @@ attrExtract <- function(doc, ns, path, child){
         attr <- list()
         for(i in 1:length(child)){
             pathChild <- paste(path, '/x:', child[i], sep='')
-            attr[[i]] <- attrExtract(doc, ns, pathChild)
+            attr[[i]] <- attrExtract(doc, ns, pathChild, addFinalizer=addFinalizer)
         }
         names(attr) <- child
         attr
@@ -191,14 +195,16 @@ attrExtract <- function(doc, ns, path, child){
 #' 
 #' @param child A character vector giving the name of the children to search for
 #' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
 #' @return A data.frame with columns for each unique value in the name attribute of the nodes search in.
 #' The data.frame will have rows for each node in the path expression, regardless of whether it contains
 #' children.
 #' 
-attrExtractNameValuePair <- function(doc, ns, path, child){
-    lengthOut <- getNodeSet(doc, namespaces=ns, path=paste('count(', path, ')', sep=''))
-    attr <- attrExtract(doc, ns, path, child)
-    nAttrChild <- countChildren(doc, ns, path, child, simplify=FALSE)
+attrExtractNameValuePair <- function(doc, ns, path, child, addFinalizer=FALSE){
+    lengthOut <- getNodeSet(doc, namespaces=ns, path=paste('count(', path, ')', sep=''), addFinalizer=addFinalizer)
+    attr <- attrExtract(doc, ns, path, child, addFinalizer=addFinalizer)
+    nAttrChild <- countChildren(doc, ns, path, child, simplify=FALSE, addFinalizer=addFinalizer)
     ans <- list()
     for(i in 1:length(attr)){
         if(all(c('value', 'name') %in% names(attr[[i]]))){
@@ -253,4 +259,25 @@ getPath <- function(ns) {
         stop("Version ", v, " unknown: only 1.0 and 1.1 supported.")
     }
     return(path)
+}
+
+colNamesToLower <- function(x) {
+    colnames(x) <- casefold(colnames(x), upper=FALSE)
+    x
+}
+
+#' Parses an xml file and defines the namespace
+#' 
+#' @param path The path to the xml file
+#' 
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' 
+#' @return A list with the named elements: doc: the results of xmlInternalTreeParse and ns: the namespace as a vector.
+#' 
+#' @importFrom XML xmlInternalTreeParse
+prepareXML <- function(path, addFinalizer=FALSE) {
+    doc <- xmlInternalTreeParse(path, addFinalizer=addFinalizer)
+    namespaceDef <- getDefaultNamespace(doc)
+    ns <- c(x=namespaceDef[[1]]$uri)
+    list(doc=doc, ns=ns)
 }

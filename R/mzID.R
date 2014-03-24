@@ -105,7 +105,6 @@ setMethod('show', 'mzID',
 #' @return A \code{numeric} giving the number of PSMs in the mzID object
 #' 
 #' @seealso \code{\link{mzID-class}}
-#' @aliases length,mzID-method
 #' 
 setMethod(
     'length', 'mzID',
@@ -114,25 +113,25 @@ setMethod(
     })
 
 #' @rdname flatten-methods
-#' @aliases flatten,mzID,ANY-method
-#' @aliases flatten,mzID-method
+#' 
+#' @param no.redundancy \code{Logical} Should duplicate peptides be removed. Default is \code{FALSE} as identical peptides from different proteins should normally be kept.
 #' 
 setMethod(
     'flatten', 'mzID',
-    function(object, no.redundancy=TRUE) {
+    function(object, no.redundancy=FALSE) {
         flatPSM <- flatten(object@psm)
         flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
         flatEviData <- 
             cbind(object@evidence@evidence,
                   object@database@database[
-                      match(object@evidence@evidence$dBSequence_ref,
+                      match(object@evidence@evidence$dbsequence_ref,
                             object@database@database$id), ])
         flatEviData <- flatEviData[,!names(flatEviData) == 'id']
         flatPep <- flatten(object@peptides)
         flatPepEviData <- 
             merge( flatPep, flatEviData, 
                    by.x="id", by.y="peptide_ref", all=TRUE)
-        if(no.redundancy){
+        if (no.redundancy) {
             flatPepEviData <- 
                 flatPepEviData[!duplicated(flatPepEviData[,'id']),]
         }
@@ -140,11 +139,11 @@ setMethod(
                          by.x='peptide_ref', by.y='id', all=TRUE)
         flatAll$spectrumFile <- 
             object@parameters@rawFile$name[
-                match(flatAll$spectraData_ref,
+                match(flatAll$spectradata_ref,
                       object@parameters@rawFile$id)]
         flatAll$databaseFile <- 
             object@parameters@databaseFile$name[
-                match(flatAll$searchDatabase_ref,
+                match(flatAll$searchdatabase_ref,
                       object@parameters@databaseFile$id)]
         flatAll <- flatAll[, !grepl('_ref$', 
                                     names(flatAll), 
@@ -152,60 +151,3 @@ setMethod(
                                !names(flatAll) == 'id']
         return(flatAll)
     })
-
-#' Parse an mzIdentML file
-#' 
-#' This function takes a single mzIdentML file and parses it into an mzID object.
-#' 
-#' The mzID function uses the XML package to read the content of an mzIdentML file and store it in
-#' an mzID object. Unlike how mzR handles mzML files, mzID parses everything in one chunk. Memory
-#' can thus be a problem for very big datasets, but as mzIdentML files are not indexed, it is
-#' ineficient to access the data dynamically.
-#' 
-#' @param file A character string giving the location of the mzIdentML file to be parsed
-#' 
-#' @return An mzID object
-#' 
-#' @seealso \code{\link{mzID-class}}
-#' 
-#' @examples
-#' 
-#' # Parsing of the example files provided by HUPO:
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_tandem.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_omssa.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Sequest_example_ver1.1.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_NA_example.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_top_down_example.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/MPC_example_Multiple_search_engines.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/mascot_pmf_example.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Sequest_example_ver1.1.mzid")
-#'
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid")
-#'
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
-#' @export
-#' 
-#' @importFrom XML xmlInternalTreeParse getDefaultNamespace
-#' 
-mzID <- function(file) {
-    if (missing(file)) {
-        new(Class='mzID')
-    } else {
-        doc <- xmlInternalTreeParse(file)
-        namespaceDef <- getDefaultNamespace(doc)
-        ns <- c(x=namespaceDef[[1]]$uri)
-        new(Class = 'mzID',
-            parameters = mzIDparameters(doc, ns),
-            psm = mzIDpsm(doc, ns),
-            peptides = mzIDpeptides(doc, ns),
-            evidence = mzIDevidence(doc, ns),
-            database = mzIDdatabase(doc, ns))
-    }
-}
