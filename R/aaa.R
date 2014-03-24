@@ -281,3 +281,14 @@ prepareXML <- function(path, addFinalizer=FALSE) {
     ns <- c(x=namespaceDef[[1]]$uri)
     list(doc=doc, ns=ns)
 }
+
+#' Test whether a given string is a remote resource
+#' 
+#' @param path the path to the xml file
+#' 
+#' @return logical
+#' 
+isRemote <- function(x) {
+  grepl("^(http|ftp)[s]?://", x)
+}
+
