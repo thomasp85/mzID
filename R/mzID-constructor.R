@@ -50,7 +50,7 @@ NULL
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
 #' @export
 #' 
-#' @importFrom XML xmlInternalTreeParse getDefaultNamespace
+#' @importFrom XML xmlInternalTreeParse getDefaultNamespace free
 #' @importFrom parallel makeCluster stopCluster detectCores
 #' @importFrom iterators icount
 #' @importFrom doParallel registerDoParallel
@@ -79,7 +79,7 @@ mzID <- function(file, verbose=TRUE) {
         return(do.call('mzIDCollection', res))
     } else {
         if(verbose) cat('reading ', basename(file), '...', sep='')
-        if(!file.exists(file)) stop('file ', sQuote(file), ' does not exist!')
+        if(!isRemote(file) && !file.exists(file)) stop('file ', sQuote(file), ' does not exist!')
         xml <- prepareXML(file)
         doc <- xml$doc
         ns <- xml$ns
