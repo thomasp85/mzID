@@ -1,4 +1,11 @@
-Version 1.1.3
+Version 1.1.5
+--------------------------------------------------------------------------------
+* Now computes mzR compatible acquisitionNum for the scans (thanks to Sebastian
+  Gibb)
+* Checks for existence of local files (thanks to Sebastian Gibb)
+* XML moved from depend to import
+
+Version 1.1.4
 --------------------------------------------------------------------------------
 * Now computes mzR compatible acquisitionNum for the scans (thanks to Sebastion
   Gibb)
