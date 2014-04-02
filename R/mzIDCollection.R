@@ -3,7 +3,21 @@
 #' @include aaa.R
 NULL
 
+#' A class to handle a set of mzID objects
+#' 
+#' This class is a container for multiple mzID objects. It is constructed such
+#' that the bulk data are not copied when passed around. It is the aim that this
+#' class have parity with the mzID class in the methods it exposes to the user, 
+#' such that mzIDCollections can be thought of as vectors in the traditional R
+#' sense. Furthermore it accepts standard indexing and concatenation.
+#' 
+#' Objects of this class is usually constructed be passing mulitple files to the
+#' mzID constructor, or by combining mulitple mzID objects.
+#' 
+#' @name mzIDCollection-class
+#' 
 #' @exportClass mzIDCollection
+#' @rdname mzIDCollection-class
 #' 
 setClass('mzIDCollection',
          representation = representation(
@@ -25,6 +39,17 @@ setClass('mzIDCollection',
          )
 )
 
+#' Show method for mzIDCollection objects
+#' 
+#' This function gives a very brief overview of the content of an mzIDCollection
+#' object.
+#' 
+#' @param object An mzIDCollection object
+#' 
+#' @return NULL
+#' 
+#' @seealso \code{\link{mzIDCollection-class}}
+#' 
 setMethod('show', 'mzIDCollection',
           function(object) {
               if(length(object)) {
@@ -35,11 +60,24 @@ setMethod('show', 'mzIDCollection',
           }
 )
 
+#' Get the length of an mzIDCollection object
+#' 
+#' The length of an mzIDCollection object is defined as the number of mzID 
+#' objects it contain.
+#' 
+#' @param x An mzIDCollection object
+#' 
+#' @return An integer giving the number of mzID objects contained in the 
+#' mzIDCollection
+#' 
+#' @seealso \code{\link{mzIDCollection-class}}
+#' 
 setMethod('length', 'mzIDCollection',
           function(x) {
               nrow(x@.lookup)
           }
 )
+
 setAs('mzIDCollection', 'list',
       function(from) {
           theList <- lapply(names(from), function(x) {from@data[[keyFor(from, x)]]})
@@ -65,17 +103,46 @@ setMethod('keyFor', c('mzIDCollection', 'character'),
               as.vector(object@.lookup[names(object) == name, 'key'])
           }
 )
+
+#' Utility functions for mzIDCollection object
+#' 
+#' These functions provide list-like handling of mzIDCollection object. Their 
+#' behavior are fully in line with that of standard R lists.
+#' 
+#' @param x An mzIDCollection object
+#' 
+#' @rdname mzIDCollectionUtilities
+#' @docType methods
+#' @name Utilities
+#' 
 setMethod('names', 'mzIDCollection',
           function(x) {
               x@.lookup[,1]
           }
 )
+
+#' @rdname mzIDCollectionUtilities
+#' 
+#' @usage \S4method{names<-}{mzIDCollection}(x, value)
+#' 
+#' @param value A string giving the name(s) to set
+#' 
+#' @name Utilities
+#' @docType methods
+#' 
 setReplaceMethod('names', c('mzIDCollection', 'character'),
                  function(x, value) {
                      x@.lookup[, 1] <- value
                      x
                  }
 )
+
+#' @rdname mzIDCollectionUtilities
+#' 
+#' @param i An integer or a string giving the index or the name respectively
+#' @param j ignored
+#' @param ... ignored
+#' 
 setMethod('[[', c('mzIDCollection', 'numeric', 'missing'),
           function(x, i, j, ...) {
               if(length(i) != 1 || i <= 0 || i > length(x)) stop('subscript out of bounds')
@@ -83,6 +150,9 @@ setMethod('[[', c('mzIDCollection', 'numeric', 'missing'),
               x[[names(x)[i]]]
           }
 )
+
+#' @rdname mzIDCollectionUtilities
+#' 
 setMethod('[[', c('mzIDCollection', 'character', 'missing'),
           function(x, i, j, ...) {
               if(length(i) != 1) stop('subscript out of bounds')
@@ -92,6 +162,9 @@ setMethod('[[', c('mzIDCollection', 'character', 'missing'),
           }
 )
 
+#' @rdname mzIDCollectionUtilities
+#' 
+#' @param y An mzID or mzIDCollection object
 setMethod('c', 'mzID', 
           function(x, y, ..., recursive=FALSE) {
               if(missing(y)) {
@@ -108,6 +181,9 @@ setMethod('c', 'mzID',
               }
           }
 )
+
+#' @rdname mzIDCollectionUtilities
+#' 
 setMethod('c', 'mzIDCollection', 
           function(x, y, ..., recursive=FALSE) {
               if(missing(y)) {
@@ -130,13 +206,29 @@ setMethod('c', 'mzIDCollection',
           }
 )
 
+#' @rdname flatten-methods
+#' 
 #' @importFrom plyr rbind.fill
+#' 
 setMethod('flatten', 'mzIDCollection',
           function(object, no.redundancy=FALSE) {
               rbind.fill(lapply(as.list(object), flatten, no.redundancy=no.redundancy))
           }
 )
 
+#' Create a new mzIDCollection
+#' 
+#' This function creates a new mzIDCollection object containing the supplied 
+#' mzID object. As such the result is equivalent to passing a number of mzID
+#' objects to \code{c()}, except that an empty mzIDCollection object is returned
+#' if no mzID objects are supplied.
+#' 
+#' @param ... An arbitrary number of mzID objects
+#' 
+#' @return An mzIDCollection object
+#' 
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
+#' 
 #' @export
 #' 
 mzIDCollection <- function(...) {
