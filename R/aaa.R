@@ -284,7 +284,7 @@ prepareXML <- function(path, addFinalizer=FALSE) {
 
 #' Test whether a given string is a remote resource
 #' 
-#' @param path the path to the xml file
+#' @param x the path to the xml file
 #' 
 #' @return logical
 #' 

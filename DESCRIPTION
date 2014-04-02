@@ -1,11 +1,11 @@
 Package: mzID
 Type: Package
 Title: An mzIdentML parser for R
-Version: 1.1.5
+Version: 1.1.6
 Date: 2013-04-22
 Author: Thomas Lin Pedersen, Vladislav A Petyuk with contributions from
     Laurent Gatto and Sebastian Gibb.
-Maintainer: Thomas Dybdal Pedersen <thomasp85@gmail.com>
+Maintainer: Thomas Lin Pedersen <thomasp85@gmail.com>
 Description: A parser for mzIdentML files implemented using the XML package.
     The parser tries to be general and able to handle all types of mzIdentML
     files with the drawback of having less 'pretty' output than a vendor

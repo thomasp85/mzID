@@ -2,6 +2,7 @@
 \name{flatten}
 \alias{flatten}
 \alias{flatten,mzID-method}
+\alias{flatten,mzIDCollection-method}
 \alias{flatten,mzIDpeptides-method}
 \alias{flatten,mzIDpsm-method}
 \title{Flatten an mzID related class into a table}
@@ -9,6 +10,8 @@
 flatten(object, ...)
 
 \S4method{flatten}{mzID}(object, no.redundancy = FALSE)
+
+\S4method{flatten}{mzIDCollection}(object, no.redundancy = FALSE)
 
 \S4method{flatten}{mzIDpeptides}(object)
 

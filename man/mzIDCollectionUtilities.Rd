@@ -1,0 +1,45 @@
+\docType{methods}
+\name{Utilities}
+\alias{Utilities}
+\alias{[[,mzIDCollection,character,missing-method}
+\alias{[[,mzIDCollection,numeric,missing-method}
+\alias{c,mzID-method}
+\alias{c,mzIDCollection-method}
+\title{Utility functions for mzIDCollection object}
+\usage{
+\S4method{names}{mzIDCollection}(x)
+
+\S4method{names<-}{mzIDCollection}(x, value)
+
+\S4method{[[}{mzIDCollection,numeric,missing}(x, i, j, ...)
+
+\S4method{[[}{mzIDCollection,character,missing}(x, i, j, ...)
+
+\S4method{c}{mzID}(x, y, ..., recursive = FALSE)
+
+\S4method{c}{mzIDCollection}(x, y, ..., recursive = FALSE)
+}
+\arguments{
+  \item{x}{An mzIDCollection object}
+
+  \item{value}{A string giving the name(s) to set}
+
+  \item{i}{An integer or a string giving the index or the
+  name respectively}
+
+  \item{j}{ignored}
+
+  \item{...}{ignored}
+
+  \item{y}{An mzID or mzIDCollection object}
+
+  \item{recursive}{logical.  If \code{recursive = TRUE},
+  the function recursively descends through lists (and
+  pairlists) combining all their elements into a vector.}
+}
+\description{
+These functions provide list-like handling of
+mzIDCollection object. Their behavior are fully in line
+with that of standard R lists.
+}
+
