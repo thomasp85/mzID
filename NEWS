@@ -1,3 +1,12 @@
+Version 1.3.1
+________________________________________________________________________________
+* Fixed bug that would cause error on files with no modifications in the search
+  parameters
+
+Version 1.2
+________________________________________________________________________________
+* Release on Bioconductor
+
 Version 1.1.6
 ________________________________________________________________________________
 * Added documentation
