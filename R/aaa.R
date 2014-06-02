@@ -120,7 +120,12 @@ type.convert <- function(...){
     x <- utils::type.convert(...)
     if(all(unique(x) %in% c('true', 'false'))){
         x <- as.logical(x)
-    } else {}
+    } else {
+        xNum <- suppressWarnings(as.numeric(x))
+        if(sum(is.na(x)) == sum(is.na(xNum))){
+            x <- xNum
+        }
+    }
     x
 }
 
