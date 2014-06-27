@@ -34,7 +34,7 @@ NULL
 #' 
 setClass(
     'mzIDevidence',
-    representation=representation(
+    slots=list(
         evidence='data.frame'
     ),
     prototype=prototype(

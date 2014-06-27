@@ -34,7 +34,7 @@ NULL
 #' 
 setClass(
     'mzIDpsm',
-    representation=representation(
+    slots=list(
         scans='data.frame',
         id='data.frame',
         mapping='list'

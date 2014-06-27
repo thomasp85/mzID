@@ -38,7 +38,7 @@ NULL
 #' 
 setClass(
     'mzIDparameters',
-    representation=representation(
+    slots=list(
         software='data.frame',
         rawFile='data.frame',
         databaseFile='data.frame',
