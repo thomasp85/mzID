@@ -42,7 +42,7 @@ NULL
 #' @rdname mzID-class
 #' 
 setClass('mzID',
-         representation = representation(
+         slots = list(
              parameters = 'mzIDparameters',
              psm = 'mzIDpsm',
              peptides = 'mzIDpeptides',

@@ -69,7 +69,7 @@
 #' per node. If \code{length(child) > 1} or \code{simplify == FALSE} a named list with an element per
 #' child argument containing a vector giving the number of matches per node.
 #' 
-#' @importFrom XML xpathApply xmlAttrs 
+#' @importFrom XML xpathApply xmlAttrs xmlChildren
 #' 
 countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE, addFinalizer=FALSE){
     children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren, addFinalizer=addFinalizer)
@@ -120,7 +120,12 @@ type.convert <- function(...){
     x <- utils::type.convert(...)
     if(all(unique(x) %in% c('true', 'false'))){
         x <- as.logical(x)
-    } else {}
+    } else {
+        xNum <- suppressWarnings(as.numeric(x))
+        if(sum(is.na(x)) == sum(is.na(xNum))){
+            x <- xNum
+        }
+    }
     x
 }
 
@@ -281,3 +286,14 @@ prepareXML <- function(path, addFinalizer=FALSE) {
     ns <- c(x=namespaceDef[[1]]$uri)
     list(doc=doc, ns=ns)
 }
+
+#' Test whether a given string is a remote resource
+#' 
+#' @param x the path to the xml file
+#' 
+#' @return logical
+#' 
+isRemote <- function(x) {
+  grepl("^(http|ftp)[s]?://", x)
+}
+

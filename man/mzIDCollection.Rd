@@ -1,0 +1,23 @@
+\name{mzIDCollection}
+\alias{mzIDCollection}
+\title{Create a new mzIDCollection}
+\usage{
+mzIDCollection(...)
+}
+\arguments{
+  \item{...}{An arbitrary number of mzID objects}
+}
+\value{
+An mzIDCollection object
+}
+\description{
+This function creates a new mzIDCollection object
+containing the supplied mzID object. As such the result is
+equivalent to passing a number of mzID objects to
+\code{c()}, except that an empty mzIDCollection object is
+returned if no mzID objects are supplied.
+}
+\seealso{
+\code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
+}
+

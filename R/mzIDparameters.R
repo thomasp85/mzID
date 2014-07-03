@@ -38,7 +38,7 @@ NULL
 #' 
 setClass(
     'mzIDparameters',
-    representation=representation(
+    slots=list(
         software='data.frame',
         rawFile='data.frame',
         databaseFile='data.frame',
@@ -498,7 +498,9 @@ getModifications <- function(doc, ns, addFinalizer=FALSE) {
                                     addFinalizer=addFinalizer)
             modName <- split(unlist(nset), rep(1:nrow(ModificationParams), nNames))
             ModificationParams$name <- sapply(modName, paste, collapse='/')
-        } else {}
+        } else {
+            return(NULL)
+        }
         ModificationParams$Specificity <- 'any'
         nset <- getNodeSet(doc,
                            paste0(.path, '/x:AnalysisProtocolCollection/x:SpectrumIdentificationProtocol/x:ModificationParams/x:SearchModification/x:SpecificityRules'),
