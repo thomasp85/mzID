@@ -20,7 +20,7 @@ NULL
 #' @rdname mzIDCollection-class
 #' 
 setClass('mzIDCollection',
-         representation = representation(
+         slots = list(
              data = 'environment',
              .lookup = 'matrix'
          ),

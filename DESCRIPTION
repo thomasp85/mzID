@@ -24,7 +24,6 @@ Imports:
     doParallel,
     foreach,
     iterators
-Suggests: knitr
 Collate:
     'aaa.R'
     'generics.R'

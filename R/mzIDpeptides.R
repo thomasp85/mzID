@@ -35,7 +35,7 @@ NULL
 #'
 setClass(
     'mzIDpeptides',
-    representation=representation(
+    slots=list(
         peptides = 'data.frame',
         modifications = 'list'
     ),

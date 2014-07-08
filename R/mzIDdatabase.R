@@ -34,7 +34,7 @@ NULL
 #' 
 setClass(
     'mzIDdatabase',
-    representation=representation(
+    slots=list(
         database='data.frame'
     ),
     prototype=prototype(
