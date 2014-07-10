@@ -100,8 +100,8 @@ setMethod(
 #' 
 setMethod(
     'flatten', 'mzIDpeptides',
-    function(object){
-        ans <- object@peptides
+    function(object, safeNames=TRUE){
+        ans <- peptides(object, safeNames=safeNames)
         ans$modification <- NA
         nMod <- sapply(object@modifications[object@peptides$modified], nrow)
         if(length(nMod) > 0){

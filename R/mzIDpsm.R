@@ -99,6 +99,11 @@ setMethod(
 #' 
 setMethod(
     'flatten', 'mzIDpsm',
+    function(object, safeNames=TRUE){
+        cbind(scans(object, safeNames=safeNames)[rep(1:length(object@mapping), sapply(object@mapping, length))[match(1:nrow(object@id),unlist(object@mapping))],],id(object, safeNames=safeNames))
+    }
+)
+
 #' See mzID-getters
 #' 
 #' @noRd
@@ -134,7 +139,6 @@ setMethod(
 setMethod(
     'idScanMap', 'mzIDpsm',
     function(object){
-        cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length))[match(1:nrow(object@id),unlist(object@mapping))],],object@id)
         object@mapping
     }
 )
