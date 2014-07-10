@@ -42,12 +42,19 @@ NULL
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/MPC_example_Multiple_search_engines.mzid")
 #' 
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/mascot_pmf_example.mzid")
-#' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Sequest_example_ver1.1.mzid")
 #'
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid")
 #'
 #' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
+#' 
+#' # Parsing into an mzIDCollection
+#' collection <- mzID(c(
+#'     "http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_tandem.mzid",
+#'     "http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_omssa.mzid",
+#'     "http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid"
+#' ))
+#' names(collection)
+#' 
 #' @export
 #' 
 #' @importFrom XML xmlInternalTreeParse getDefaultNamespace free
