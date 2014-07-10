@@ -52,6 +52,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDevidence',
     function(object){
@@ -72,6 +74,8 @@ setMethod(
 #' @return A \code{numeric} giving the number of peptide evidences in the mzIDevidence object
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
+#' 
+#' @noRd
 #' 
 setMethod(
     'length', 'mzIDevidence',

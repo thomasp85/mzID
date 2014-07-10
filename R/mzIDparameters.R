@@ -34,7 +34,7 @@ NULL
 #' 
 #' @seealso \code{\link{mzID-class}} \code{\link{mzIDparameters}}
 #' 
-#' @rdname mzIDdatabase-class
+#' @rdname mzIDparameters-class
 #' 
 setClass(
     'mzIDparameters',
@@ -62,6 +62,8 @@ setClass(
 #' @return A description of the content of the mzIDparameters object
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' 
+#' @noRd
 #' 
 setMethod(
     'show', 'mzIDparameters',
@@ -100,6 +102,8 @@ setMethod(
 #' @return A \code{numeric} giving the number raw datafiles used in the analysis
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' 
+#' @noRd
 #' 
 setMethod(
     'length', 'mzIDparameters',
@@ -177,6 +181,8 @@ mzIDparameters <- function(doc, ns, addFinalizer=FALSE, path){
 #' 
 #' @importFrom XML getNodeSet
 #' 
+#' @noRd
+#' 
 getSoftware <- function(doc, ns, addFinalizer=FALSE){
     .path <- getPath(ns)
     software <- attrExtract(doc, ns, paste0(.path, '/x:AnalysisSoftwareList/x:AnalysisSoftware'), addFinalizer=addFinalizer)
@@ -207,6 +213,8 @@ getSoftware <- function(doc, ns, addFinalizer=FALSE){
 #' 
 #' @importFrom XML getNodeSet
 #' 
+#' @noRd
+#' 
 getRawFile <- function(doc, ns, addFinalizer=FALSE){
     .path <- getPath(ns)
     rawFile <- attrExtract(doc, ns, paste0(.path, '/x:DataCollection/x:Inputs/x:SpectraData'), addFinalizer=addFinalizer)
@@ -234,6 +242,8 @@ getRawFile <- function(doc, ns, addFinalizer=FALSE){
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 #' @importFrom XML getNodeSet
+#' 
+#' @noRd
 #' 
 getDatabaseFile <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
@@ -270,6 +280,8 @@ getDatabaseFile <- function(doc, ns, addFinalizer=FALSE) {
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 #' @importFrom XML getNodeSet
+#' 
+#' @noRd
 #'
 getSearchType <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
@@ -293,6 +305,8 @@ getSearchType <- function(doc, ns, addFinalizer=FALSE) {
 #' @return A \code{data.frame} with columns 'name' and 'value' storing the tresholds used
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' 
+#' @noRd
 #' 
 getThreshold <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
@@ -318,6 +332,8 @@ getThreshold <- function(doc, ns, addFinalizer=FALSE) {
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 #' @importFrom XML getNodeSet xpathApply
+#' 
+#' @noRd
 #' 
 getAdditionalPar <- function(doc, ns, addFinalizer=FALSE){
     .path <- getPath(ns)
@@ -372,6 +388,8 @@ getAdditionalPar <- function(doc, ns, addFinalizer=FALSE){
 #' 
 #' @importFrom XML getNodeSet
 #' 
+#' @noRd
+#' 
 getEnzymes <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
     nset <- getNodeSet(doc,
@@ -412,6 +430,8 @@ getEnzymes <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @importFrom XML getNodeSet
 #' 
+#' @noRd
+#' 
 getParentTolerance <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
     nset <-
@@ -446,6 +466,8 @@ getParentTolerance <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @importFrom XML getNodeSet
 #' 
+#' @noRd
+#' 
 getFragmentTolerance <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
     nset <-
@@ -479,6 +501,8 @@ getFragmentTolerance <- function(doc, ns, addFinalizer=FALSE) {
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 #' @importFrom XML getNodeSet
+#' 
+#' @noRd
 #' 
 getModifications <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
@@ -545,6 +569,8 @@ getModifications <- function(doc, ns, addFinalizer=FALSE) {
 #' 
 #' @importFrom XML getNodeSet
 #' 
+#' @noRd
+#' 
 getMassTable <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
     nset <- getNodeSet(doc,
@@ -586,6 +612,8 @@ getMassTable <- function(doc, ns, addFinalizer=FALSE) {
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
 #' @importFrom XML getNodeSet
+#' 
+#' @noRd
 #' 
 getDatabaseTranslation <- function(doc, ns, addFinalizer=FALSE) {
     .path <- getPath(ns)
@@ -639,6 +667,8 @@ getDatabaseTranslation <- function(doc, ns, addFinalizer=FALSE) {
 #' @return \code{NULL}
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' 
+#' @noRd
 #' 
 getDatabaseFilter <- function(doc, ns, addFinalizer=FALSE){
     NULL

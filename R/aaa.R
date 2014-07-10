@@ -71,6 +71,8 @@
 #' 
 #' @importFrom XML xpathApply xmlAttrs xmlChildren
 #' 
+#' @noRd
+#' 
 countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE, addFinalizer=FALSE){
     children <- xpathApply(doc, path=path, namespaces=ns, fun=xmlChildren, addFinalizer=addFinalizer)
     if(length(children) == 0){
@@ -116,6 +118,8 @@ countChildren <- function(doc, ns, path, child, withPar, simplify=TRUE, addFinal
 #' 
 #' @seealso \code{\link[utils]{type.convert}}
 #' 
+#' @noRd
+#' 
 type.convert <- function(...){
     x <- utils::type.convert(...)
     if(all(unique(x) %in% c('true', 'false'))){
@@ -150,6 +154,8 @@ type.convert <- function(...){
 #' 
 #' @importFrom XML xpathSApply xmlAttrs
 #' @importFrom plyr rbind.fill.matrix
+#' 
+#' @noRd
 #' 
 attrExtract <- function(doc, ns, path, child, addFinalizer=FALSE){
     if(missing(child)){
@@ -206,6 +212,8 @@ attrExtract <- function(doc, ns, path, child, addFinalizer=FALSE){
 #' The data.frame will have rows for each node in the path expression, regardless of whether it contains
 #' children.
 #' 
+#' @noRd
+#' 
 attrExtractNameValuePair <- function(doc, ns, path, child, addFinalizer=FALSE){
     lengthOut <- getNodeSet(doc, namespaces=ns, path=paste('count(', path, ')', sep=''), addFinalizer=addFinalizer)
     attr <- attrExtract(doc, ns, path, child, addFinalizer=addFinalizer)
@@ -237,6 +245,8 @@ attrExtractNameValuePair <- function(doc, ns, path, child, addFinalizer=FALSE){
 #' @return A textstring giving the version of the mzIdentML file if it is supported. In case of missing support 
 #' it throws an error.
 #' 
+#' @noRd
+#' 
 getVersion <- function(ns) {
     v <- strsplit(ns, "/")[[1]]
     v <- v[length(v)]
@@ -254,6 +264,8 @@ getVersion <- function(ns) {
 #' 
 #' @return A textstring with the top parent node of the DOM
 #' 
+#' @noRd
+#' 
 getPath <- function(ns) {
     v <- getVersion(ns)
     if (v == "1.0") {
@@ -266,9 +278,36 @@ getPath <- function(ns) {
     return(path)
 }
 
+#' Lower the case of column names
+#' 
+#' This function takes a data.frame and returns a version of it with column names lowered
+#' 
+#' @param x A data.frame
+#' 
+#' @return A data.fram matching x with lowered column names
+#' 
+#' @noRd
+#' 
 colNamesToLower <- function(x) {
     colnames(x) <- casefold(colnames(x), upper=FALSE)
     x
+}
+
+#' Extract a column from a data.frame safely
+#' 
+#' This function allows you to safely extract a column from a data.frame by name
+#' without knowing the casing of the name
+#' 
+#' @param x A data.frame
+#' 
+#' @param colname The name of the column to extract
+#' 
+#' @return A vector with the values in the requested column
+#' 
+#' @noRd
+#' 
+safeCol <- function(x, colname) {
+    x[,tolower(names(x)) == tolower(colname)]
 }
 
 #' Parses an xml file and defines the namespace
@@ -280,6 +319,9 @@ colNamesToLower <- function(x) {
 #' @return A list with the named elements: doc: the results of xmlInternalTreeParse and ns: the namespace as a vector.
 #' 
 #' @importFrom XML xmlInternalTreeParse
+#' 
+#' @noRd
+#' 
 prepareXML <- function(path, addFinalizer=FALSE) {
     doc <- xmlInternalTreeParse(path, addFinalizer=addFinalizer)
     namespaceDef <- getDefaultNamespace(doc)
@@ -293,7 +335,45 @@ prepareXML <- function(path, addFinalizer=FALSE) {
 #' 
 #' @return logical
 #' 
+#' @noRd
+#' 
 isRemote <- function(x) {
   grepl("^(http|ftp)[s]?://", x)
 }
 
+#' Create a subset of a mapped ressource
+#' 
+#' This function allows you to subset a datastructure such as the one found in
+#' mzIDpsm, where two data.frames are linked by a list of indexes. It subsets on
+#' the dataframe that relates to the list index, not the one that relates to the
+#' content of the list.
+#' 
+#' @param main A data.frame whose link to the mappingis the index of the list
+#' 
+#' @param sub A data.frame whose link to the mapping is the content of the list
+#' 
+#' @param mapping A list containing mapping between main and sub
+#' 
+#' @param mainIndex A vector of indexes in main to subset
+#' 
+#' @return A list containing the elements main, sub and mapping with the given
+#' subset
+#' 
+#' @noRd
+#' 
+subsetWithMapping <- function(main, sub, mapping, mainIndex) {
+    ans <- list()
+    
+    ans$main <- main[mainIndex, , drop=F]
+    
+    subIndex <- sort(unique(rep(1:length(mapping), sapply(mapping, length))[match(mainIndex, unlist(mapping))]))
+    ans$sub <- sub[subIndex, ,drop=F]
+    
+    nMapping <- mapping[subIndex]
+    nMappingLengths <- sapply(nMapping, length)
+    nMappingNewIndex <- match(unlist(nMapping), mainIndex)
+    ans$mapping <-  split(nMappingNewIndex[!is.na(nMappingNewIndex)], rep(1:length(nMapping), nMappingLengths)[!is.na(nMappingNewIndex)])
+    names(ans$mapping) <- NULL
+    
+    ans
+}

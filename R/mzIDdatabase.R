@@ -52,6 +52,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDdatabase',
     function(object){
@@ -72,6 +74,8 @@ setMethod(
 #' @return A \code{numeric} giving the number of entries in the mzIDdatabase object
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
+#' 
+#' @noRd
 #' 
 setMethod(
     'length', 'mzIDdatabase',

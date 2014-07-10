@@ -14,6 +14,12 @@ NULL
 #' Objects of this class is usually constructed be passing mulitple files to the
 #' mzID constructor, or by combining mulitple mzID objects.
 #' 
+#' @section Methods:
+#' mzIDCollections support the same methods as mzID object but will return the
+#' results for each mzID object as an entry in a list. Apart from this
+#' mzIDCollections support standard vector indexing and concatenation as 
+#' described in \code{\link{mzIDCollectionUtilities}}
+#' 
 #' @name mzIDCollection-class
 #' 
 #' @exportClass mzIDCollection
@@ -50,6 +56,8 @@ setClass('mzIDCollection',
 #' 
 #' @seealso \code{\link{mzIDCollection-class}}
 #' 
+#' @noRd
+#' 
 setMethod('show', 'mzIDCollection',
           function(object) {
               if(length(object)) {
@@ -72,12 +80,18 @@ setMethod('show', 'mzIDCollection',
 #' 
 #' @seealso \code{\link{mzIDCollection-class}}
 #' 
+#' @noRd
+#' 
 setMethod('length', 'mzIDCollection',
           function(x) {
               nrow(x@.lookup)
           }
 )
 
+#' Convert an mzIDCollection to a list of mzID object
+#' 
+#' @noRd
+#' 
 setAs('mzIDCollection', 'list',
       function(from) {
           theList <- lapply(names(from), function(x) {from@data[[keyFor(from, x)]]})
@@ -88,6 +102,10 @@ setAs('mzIDCollection', 'list',
 )
 as.list.mzIDCollection <- function(object) {as(object, 'list')}
 
+#' see mzIDCollection internals in generics.R
+#' 
+#' @noRd
+#' 
 setMethod('increment', 'mzIDCollection',
           function(object) {
               if(exists('.counter', object@data)) {

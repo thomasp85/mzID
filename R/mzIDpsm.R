@@ -61,6 +61,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDpsm',
     function(object){
@@ -82,6 +84,8 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzIDpsm',
     function(x){
@@ -89,7 +93,9 @@ setMethod(
     }
 )
 
-#' @rdname flatten-methods
+#' see flatten
+#' 
+#' @noRd
 #' 
 setMethod(
     'flatten', 'mzIDpsm',

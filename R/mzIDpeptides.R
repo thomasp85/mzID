@@ -60,6 +60,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDpeptides',
     function(object){
@@ -83,6 +85,8 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzIDpeptides',
     function(x){
@@ -90,7 +94,9 @@ setMethod(
     }
 )
 
-#' @rdname flatten-methods
+#' see flatten
+#' 
+#' @noRd
 #' 
 setMethod(
     'flatten', 'mzIDpeptides',

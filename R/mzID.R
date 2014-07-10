@@ -31,7 +31,15 @@ NULL
 #' @section Methods:
 #' \describe{
 #'  \item{\code{\link{length}}:}{Reports the number of PSMs in the object.}
-#'  \item{\code{\link{flatten}}:}{...}
+#'  \item{\code{\link{flatten}}:}{Flattens the mzID object to a tabular format}
+#'  \item{\code{\link{removeDecoy}}:}{Remove decoy related information from the mzID object, potentionally trimming the size down substantially}
+#'  \item{\code{\link{database}}:}{Returns a data frame with information pertaining to the database used during peptide search}
+#'  \item{\code{\link{evidence}}:}{Returns a data frame with information pertaining to the evidences (sequences from proteins) found during peptide search}
+#'  \item{\code{\link{peptides}}:}{Returns a data frame with information pertaining to the peptides detected during a peptide search. Peptides can link to several evidence if the same sequence is reoccuring in multiple proteins}
+#'  \item{\code{\link{modifications}}:}{Returns a list with information on the modification state of all peptides}
+#'  \item{\code{\link{id}}:}{Returns a data frame with information pertaining to identification of specific peptides}
+#'  \item{\code{\link{scans}}:}{Returns a data frame with references to the scans in the raw file that have returned a match}
+#'  \item{\code{\link{idScanMap}}:}{Returns a list linking scans with identification result}
 #' }
 #' 
 #' @seealso \code{\link{mzID}} \code{\link{mzIDparameters-class}} \code{\link{mzIDpsm-class}} \code{\link{mzIDpeptides-class}} \code{\link{mzIDevidence-class}} \code{\link{mzIDdatabase-class}}
@@ -65,6 +73,8 @@ setClass('mzID',
 #' @return A description of the content of the mzID object
 #' 
 #' @seealso \code{\link{mzID-class}}
+#' 
+#' @noRd
 #' 
 setMethod('show', 'mzID',
           function(object) {
@@ -106,15 +116,17 @@ setMethod('show', 'mzID',
 #' 
 #' @seealso \code{\link{mzID-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzID',
     function(x){
         length(x@psm)
     })
 
-#' @rdname flatten-methods
+#' see flatten
 #' 
-#' @param no.redundancy \code{Logical} Should duplicate peptides be removed. Default is \code{FALSE} as identical peptides from different proteins should normally be kept.
+#' @noRd
 #' 
 setMethod(
     'flatten', 'mzID',
