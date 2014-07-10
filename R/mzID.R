@@ -130,25 +130,30 @@ setMethod(
 #' 
 setMethod(
     'flatten', 'mzID',
-    function(object, no.redundancy=FALSE) {
-        flatPSM <- flatten(object@psm)
-        flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
-        flatEviData <- 
-            cbind(object@evidence@evidence,
-                  object@database@database[
-                      match(object@evidence@evidence$dbsequence_ref,
-                            object@database@database$id), ])
-        flatEviData <- flatEviData[,!names(flatEviData) == 'id']
-        flatPep <- flatten(object@peptides)
-        flatPepEviData <- 
-            merge( flatPep, flatEviData, 
-                   by.x="id", by.y="peptide_ref", all=TRUE)
-        if (no.redundancy) {
-            flatPepEviData <- 
-                flatPepEviData[!duplicated(flatPepEviData[,'id']),]
-        }
-        flatAll <- merge(flatPSM, flatPepEviData, 
-                         by.x='peptide_ref', by.y='id', all=TRUE)
+    function(object, safeNames=TRUE) {
+        flatPSM <- flatten(object@psm, safeNames=safeNames)
+        flatPSM <- flatPSM[, tolower(colnames(flatPSM)) != 'id']
+        evi <- evidence(object, safeNames=safeNames)
+        db <- database(object, safeNames=safeNames)
+        flatEviData <- cbind(evi, db[match(safeCol(evi, 'dbsequence_ref'), safeCol(db, 'id')), ])
+        flatEviData <- flatEviData[,!tolower(names(flatEviData)) == 'id']
+        flatPep <- flatten(object@peptides, safeNames=safeNames)
+        flatPepEviData <- cbind(flatEviData, flatPep[match(safeCol(flatEviData, 'peptide_ref'), safeCol(flatPep, 'id')), ])
+#         flatPepEviData <- 
+#             merge( flatPep, flatEviData, 
+#                    by.x="id", by.y="peptide_ref", all=TRUE)
+#         if (no.redundancy) {
+#             flatPepEviData <- 
+#                 flatPepEviData[!duplicated(flatPepEviData[,'id']),]
+#         }
+
+        peptideGroups <- split(1:nrow(flatPepEviData), safeCol(flatPepEviData, 'id'))
+        peptideMatch <- match(safeCol(flatPSM, 'peptide_ref'), names(peptideGroups))
+        peptideGroups <- peptideGroups[peptideMatch]
+        groupLength <- sapply(peptideGroups, length)
+        flatAll <- cbind(flatPSM[rep(1:nrow(flatPSM), times=groupLength),], flatPepEviData[unlist(peptideGroups),])
+#         flatAll <- merge(flatPSM, flatPepEviData, 
+#                          by.x='peptide_ref', by.y='id', all=TRUE)
         flatAll$spectrumFile <- 
             object@parameters@rawFile$name[
                 match(flatAll$spectradata_ref,
@@ -158,8 +163,8 @@ setMethod(
                 match(flatAll$searchdatabase_ref,
                       object@parameters@databaseFile$id)]
         flatAll <- flatAll[, !grepl('_ref$', 
-                                    names(flatAll), 
+                                    tolower(names(flatAll)), 
                                     perl=T) & 
-                               !names(flatAll) == 'id']
+                               !tolower(names(flatAll)) == 'id']
         return(flatAll)
-    })
+    }
