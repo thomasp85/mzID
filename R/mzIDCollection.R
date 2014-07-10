@@ -122,6 +122,58 @@ setMethod('keyFor', c('mzIDCollection', 'character'),
           }
 )
 
+#' see flatten
+#' 
+#' @importFrom plyr rbind.fill
+#' 
+#' @noRd
+#' 
+setMethod('flatten', 'mzIDCollection',
+          function(object, safeNames=TRUE) {
+              rbind.fill(lapply(as.list(object), flatten, safeNames=safeNames))
+          }
+)
+
+#' see removeDecoy
+#' 
+#' @noRd
+#' 
+setMethod('removeDecoy', 'mzIDCollection',
+          function(object) {
+              for(i in names(object)) {
+                  mzid <- object[i]
+                  object@data[[keyFor(object, i)]] <- removeDecoy(mzid)
+              }
+              object
+          }
+)
+
+#' Create a new mzIDCollection
+#' 
+#' This function creates a new mzIDCollection object containing the supplied 
+#' mzID object. As such the result is equivalent to passing a number of mzID
+#' objects to \code{c()}, except that an empty mzIDCollection object is returned
+#' if no mzID objects are supplied.
+#' 
+#' @param ... An arbitrary number of mzID objects
+#' 
+#' @return An mzIDCollection object
+#' 
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
+#' 
+#' @export
+#' 
+mzIDCollection <- function(...) {
+    collection <- new(Class='mzIDCollection', data=new.env())
+    data <- eval(substitute(alist(...)))
+    if(length(data) != 0) {
+        for(i in 1:length(data)) {
+            obj <- data[[i]]
+            collection <- c(collection, eval.parent(obj))
+        }
+    }
+    collection
+}
 #' Utility functions for mzIDCollection object
 #' 
 #' These functions provide list-like handling of mzIDCollection object. Their 
@@ -224,39 +276,13 @@ setMethod('c', 'mzIDCollection',
           }
 )
 
-#' @rdname flatten-methods
 #' 
-#' @importFrom plyr rbind.fill
 #' 
-setMethod('flatten', 'mzIDCollection',
-          function(object, no.redundancy=FALSE) {
-              rbind.fill(lapply(as.list(object), flatten, no.redundancy=no.redundancy))
-          }
 )
-
-#' Create a new mzIDCollection
 #' 
-#' This function creates a new mzIDCollection object containing the supplied 
-#' mzID object. As such the result is equivalent to passing a number of mzID
-#' objects to \code{c()}, except that an empty mzIDCollection object is returned
-#' if no mzID objects are supplied.
 #' 
-#' @param ... An arbitrary number of mzID objects
 #' 
-#' @return An mzIDCollection object
 #' 
-#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
 #' 
-#' @export
 #' 
-mzIDCollection <- function(...) {
-    collection <- new(Class='mzIDCollection', data=new.env())
-    data <- eval(substitute(alist(...)))
-    if(length(data) != 0) {
-        for(i in 1:length(data)) {
-            obj <- data[[i]]
-            collection <- c(collection, eval.parent(obj))
-        }
     }
-    collection
-}
