@@ -61,6 +61,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDpsm',
     function(object){
@@ -82,6 +84,8 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpsm-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzIDpsm',
     function(x){
@@ -89,12 +93,53 @@ setMethod(
     }
 )
 
-#' @rdname flatten-methods
+#' see flatten
+#' 
+#' @noRd
 #' 
 setMethod(
     'flatten', 'mzIDpsm',
+    function(object, safeNames=TRUE){
+        cbind(scans(object, safeNames=safeNames)[rep(1:length(object@mapping), sapply(object@mapping, length))[match(1:nrow(object@id),unlist(object@mapping))],],id(object, safeNames=safeNames))
+    }
+)
+
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'id', 'mzIDpsm',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@id)
+        } else {
+            object@id
+        }
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'scans', 'mzIDpsm',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@scans)
+        } else {
+            object@scans
+        }
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'idScanMap', 'mzIDpsm',
     function(object){
-        cbind(object@scans[rep(1:length(object@mapping), sapply(object@mapping, length))[match(1:nrow(object@id),unlist(object@mapping))],],object@id)
+        object@mapping
     }
 )
 
@@ -158,7 +203,7 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
     indMap <- list()
     indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
     new(Class = 'mzIDpsm',
-        scans = colNamesToLower(scans),
-        id = colNamesToLower(id),
+        scans = scans,
+        id = id,
         mapping = indMap)
 }

@@ -8,7 +8,7 @@
 \hypersetup{colorlinks=true, urlcolor=blue}
 
 \title{Parsing mzIdentML files using mzID}
-\author{Thomas Dybdal Pedersen}
+\author{Thomas Lin Pedersen}
 
 \begin{document}
 

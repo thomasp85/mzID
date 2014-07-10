@@ -60,6 +60,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDpeptides',
     function(object){
@@ -83,6 +85,8 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDpeptides-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzIDpeptides',
     function(x){
@@ -90,12 +94,14 @@ setMethod(
     }
 )
 
-#' @rdname flatten-methods
+#' see flatten
+#' 
+#' @noRd
 #' 
 setMethod(
     'flatten', 'mzIDpeptides',
-    function(object){
-        ans <- object@peptides
+    function(object, safeNames=TRUE){
+        ans <- peptides(object, safeNames=safeNames)
         ans$modification <- NA
         nMod <- sapply(object@modifications[object@peptides$modified], nrow)
         if(length(nMod) > 0){
@@ -105,6 +111,31 @@ setMethod(
             ans$modification[ans$modified] <- modPasted 
         }
         ans
+    }
+)
+
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'peptides', 'mzIDpeptides',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@peptides)
+        } else {
+            object@peptides
+        }
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'modifications', 'mzIDpeptides',
+    function(object){
+        object@modifications
     }
 )
 
@@ -174,6 +205,6 @@ mzIDpeptides <- function(doc, ns, addFinalizer=FALSE, path) {
         modList <- list()
     }
     new(Class='mzIDpeptides',
-        peptides=colNamesToLower(pepDF),
+        peptides=pepDF,
         modifications=modList)
 }

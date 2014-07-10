@@ -14,6 +14,12 @@ NULL
 #' Objects of this class is usually constructed be passing mulitple files to the
 #' mzID constructor, or by combining mulitple mzID objects.
 #' 
+#' @section Methods:
+#' mzIDCollections support the same methods as mzID object but will return the
+#' results for each mzID object as an entry in a list. Apart from this
+#' mzIDCollections support standard vector indexing and concatenation as 
+#' described in \code{\link{mzIDCollectionUtilities}}
+#' 
 #' @name mzIDCollection-class
 #' 
 #' @exportClass mzIDCollection
@@ -50,6 +56,8 @@ setClass('mzIDCollection',
 #' 
 #' @seealso \code{\link{mzIDCollection-class}}
 #' 
+#' @noRd
+#' 
 setMethod('show', 'mzIDCollection',
           function(object) {
               if(length(object)) {
@@ -72,12 +80,18 @@ setMethod('show', 'mzIDCollection',
 #' 
 #' @seealso \code{\link{mzIDCollection-class}}
 #' 
+#' @noRd
+#' 
 setMethod('length', 'mzIDCollection',
           function(x) {
               nrow(x@.lookup)
           }
 )
 
+#' Convert an mzIDCollection to a list of mzID object
+#' 
+#' @noRd
+#' 
 setAs('mzIDCollection', 'list',
       function(from) {
           theList <- lapply(names(from), function(x) {from@data[[keyFor(from, x)]]})
@@ -88,6 +102,10 @@ setAs('mzIDCollection', 'list',
 )
 as.list.mzIDCollection <- function(object) {as(object, 'list')}
 
+#' see mzIDCollection internals in generics.R
+#' 
+#' @noRd
+#' 
 setMethod('increment', 'mzIDCollection',
           function(object) {
               if(exists('.counter', object@data)) {
@@ -104,6 +122,58 @@ setMethod('keyFor', c('mzIDCollection', 'character'),
           }
 )
 
+#' see flatten
+#' 
+#' @importFrom plyr rbind.fill
+#' 
+#' @noRd
+#' 
+setMethod('flatten', 'mzIDCollection',
+          function(object, safeNames=TRUE) {
+              rbind.fill(lapply(as.list(object), flatten, safeNames=safeNames))
+          }
+)
+
+#' see removeDecoy
+#' 
+#' @noRd
+#' 
+setMethod('removeDecoy', 'mzIDCollection',
+          function(object) {
+              for(i in names(object)) {
+                  mzid <- object[i]
+                  object@data[[keyFor(object, i)]] <- removeDecoy(mzid)
+              }
+              object
+          }
+)
+
+#' Create a new mzIDCollection
+#' 
+#' This function creates a new mzIDCollection object containing the supplied 
+#' mzID object. As such the result is equivalent to passing a number of mzID
+#' objects to \code{c()}, except that an empty mzIDCollection object is returned
+#' if no mzID objects are supplied.
+#' 
+#' @param ... An arbitrary number of mzID objects
+#' 
+#' @return An mzIDCollection object
+#' 
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
+#' 
+#' @export
+#' 
+mzIDCollection <- function(...) {
+    collection <- new(Class='mzIDCollection', data=new.env())
+    data <- eval(substitute(alist(...)))
+    if(length(data) != 0) {
+        for(i in 1:length(data)) {
+            obj <- data[[i]]
+            collection <- c(collection, eval.parent(obj))
+        }
+    }
+    collection
+}
 #' Utility functions for mzIDCollection object
 #' 
 #' These functions provide list-like handling of mzIDCollection object. Their 
@@ -206,39 +276,106 @@ setMethod('c', 'mzIDCollection',
           }
 )
 
-#' @rdname flatten-methods
-#' 
-#' @importFrom plyr rbind.fill
-#' 
-setMethod('flatten', 'mzIDCollection',
-          function(object, no.redundancy=FALSE) {
-              rbind.fill(lapply(as.list(object), flatten, no.redundancy=no.redundancy))
-          }
-)
+## GETTER FUNCTIONS
+###################
 
-#' Create a new mzIDCollection
+#' See mzID-getters
 #' 
-#' This function creates a new mzIDCollection object containing the supplied 
-#' mzID object. As such the result is equivalent to passing a number of mzID
-#' objects to \code{c()}, except that an empty mzIDCollection object is returned
-#' if no mzID objects are supplied.
+#' @noRd
 #' 
-#' @param ... An arbitrary number of mzID objects
-#' 
-#' @return An mzIDCollection object
-#' 
-#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
-#' 
-#' @export
-#' 
-mzIDCollection <- function(...) {
-    collection <- new(Class='mzIDCollection', data=new.env())
-    data <- eval(substitute(alist(...)))
-    if(length(data) != 0) {
-        for(i in 1:length(data)) {
-            obj <- data[[i]]
-            collection <- c(collection, eval.parent(obj))
-        }
+setMethod(
+    'database', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), database, safeNames=safeNames)
     }
-    collection
-}
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'evidence', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), evidence, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'parameters', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'software', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), software)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'files', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), files)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'peptides', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), peptides, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'modifications', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), modifications)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'id', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), id, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'scans', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), scans, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'idScanMap', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), idScanMap)
+    }
+)
