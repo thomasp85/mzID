@@ -157,13 +157,7 @@ attrExtract <- function(doc, ns, path, child, addFinalizer=FALSE){
         if(is.list(attr)){
             isNULL <- sapply(attr, is.null)
             attr <- attr[!isNULL]
-            #
-            # will be changed by Vlad
-            # old version
-            # attr <- rbind.fill.matrix(lapply(attr, function(x) if(!is.null(x)) t(x) else matrix()))
-            # new version. supposed to speed up
-            attr <- t(sapply(attr, I))
-            #
+            attr <- rbind.fill.matrix(lapply(attr, function(x) if(!is.null(x)) t(x) else matrix()))
             colnames <- colnames(attr)
             attr <- replace(matrix(NA, length(isNULL), ncol(attr)), !isNULL, attr)
             colnames(attr) <- colnames
