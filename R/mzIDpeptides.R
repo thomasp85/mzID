@@ -180,6 +180,6 @@ mzIDpeptides <- function(doc, ns, addFinalizer=FALSE, path) {
         modList <- list()
     }
     new(Class='mzIDpeptides',
-        peptides=colNamesToLower(pepDF),
+        peptides=pepDF,
         modifications=modList)
 }

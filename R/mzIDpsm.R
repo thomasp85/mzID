@@ -164,7 +164,7 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
     indMap <- list()
     indMap[nID > 0] <- split(1:nrow(id), rep(1:length(nID), nID))
     new(Class = 'mzIDpsm',
-        scans = colNamesToLower(scans),
-        id = colNamesToLower(id),
+        scans = scans,
+        id = id,
         mapping = indMap)
 }

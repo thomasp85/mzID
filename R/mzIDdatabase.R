@@ -143,5 +143,5 @@ mzIDdatabase <- function(doc, ns, addFinalizer=FALSE, path){
         database$sequence[hasSeq != 0] <- dbseq
     }
     new(Class = 'mzIDdatabase',
-        database = colNamesToLower(database))
+        database = database)
 }

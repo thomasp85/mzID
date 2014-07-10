@@ -127,5 +127,5 @@ mzIDevidence <- function(doc, ns, addFinalizer=FALSE, path) {
                 substr(evidence$id, 1, 6))
     }        
     new(Class = 'mzIDevidence',
-        evidence = colNamesToLower(evidence))
+        evidence = evidence)
 }
