@@ -83,7 +83,20 @@ setMethod(
         nrow(x@database)
     }
 )
-
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'database', 'mzIDdatabase',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@database)
+        } else {
+            object@database
+        }
+    }
+)
 #' A constructor for the mzIDdatabase class
 #' 
 #' This function handles parsing of data and construction of an mzIDdatabase object. This function is not intended to be called

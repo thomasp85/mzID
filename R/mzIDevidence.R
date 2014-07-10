@@ -84,6 +84,21 @@ setMethod(
     }
 )
 
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'evidence', 'mzIDevidence',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@evidence)
+        } else {
+            object@evidence
+        }
+    }
+)
+
 #' A constructor for the mzIDevidence class
 #' 
 #' This function handles parsing of data and construction of an mzIDevidence object. This function is not intended to be called

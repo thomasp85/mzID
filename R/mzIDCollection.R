@@ -276,13 +276,106 @@ setMethod('c', 'mzIDCollection',
           }
 )
 
+## GETTER FUNCTIONS
+###################
+
+#' See mzID-getters
 #' 
+#' @noRd
 #' 
-)
-#' 
-#' 
-#' 
-#' 
-#' 
-#' 
+setMethod(
+    'database', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), database, safeNames=safeNames)
     }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'evidence', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), evidence, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'parameters', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'software', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), software)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'files', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), files)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'peptides', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), peptides, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'modifications', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), modifications)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'id', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), id, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'scans', 'mzIDCollection',
+    function(object, safeNames=TRUE){
+        lapply(as.list(object), scans, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'idScanMap', 'mzIDCollection',
+    function(object){
+        lapply(as.list(object), idScanMap)
+    }
+)

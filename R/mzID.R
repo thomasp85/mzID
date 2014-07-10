@@ -208,3 +208,106 @@ setMethod(
             database = new('mzIDdatabase', database=db))
     }
 )
+
+## GETTER FUNCTIONS
+###################
+
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'database', 'mzID',
+    function(object, safeNames=TRUE){
+        database(object@database, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'evidence', 'mzID',
+    function(object, safeNames=TRUE){
+        evidence(object@evidence, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'parameters', 'mzID',
+    function(object){
+        parameters(object@parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'software', 'mzID',
+    function(object){
+        software(object@parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'files', 'mzID',
+    function(object){
+        files(object@parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'peptides', 'mzID',
+    function(object, safeNames=TRUE){
+        peptides(object@peptides, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'modifications', 'mzID',
+    function(object){
+        modifications(object@peptides)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'id', 'mzID',
+    function(object, safeNames=TRUE){
+        id(object@psm, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'scans', 'mzID',
+    function(object, safeNames=TRUE){
+        scans(object@psm, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'idScanMap', 'mzID',
+    function(object){
+        idScanMap(object@psm)
+    }

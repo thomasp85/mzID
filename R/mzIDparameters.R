@@ -112,6 +112,37 @@ setMethod(
     }
 )
 
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'parameters', 'mzIDparameters',
+    function(object){
+        object@parameters
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'software', 'mzIDparameters',
+    function(object){
+        object@software
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'files', 'mzIDparameters',
+    function(object){
+        list(id=object@idFile, raw=object@rawFile, database=object@databaseFile)
+    }
+)
+
 #' A constructor for the mzIDparameters class
 #' 
 #' This function handles parsing of data and construction of an mzIDparameters object. This function is not intended to be called

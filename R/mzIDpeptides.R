@@ -114,6 +114,31 @@ setMethod(
     }
 )
 
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'peptides', 'mzIDpeptides',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@peptides)
+        } else {
+            object@peptides
+        }
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'modifications', 'mzIDpeptides',
+    function(object){
+        object@modifications
+    }
+)
+
 #' A constructor for the mzIDpeptides class
 #' 
 #' This function handles parsing of data and construction of an mzIDpeptides object. This function is not intended to be called
