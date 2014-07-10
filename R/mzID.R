@@ -168,3 +168,43 @@ setMethod(
                                !tolower(names(flatAll)) == 'id']
         return(flatAll)
     }
+)
+
+#' See removeDecoy
+#' 
+#' @noRd
+#' 
+setMethod(
+    'removeDecoy', 'mzID',
+    function(object) {
+        #Start with evidence
+        evi <- evidence(object, safeNames=FALSE)
+        evi <- evi[!safeCol(evi, 'isdecoy'),]
+        
+        #Remove peptides no longer referenced in evidence
+        pep <- peptides(object, safeNames=FALSE)
+        index <- safeCol(pep, 'id') %in% safeCol(evi, 'peptide_ref')
+        pep <- pep[index,]
+        mod <- modifications(object)[index]
+        
+        #Remove proteins no longer referenced in evidence
+        db <- database(object, safeNames=FALSE)
+        db <- db[safeCol(db, 'id') %in% safeCol(evi, 'dbsequence_ref'),]
+        
+        #Trim psm's and scans
+        nID <- id(object, safeNames=FALSE)
+        index <- which(safeCol(nID, 'peptide_ref') %in% safeCol(evi, 'peptide_ref'))
+        nPSM <- subsetWithMapping(nID, scans(object, safeNames=FALSE), idScanMap(object), index)
+        
+        nID <- nPSM$main
+        nScan <- nPSM$sub
+        nMapping <- nPSM$mapping
+        
+        new('mzID',
+            parameters = object@parameters,
+            psm = new('mzIDpsm', scans=nScan, id=nID, mapping=nMapping),
+            peptides = new('mzIDpeptides', peptides=pep, modifications=mod),
+            evidence = new('mzIDevidence', evidence=evi),
+            database = new('mzIDdatabase', database=db))
+    }
+)
