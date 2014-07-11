@@ -132,12 +132,12 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
                     path=paste0(.path,
                                 "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"),
                     addFinalizer=addFinalizer)
-    scanNums <- 
+    extra <- 
        attrExtractNameValuePair(doc, ns, 
                                 path = paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 
                                 c("cvParam", "userParam"), 
                                 addFinalizer = TRUE)
-    scans <- cbind(scans, scanNums)
+    scans <- cbind(scans, extra)
     if (nrow(scans) == 0) {
         return(new("mzIDpsm"))
     }
