@@ -52,6 +52,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDdatabase',
     function(object){
@@ -73,13 +75,28 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDdatabase-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzIDdatabase',
     function(x){
         nrow(x@database)
     }
 )
-
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'database', 'mzIDdatabase',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@database)
+        } else {
+            object@database
+        }
+    }
+)
 #' A constructor for the mzIDdatabase class
 #' 
 #' This function handles parsing of data and construction of an mzIDdatabase object. This function is not intended to be called
@@ -139,5 +156,5 @@ mzIDdatabase <- function(doc, ns, addFinalizer=FALSE, path){
         database$sequence[hasSeq != 0] <- dbseq
     }
     new(Class = 'mzIDdatabase',
-        database = colNamesToLower(database))
+        database = database)
 }

@@ -31,7 +31,15 @@ NULL
 #' @section Methods:
 #' \describe{
 #'  \item{\code{\link{length}}:}{Reports the number of PSMs in the object.}
-#'  \item{\code{\link{flatten}}:}{...}
+#'  \item{\code{\link{flatten}}:}{Flattens the mzID object to a tabular format}
+#'  \item{\code{\link{removeDecoy}}:}{Remove decoy related information from the mzID object, potentionally trimming the size down substantially}
+#'  \item{\code{\link{database}}:}{Returns a data frame with information pertaining to the database used during peptide search}
+#'  \item{\code{\link{evidence}}:}{Returns a data frame with information pertaining to the evidences (sequences from proteins) found during peptide search}
+#'  \item{\code{\link{peptides}}:}{Returns a data frame with information pertaining to the peptides detected during a peptide search. Peptides can link to several evidence if the same sequence is reoccuring in multiple proteins}
+#'  \item{\code{\link{modifications}}:}{Returns a list with information on the modification state of all peptides}
+#'  \item{\code{\link{id}}:}{Returns a data frame with information pertaining to identification of specific peptides}
+#'  \item{\code{\link{scans}}:}{Returns a data frame with references to the scans in the raw file that have returned a match}
+#'  \item{\code{\link{idScanMap}}:}{Returns a list linking scans with identification result}
 #' }
 #' 
 #' @seealso \code{\link{mzID}} \code{\link{mzIDparameters-class}} \code{\link{mzIDpsm-class}} \code{\link{mzIDpeptides-class}} \code{\link{mzIDevidence-class}} \code{\link{mzIDdatabase-class}}
@@ -65,6 +73,8 @@ setClass('mzID',
 #' @return A description of the content of the mzID object
 #' 
 #' @seealso \code{\link{mzID-class}}
+#' 
+#' @noRd
 #' 
 setMethod('show', 'mzID',
           function(object) {
@@ -106,37 +116,44 @@ setMethod('show', 'mzID',
 #' 
 #' @seealso \code{\link{mzID-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzID',
     function(x){
         length(x@psm)
     })
 
-#' @rdname flatten-methods
+#' see flatten
 #' 
-#' @param no.redundancy \code{Logical} Should duplicate peptides be removed. Default is \code{FALSE} as identical peptides from different proteins should normally be kept.
+#' @noRd
 #' 
 setMethod(
     'flatten', 'mzID',
-    function(object, no.redundancy=FALSE) {
-        flatPSM <- flatten(object@psm)
-        flatPSM <- flatPSM[, colnames(flatPSM) != 'id']
-        flatEviData <- 
-            cbind(object@evidence@evidence,
-                  object@database@database[
-                      match(object@evidence@evidence$dbsequence_ref,
-                            object@database@database$id), ])
-        flatEviData <- flatEviData[,!names(flatEviData) == 'id']
-        flatPep <- flatten(object@peptides)
-        flatPepEviData <- 
-            merge( flatPep, flatEviData, 
-                   by.x="id", by.y="peptide_ref", all=TRUE)
-        if (no.redundancy) {
-            flatPepEviData <- 
-                flatPepEviData[!duplicated(flatPepEviData[,'id']),]
-        }
-        flatAll <- merge(flatPSM, flatPepEviData, 
-                         by.x='peptide_ref', by.y='id', all=TRUE)
+    function(object, safeNames=TRUE) {
+        flatPSM <- flatten(object@psm, safeNames=safeNames)
+        flatPSM <- flatPSM[, tolower(colnames(flatPSM)) != 'id']
+        evi <- evidence(object, safeNames=safeNames)
+        db <- database(object, safeNames=safeNames)
+        flatEviData <- cbind(evi, db[match(safeCol(evi, 'dbsequence_ref'), safeCol(db, 'id')), ])
+        flatEviData <- flatEviData[,!tolower(names(flatEviData)) == 'id']
+        flatPep <- flatten(object@peptides, safeNames=safeNames)
+        flatPepEviData <- cbind(flatEviData, flatPep[match(safeCol(flatEviData, 'peptide_ref'), safeCol(flatPep, 'id')), ])
+#         flatPepEviData <- 
+#             merge( flatPep, flatEviData, 
+#                    by.x="id", by.y="peptide_ref", all=TRUE)
+#         if (no.redundancy) {
+#             flatPepEviData <- 
+#                 flatPepEviData[!duplicated(flatPepEviData[,'id']),]
+#         }
+
+        peptideGroups <- split(1:nrow(flatPepEviData), safeCol(flatPepEviData, 'id'))
+        peptideMatch <- match(safeCol(flatPSM, 'peptide_ref'), names(peptideGroups))
+        peptideGroups <- peptideGroups[peptideMatch]
+        groupLength <- sapply(peptideGroups, length)
+        flatAll <- cbind(flatPSM[rep(1:nrow(flatPSM), times=groupLength),], flatPepEviData[unlist(peptideGroups),])
+#         flatAll <- merge(flatPSM, flatPepEviData, 
+#                          by.x='peptide_ref', by.y='id', all=TRUE)
         flatAll$spectrumFile <- 
             object@parameters@rawFile$name[
                 match(flatAll$spectradata_ref,
@@ -146,8 +163,152 @@ setMethod(
                 match(flatAll$searchdatabase_ref,
                       object@parameters@databaseFile$id)]
         flatAll <- flatAll[, !grepl('_ref$', 
-                                    names(flatAll), 
+                                    tolower(names(flatAll)), 
                                     perl=T) & 
-                               !names(flatAll) == 'id']
+                               !tolower(names(flatAll)) == 'id']
         return(flatAll)
-    })
+    }
+)
+
+#' See removeDecoy
+#' 
+#' @noRd
+#' 
+setMethod(
+    'removeDecoy', 'mzID',
+    function(object) {
+        #Start with evidence
+        evi <- evidence(object, safeNames=FALSE)
+        evi <- evi[!safeCol(evi, 'isdecoy'),]
+        
+        #Remove peptides no longer referenced in evidence
+        pep <- peptides(object, safeNames=FALSE)
+        index <- safeCol(pep, 'id') %in% safeCol(evi, 'peptide_ref')
+        pep <- pep[index,]
+        mod <- modifications(object)[index]
+        
+        #Remove proteins no longer referenced in evidence
+        db <- database(object, safeNames=FALSE)
+        db <- db[safeCol(db, 'id') %in% safeCol(evi, 'dbsequence_ref'),]
+        
+        #Trim psm's and scans
+        nID <- id(object, safeNames=FALSE)
+        index <- which(safeCol(nID, 'peptide_ref') %in% safeCol(evi, 'peptide_ref'))
+        nPSM <- subsetWithMapping(nID, scans(object, safeNames=FALSE), idScanMap(object), index)
+        
+        nID <- nPSM$main
+        nScan <- nPSM$sub
+        nMapping <- nPSM$mapping
+        
+        new('mzID',
+            parameters = object@parameters,
+            psm = new('mzIDpsm', scans=nScan, id=nID, mapping=nMapping),
+            peptides = new('mzIDpeptides', peptides=pep, modifications=mod),
+            evidence = new('mzIDevidence', evidence=evi),
+            database = new('mzIDdatabase', database=db))
+    }
+)
+
+## GETTER FUNCTIONS
+###################
+
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'database', 'mzID',
+    function(object, safeNames=TRUE){
+        database(object@database, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'evidence', 'mzID',
+    function(object, safeNames=TRUE){
+        evidence(object@evidence, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'parameters', 'mzID',
+    function(object){
+        parameters(object@parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'software', 'mzID',
+    function(object){
+        software(object@parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'files', 'mzID',
+    function(object){
+        files(object@parameters)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'peptides', 'mzID',
+    function(object, safeNames=TRUE){
+        peptides(object@peptides, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'modifications', 'mzID',
+    function(object){
+        modifications(object@peptides)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'id', 'mzID',
+    function(object, safeNames=TRUE){
+        id(object@psm, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'scans', 'mzID',
+    function(object, safeNames=TRUE){
+        scans(object@psm, safeNames=safeNames)
+    }
+)
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'idScanMap', 'mzID',
+    function(object){
+        idScanMap(object@psm)
+    }
+)

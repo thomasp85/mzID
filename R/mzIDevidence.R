@@ -52,6 +52,8 @@ setClass(
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'show', 'mzIDevidence',
     function(object){
@@ -73,10 +75,27 @@ setMethod(
 #' 
 #' @seealso \code{\link{mzIDevidence-class}}
 #' 
+#' @noRd
+#' 
 setMethod(
     'length', 'mzIDevidence',
     function(x){
         nrow(x@evidence)
+    }
+)
+
+#' See mzID-getters
+#' 
+#' @noRd
+#' 
+setMethod(
+    'evidence', 'mzIDevidence',
+    function(object, safeNames=TRUE){
+        if(safeNames) {
+            colNamesToLower(object@evidence)
+        } else {
+            object@evidence
+        }
     }
 )
 
@@ -123,5 +142,5 @@ mzIDevidence <- function(doc, ns, addFinalizer=FALSE, path) {
                 substr(evidence$id, 1, 6))
     }        
     new(Class = 'mzIDevidence',
-        evidence = colNamesToLower(evidence))
+        evidence = evidence)
 }
