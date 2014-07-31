@@ -154,18 +154,9 @@ setMethod(
         flatAll <- cbind(flatPSM[rep(1:nrow(flatPSM), times=groupLength),], flatPepEviData[unlist(peptideGroups),])
 #         flatAll <- merge(flatPSM, flatPepEviData, 
 #                          by.x='peptide_ref', by.y='id', all=TRUE)
-        flatAll$spectrumFile <- 
-            object@parameters@rawFile$name[
-                match(flatAll$spectradata_ref,
-                      object@parameters@rawFile$id)]
-        flatAll$databaseFile <- 
-            object@parameters@databaseFile$name[
-                match(flatAll$searchdatabase_ref,
-                      object@parameters@databaseFile$id)]
-        flatAll <- flatAll[, !grepl('_ref$', 
-                                    tolower(names(flatAll)), 
-                                    perl=T) & 
-                               !tolower(names(flatAll)) == 'id']
+        flatAll$spectrumFile <- object@parameters@rawFile$name[match(safeCol(flatAll, 'spectradata_ref'), object@parameters@rawFile$id)]
+        flatAll$databaseFile <- object@parameters@databaseFile$name[match(safeCol(flatAll, 'searchdatabase_ref'), object@parameters@databaseFile$id)]
+        flatAll <- flatAll[, !grepl('_ref$', tolower(names(flatAll)), perl=T) & !tolower(names(flatAll)) == 'id']
         return(flatAll)
     }
 )
