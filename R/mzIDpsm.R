@@ -182,7 +182,9 @@ mzIDpsm <-function(doc, ns, addFinalizer=FALSE, path) {
                                 path = paste0(.path, "/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult"), 
                                 c("cvParam", "userParam"), 
                                 addFinalizer = TRUE)
-    scans <- cbind(scans, extra)
+    if(!is.null(extra)) {
+        scans <- cbind(scans, extra)
+    }
     if (nrow(scans) == 0) {
         return(new("mzIDpsm"))
     }
