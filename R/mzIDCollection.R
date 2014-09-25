@@ -197,6 +197,37 @@ setMethod('[[', c('mzIDCollection', 'character', 'missing'),
           }
 )
 
+#' @describeIn mzIDCollection Subset collection by index
+#' 
+#' @param drop ignored
+#' 
+setMethod('[', c('mzIDCollection', 'numeric', 'missing', 'missing'),
+          function(x, i, j, drop) {
+              if(all(i <= 0)) {
+                  i <- which(!1:length(x) %in% abs(i))
+              } else if(any(i < 0)) {
+                  stop('only 0\'s may be mixed with negative subscripts')
+              }
+              newLookup <- x@.lookup[i, ]
+              new('mzIDCollection', data=x@data, .lookup=newLookup)
+          }
+)
+#' @describeIn mzIDCollection Subset collection by name
+#' 
+setMethod('[', c('mzIDCollection', 'character', 'missing', 'missing'),
+          function(x, i, j, drop) {
+              i <- which(i %in% names(x))
+              x[i]
+          }
+)
+#' @describeIn mzIDCollection Subset collection by logical value
+#' 
+setMethod('[', c('mzIDCollection', 'logical', 'missing', 'missing'),
+          function(x, i, j, drop) {
+              i <- which(rep(i, length.out=length(x)))
+              x[i]
+          }
+)
 
 #' @describeIn mzID Combine mzID and mzIDCollection objects
 #' 
