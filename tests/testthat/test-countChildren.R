@@ -1,4 +1,5 @@
-doc <- xmlInternalTreeParse('~/Dropbox/GitHub/mzID/inst/tests/testfile.xml')
+testfile <- system.file('extdata', 'testfile.xml', package='mzID')
+doc <- xmlInternalTreeParse(testfile)
 namespaceDef <- getDefaultNamespace(doc)
 ns <- c(x=namespaceDef[[1]]$uri)
 
@@ -7,7 +8,7 @@ context('countChildren')
 test_that('countChildren works when one child is specified', {
     expect_that(countChildren(doc, ns, path='/x:MzIdentML/x:TestSpace/x:countChildren/x:node', child='child1'), equals(c(2,1)))
     expect_that(countChildren(doc, ns, path='/x:MzIdentML/x:TestSpace/x:countChildren/x:node', child='dummy'), equals(c(0,0)))
-    expect_that(countChildren(doc, ns, path='/x:MzIdentML/x:TestSpace/x:countChildren/x:dummyNode', child='child1'), equals(0))
+    expect_that(suppressWarnings(countChildren(doc, ns, path='/x:MzIdentML/x:TestSpace/x:countChildren/x:dummyNode', child='child1')), equals(0))
     expect_that(countChildren(doc, ns, path='/x:MzIdentML/x:TestSpace/x:countChildren/x:dummyNode', child='child1'), gives_warning('The specified XPATH expression is empty'))
 })
 

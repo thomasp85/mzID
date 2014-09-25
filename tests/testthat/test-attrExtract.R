@@ -1,4 +1,5 @@
-doc <- xmlInternalTreeParse('~/Dropbox/GitHub/mzID/inst/tests/testfile.xml')
+testfile <- system.file('extdata', 'testfile.xml', package='mzID')
+doc <- xmlInternalTreeParse(testfile)
 namespaceDef <- getDefaultNamespace(doc)
 ns <- c(x=namespaceDef[[1]]$uri)
 
