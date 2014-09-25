@@ -1,15 +1,19 @@
 #' Flatten an mzID related class into a table
 #' 
-#' This function flattens the content of the object into a table by merging the content intelligently (it knows the links
-#' between the different objects).
+#' This function flattens the content of the object into a table by merging the 
+#' content intelligently (it knows the links between the different objects).
 #' 
 #' @param object The object to be flattened
 #' 
-#' @param safeNames Logical. Should column names be lowered to ensure compitability between different versions of the mzIdentML schema. Defaults to TRUE
+#' @param safeNames Logical. Should column names be lowered to ensure 
+#' compitability between different versions of the mzIdentML schema. 
+#' Defaults to TRUE
 #' 
-#' @return A \code{data.frame} with the flattened result
+#' @return A \code{data.frame} with the flattened result or a list of 
+#' data.frames
 #' 
-#' @seealso \code{\link{mzID-class}}
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}} 
+#' \code{\link{mzIDpsm}} \code{\link{mzIDpeptides}}
 #' 
 #' @export
 #' 
@@ -35,6 +39,8 @@ setGeneric(
 #' 
 #' @return An mzID or mzIDCollection object depending on the input
 #' 
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
+#' 
 #' @export
 #' 
 setGeneric(
@@ -49,13 +55,16 @@ setGeneric(
 #' 
 #' @param object An mzID or mzIDCollection object
 #' 
-#' @param safeNames Logical. Should column names be lowered to ensure compitability between different versions of the mzIdentML schema. Defaults to TRUE
+#' @param safeNames Logical. Should column names be lowered to ensure 
+#' compitability between different versions of the mzIdentML schema. Defaults to
+#' TRUE
 #' 
 #' @return A data frame or a list of data frames in the case of mzIDCollections
 #' 
+#' @seealso \code{\link{mzID-class}} \code{\link{mzIDCollection-class}}
+#' 
 #' @rdname mzID-getters
 #' @name mzID-getters
-#' @docType methods
 #' 
 NULL
 
@@ -147,14 +156,27 @@ setGeneric(
 #' increment looks for a counter in the data environment of mzIDCollection
 #' objects and increments it by one if it exists. Otherwise it initialises the
 #' counter to 1. It returns the value of the counter.
-#' keyFor returns the internal hash for a given name.
 #' 
-#' @noRd
+#' @param object An mzIDCollection object
+#' 
+#' @return An integer given the current count
+#' 
+#' @keywords internal
 #' 
 setGeneric(
     'increment', 
     def=function(object){standardGeneric('increment')}
 )
+#' Tools to handle generation of lookup names for the dictionary
+#' 
+#' keyFor returns the internal hash for a given name.
+#' 
+#' @param object An mzIDCollection object
+#' 
+#' @return The hash under wich the object with the given name is stored
+#' 
+#' @keywords internal
+#' 
 setGeneric(
     'keyFor', 
     def=function(object, name){standardGeneric('keyFor')}
