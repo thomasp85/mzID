@@ -1,8 +1,31 @@
 #' A parser for the mzIdentML file format
 #' 
-#' Using the \code{mzID} function this package is able to parse mzIdentML files into an mzID class instance.
+#' Using the \code{mzID} function this package is able to parse mzIdentML files 
+#' into an mzID class instance. Multiple files can be parsed in parallel into
+#' an mzIDCollection which is a list-like class that handles multiple mzID
+#' objects.
 #' 
-#' @author Thomas Dybdal Pedersen with contributions from Laurent Gatto
+#' The key functionalities are described in the following pages:
+#' 
+#' \itemize{
+#'  \item{\code{\link{mzID}:}}{Parse mzIdentML files}
+#'  \item{\code{\link{mzID-class}:}}{Class to store the data from an mzIdentML
+#'  file}
+#'  \item{\code{\link{mzIDCollection-class}:}}{Class to store multiple mzID
+#'  objects}
+#'  \item{\code{\link{mzID-getters}:}}{Access the data stored in mzID and 
+#'  mzIDCollection objects}
+#'  \item{\code{\link{flatten}:}}{Converts the content of an mzID object to a
+#'  table with respect to the peptide-spectrum matches}
+#' }
+#' 
+#' The package is maintained at its 
+#' \href{https://github.com/thomasp85/mzID}{GitHub repository} where feature
+#' requests and bugs can be directed. Questions and bugs can furthermore be
+#' posted at the 
+#' \href{https://support.bioconductor.org}{Bioconductor support site}
+#' 
+#' @author Thomas Lin Pedersen with contributions from Laurent Gatto
 #' 
 #' @import methods
 #' @docType package

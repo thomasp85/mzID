@@ -4,37 +4,45 @@ NULL
 
 #' A Class to store analysis information from the mzIdentML file
 #' 
-#' This class tries to collect the multitude of different analysis information required to rerun the analysis. The intended
-#' data to be stored are: The software used in the analysis of the data, the location and nature of the rawfile(s), the
-#' location and nature of the database file(s), the location of the mzIDentML file itself as well as all the parameters used
-#' during the analysis leading to the mzIdentML file. Information regarding how the LC-MS experiment was performed should be
-#' collected from the raw data file. As the parameters used in different software solutions can vary greatly, all these
-#' parameters are stored in a named list, which can thus be very different from pipeline to pipeline. It is the users
-#' responsibility to check conformity between samples.
-#' 
-#' @name mzIDparameters-class
+#' This class tries to collect the multitude of different analysis information 
+#' required to rerun the analysis. The intended data to be stored are: The 
+#' software used in the analysis of the data, the location and nature of the 
+#' rawfile(s), the location and nature of the database file(s), the location of 
+#' the mzIDentML file itself as well as all the parameters used during the 
+#' analysis leading to the mzIdentML file. Information regarding how the LC-MS 
+#' experiment was performed should be collected from the raw data file. As the 
+#' parameters used in different software solutions can vary greatly, all these
+#' parameters are stored in a named list, which can thus be very different from 
+#' pipeline to pipeline. It is the users responsibility to check conformity 
+#' between samples.
 #' 
 #' @section Objects from the class:
-#' Objects of mzIDparameters are not meant to be created explicitly but as part of the \code{\link{mzID-class}}. Still
-#' object can be created with the constructor \code{\link{mzIDparameters}} (not exported).
+#' Objects of mzIDparameters are not meant to be created explicitly but as part 
+#' of the \code{\link{mzID-class}}. Still object can be created with the 
+#' constructor \code{\link{mzIDparameters}} (not exported).
 #' 
-#' @section Slots:
-#' \describe{
-#'  \item{\code{software}:}{A data frame with information retaining to the software used for the analysis. At least the name and an id is given, but optionally also version number and URI}
-#'  \item{\code{rawFile}:}{A data frame with information about the raw data file(s) used for the analysis. The data frame will contain at least the location and spectrum ID format.}
-#'  \item{\code{databaseFile}:}{ A data frame containing at least the location and file format of the database file used in the search.}
-#'  \item{\code{idFile}:}{A character string containing the location of the mzIdentML file at the time of parsing.}
-#'  \item{\code{parameters}:}{A list containing containing the information stored in the MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol node. SearchType and Threshold are the only required parameters given by the mzIdentML standard.}
-#' }
 #' 
-#' @section Methods:
-#' \describe{
-#'  \item{\code{length}:}{Reports the number of raw files used in the analysis.}
-#' }
+#' @slot software A data frame with information retaining to the software used 
+#' for the analysis. At least the name and an id is given, but optionally also 
+#' version number and URI.
 #' 
-#' @seealso \code{\link{mzID-class}} \code{\link{mzIDparameters}}
+#' @slot rawFile A data frame with information about the raw data file(s) used 
+#' for the analysis. The data frame will contain at least the location and 
+#' spectrum ID format.
 #' 
-#' @rdname mzIDparameters-class
+#' @slot databaseFile A data frame containing at least the location and file 
+#' format of the database file used in the search.
+#' 
+#' @slot idFile A character string containing the location of the mzIdentML file
+#' at the time of parsing.
+#' 
+#' @slot parameters A list containing containing the information stored in the 
+#' MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol node. 
+#' SearchType and Threshold are the only required parameters given by the 
+#' mzIdentML standard.
+#' 
+#' @family mzID-classes
+#' @seealso \code{\link{mzIDparameters}}
 #' 
 setClass(
     'mzIDparameters',
@@ -53,17 +61,9 @@ setClass(
         parameters=list())
 )
 
-#' Show method for mzIDparameters objects
-#' 
-#' This function reports general information on the mzIDparameters object. It is called automatically when an object is querried.
+#' @describeIn mzIDparameters Short summary of the content
 #' 
 #' @param object An mzIDparameters object
-#' 
-#' @return A description of the content of the mzIDparameters object
-#' 
-#' @seealso \code{\link{mzIDparameters-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'show', 'mzIDparameters',
@@ -93,17 +93,9 @@ setMethod(
     }
 )
 
-#' Report the length of an mzIDparameters object
-#' 
-#' The length of an mzIDparameters object is defined as the number of raw datafiles used in the analysis. An empty object has a length of 0
+#' @describeIn mzIDparameters Get the length of the object
 #' 
 #' @param x An mzIDparameters object
-#' 
-#' @return A \code{numeric} giving the number raw datafiles used in the analysis
-#' 
-#' @seealso \code{\link{mzIDparameters-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'length', 'mzIDparameters',
@@ -112,9 +104,7 @@ setMethod(
     }
 )
 
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDparameters Get the parameters used for the search
 #' 
 setMethod(
     'parameters', 'mzIDparameters',
@@ -122,9 +112,7 @@ setMethod(
         object@parameters
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDparameters Get the software used to arrive at the results
 #' 
 setMethod(
     'software', 'mzIDparameters',
@@ -132,9 +120,7 @@ setMethod(
         object@software
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDparameters Get the data files used for the analysis
 #' 
 setMethod(
     'files', 'mzIDparameters',
@@ -145,21 +131,27 @@ setMethod(
 
 #' A constructor for the mzIDparameters class
 #' 
-#' This function handles parsing of data and construction of an mzIDparameters object. This function is not intended to be called
-#' explicitly but as part of an mzID construction. Thus, the function is not exported. It relies on a number of getter functions
-#' to retrive the different information from around the document.
+#' This function handles parsing of data and construction of an mzIDparameters 
+#' object. This function is not intended to be called explicitly but as part of 
+#' an mzID construction. Thus, the function is not exported. It relies on a 
+#' number of getter functions to retrive the different information from around 
+#' the document.
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
 #' @param path If doc is missing the file specified here will be parsed
 #' 
 #' @return An \code{mzIDparameters} object
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
+#' 
 #' @export
 #' @importFrom XML docName
 #' 
@@ -198,15 +190,20 @@ mzIDparameters <- function(doc, ns, addFinalizer=FALSE, path){
 
 #' Retrive information on the software used in the analysis
 #' 
-#' This function collects the information regarding the analysis software used during creation of the data stored in the mzIDentML file
+#' This function collects the information regarding the analysis software used 
+#' during creation of the data stored in the mzIDentML file
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with a row for each software used, and columns with at least name and id of the software
+#' @return A \code{data.frame} with a row for each software used, and columns 
+#' with at least name and id of the software
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -230,15 +227,21 @@ getSoftware <- function(doc, ns, addFinalizer=FALSE){
 
 #' Retrive information on the raw files used in the analysis
 #' 
-#' This function collects the information regarding the raw data files related to the analysis stored in the mzIdentML file
+#' This function collects the information regarding the raw data files related 
+#' to the analysis stored in the mzIdentML file
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with a row for each raw data file used in the analysis and at least a column for the location and the ID format of the file. 
+#' @return A \code{data.frame} with a row for each raw data file used in the 
+#' analysis and at least a column for the location and the ID format of the 
+#' file. 
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -260,15 +263,20 @@ getRawFile <- function(doc, ns, addFinalizer=FALSE){
 
 #' Retrive information on the database used in the analysis
 #' 
-#' This function collects the information regarding the database used in the analysis stored in the mzIdentML file
+#' This function collects the information regarding the database used in the 
+#' analysis stored in the mzIdentML file
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with a at least the location of the database stored
+#' @return A \code{data.frame} with a at least the location of the database 
+#' stored
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -298,15 +306,20 @@ getDatabaseFile <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Gets the search type as specified in the mzIdentML file
 #' 
-#' This function simply extracts the information stored in /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/SearchType/cvParam/@@name
+#' This function simply extracts the information stored in 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/SearchType/cvParam/@@name
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{character} with the name of the search type (e.g. 'ms-ms search' or 'de novo search')
+#' @return A \code{character} with the name of the search type (e.g. 
+#' 'ms-ms search' or 'de novo search')
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -325,15 +338,20 @@ getSearchType <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Finds the psm threshold used in the file
 #' 
-#' This function simply extracts the attributes stored in /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/Threshold/*
+#' This function simply extracts the attributes stored in 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/Threshold/*
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with columns 'name' and 'value' storing the tresholds used
+#' @return A \code{data.frame} with columns 'name' and 'value' storing the 
+#' tresholds used
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -350,15 +368,22 @@ getThreshold <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Extracts the additional, often software specific parameters
 #' 
-#' This function extracts and formats the information stored in the cvParam and userParam nodes in /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/AdditionalSearchParams
+#' This function extracts and formats the information stored in the cvParam and 
+#' userParam nodes in 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/AdditionalSearchParams
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{list} with names corresponding to the name attribute of the node, and content corresponding to the value attribute. If the node haven't got a a value attribute the content is set to TRUE
+#' @return A \code{list} with names corresponding to the name attribute of the 
+#' node, and content corresponding to the value attribute. If the node haven't 
+#' got a a value attribute the content is set to TRUE
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -403,17 +428,24 @@ getAdditionalPar <- function(doc, ns, addFinalizer=FALSE){
     addPar
 }
 
-#' Extracts the enzymes used for digestion specified as specified in the software analysis
+#' Extracts the enzymes used for digestion specified as specified in the 
+#' software analysis
 #' 
-#' The function looks for information on the enzymes used in the protocol and if present extracts it
+#' The function looks for information on the enzymes used in the protocol and if
+#' present extracts it
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with names of the enzymes as well as other settings related to the cleavage of proteins or \code{NULL} if no information is present
+#' @return A \code{data.frame} with names of the enzymes as well as other 
+#' settings related to the cleavage of proteins or \code{NULL} if no information
+#' is present
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -446,16 +478,21 @@ getEnzymes <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Looks for presence of parent tolerance settings and reports these if found
 #' 
-#' This function checks for the existence of /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ParentTolerance
+#' This function checks for the existence of 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ParentTolerance
 #' and if found reports these.
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with the settings used for parent tolerance or \code{NULL} if none exists
+#' @return A \code{data.frame} with the settings used for parent tolerance or 
+#' \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -482,16 +519,21 @@ getParentTolerance <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Looks for presence of fragment tolerance settings and reports these if found
 #' 
-#' This function checks for the existence of /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/FragmentTolerance
+#' This function checks for the existence of 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/FragmentTolerance
 #' and if found reports these.
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with the settings used for fragment tolerance or \code{NULL} if none exists
+#' @return A \code{data.frame} with the settings used for fragment tolerance or 
+#' \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -516,18 +558,24 @@ getFragmentTolerance <- function(doc, ns, addFinalizer=FALSE) {
     }
 }
 
-#' Looks for presence of amino acid modification settings and reports these if found
+#' Looks for presence of amino acid modification settings and reports these if 
+#' found
 #' 
-#' This function checks for the existence of /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ModificationParams
+#' This function checks for the existence of 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/ModificationParams
 #' and if found formats these for easy reading.
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with information on the modification settings in the search or \code{NULL} if none exists
+#' @return A \code{data.frame} with information on the modification settings in 
+#' the search or \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -585,16 +633,21 @@ getModifications <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Search for the presence of a mass table used during the search
 #' 
-#' This function checks for the existence of /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/MassTable
+#' This function checks for the existence of 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/MassTable
 #' and if found formats these for easy reading.
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with the masses used for each amino acid at the different ms levels \code{NULL} if none exists
+#' @return A \code{data.frame} with the masses used for each amino acid at the 
+#' different ms levels \code{NULL} if none exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -627,18 +680,24 @@ getMassTable <- function(doc, ns, addFinalizer=FALSE) {
     }
 }
 
-#' Looks whether a translation table is present in the mzIdentML file and reports it if found
+#' Looks whether a translation table is present in the mzIdentML file and 
+#' reports it if found
 #' 
-#' This function checks for the existence of /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/DatabaseTranslation
+#' This function checks for the existence of 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/DatabaseTranslation
 #' and if found formats these for easy reading.
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
-#' @return A \code{data.frame} with a translation table or \code{NULL} if none exists
+#' @return A \code{data.frame} with a translation table or \code{NULL} if none 
+#' exists
 #' 
 #' @seealso \code{\link{mzIDparameters-class}}
 #' 
@@ -687,13 +746,18 @@ getDatabaseTranslation <- function(doc, ns, addFinalizer=FALSE) {
 
 #' Looks for any database filters applied during the peptide search
 #' 
-#' This function is still unimplemented, as no proper use of the /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/DatabaseFilters have been found
+#' This function is still unimplemented, as no proper use of the 
+#' /MzIdentML/AnalysisProtocolCollection/SpectrumIdentificationProtocol/DatabaseFilters
+#' have been found
 #'  
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
 #' @return \code{NULL}
 #' 

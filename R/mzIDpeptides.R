@@ -4,34 +4,29 @@ NULL
 
 #' A class to store peptide information from an mzIdentML file
 #' 
-#' This class handles parsing and storage of peptide information from mzIDentML files, residing at the
-#' /x:MzIdentML/x:SequenceCollection/x:Peptide node.
+#' This class handles parsing and storage of peptide information from mzIDentML 
+#' files, residing at the /x:MzIdentML/x:SequenceCollection/x:Peptide node.
 #' 
-#' The information is stored in a dataframe with an id, an optinal name and the amino acid sequence of the peptide.
-#' Alongside a list is stored with modification information of each peptide. Each row in the dataframe has a
-#' corresponding entry en the list. If no modification of the peptide is present the entry is NULL, if a modification
-#' is present the entry is a dataframe, listing the different modifications of the peptide.
-#' 
-#' @name mzIDpeptides-class
+#' The information is stored in a dataframe with an id, an optinal name and the 
+#' amino acid sequence of the peptide. Alongside a list is stored with 
+#' modification information of each peptide. Each row in the dataframe has a
+#' corresponding entry en the list. If no modification of the peptide is present
+#' the entry is NULL, if a modification is present the entry is a dataframe, 
+#' listing the different modifications of the peptide.
 #' 
 #' @section Objects from the class:
-#' Objects of mzIDpeptides are not meant to be created explicitly but as part of the \code{\link{mzID-class}}. Still
-#' object can be created with the constructor \code{\link{mzIDpeptides}} (not exported).
+#' Objects of mzIDpeptides are not meant to be created explicitly but as part of
+#' the \code{\link{mzID-class}}. Still object can be created with the 
+#' constructor \code{\link{mzIDpeptides}}.
 #' 
-#' @section Slots:
-#' \describe{
-#'  \item{\code{peptides}:}{A data.frame containing all peptides used in the search}
-#'  \item{\code{modifications}:}{A list containing possible modifications of the peptides listed in @@peptides}
-#' }
 #' 
-#' @section Methods:
-#' \describe{
-#'  \item{\code{length}:}{Reports the number of peptides}
-#' }
+#' @slot peptides A data.frame containing all peptides used in the search
 #' 
-#' @seealso \code{\link{mzID-class}} \code{\link{mzIDpeptides}}
+#' @slot modifications A list containing possible modifications of the peptides 
+#' listed in @@peptides
 #' 
-#' @rdname mzIDpeptides-class
+#' @family mzID-classes
+#' @seealso \code{\link{mzIDpeptides}}
 #'
 setClass(
     'mzIDpeptides',
@@ -41,7 +36,7 @@ setClass(
     ),
     validity=function(object){
         if(nrow(object@peptides) != length(object@modifications) & length(object@modifications) != 0){
-            stop('Dimensions must match between elements')
+            return('Dimensions must match between elements')
         }
     },
     prototype=prototype(
@@ -50,17 +45,9 @@ setClass(
     )
 )
 
-#' Show method for mzIDpeptides objects
-#' 
-#' This function reports general information on the mzIDpeptides object. It is called automatically when an object is querried.
+#' @describeIn mzIDpeptides Short summary of the content of the object
 #' 
 #' @param object An mzIDpeptides object
-#' 
-#' @return A description of the content of the mzIDpeptides object
-#' 
-#' @seealso \code{\link{mzIDpeptides-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'show', 'mzIDpeptides',
@@ -75,17 +62,9 @@ setMethod(
     }
 )
 
-#' Report the length of an mzIDpeptides object
-#' 
-#' The length of an mzIDpeptides object is defined as the number of peptides in the @@peptides slot. An empty object has a length of 0
+#' @describeIn mzIDpeptides Report the number of peptides
 #' 
 #' @param x An mzIDpeptides object
-#' 
-#' @return A \code{numeric} giving the number of peptides in the mzIDpeptides object
-#' 
-#' @seealso \code{\link{mzIDpeptides-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'length', 'mzIDpeptides',
@@ -94,9 +73,7 @@ setMethod(
     }
 )
 
-#' see flatten
-#' 
-#' @noRd
+#' @describeIn flatten Merge peptides with their modifications
 #' 
 setMethod(
     'flatten', 'mzIDpeptides',
@@ -114,9 +91,10 @@ setMethod(
     }
 )
 
-#' See mzID-getters
+#' @describeIn mzIDpeptides Get the peptides identified.
 #' 
-#' @noRd
+#' @param safeNames Should column names be lowercased to ensure compatibility
+#' between v1.0 and v1.1 files?
 #' 
 setMethod(
     'peptides', 'mzIDpeptides',
@@ -128,9 +106,7 @@ setMethod(
         }
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDpeptides Get the modification on the identified peptides
 #' 
 setMethod(
     'modifications', 'mzIDpeptides',
@@ -141,14 +117,18 @@ setMethod(
 
 #' A constructor for the mzIDpeptides class
 #' 
-#' This function handles parsing of data and construction of an mzIDpeptides object. This function is not intended to be called
-#' explicitly but as part of an mzID construction. Thus, the function is not exported.
+#' This function handles parsing of data and construction of an mzIDpeptides 
+#' object. This function is not intended to be called explicitly but as part of 
+#' an mzID construction. Thus, the function is not exported.
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on
 #' 
 #' @param path If doc is missing the file specified here will be parsed
 #' 

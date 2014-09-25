@@ -10,44 +10,39 @@ NULL
 #'
 #' This class stores all parsed information from mzIdentML files
 #'
-#' The mzID class stores information in a subset of classes, each class having its own slot. While
-#' These classes should not need to be accessed directly, but descriptions of their content is
-#' delegated to each respective class.
-#' 
-#' @name mzID-class
+#' The mzID class stores information in a subset of classes, each class having 
+#' its own slot. While these classes should not need to be accessed directly, 
+#' descriptions of their content is delegated to each respective class.
 #' 
 #' @section Objects from the class:
-#' Objects can be created using the \code{\link{mzID}} constructor, which handles parsing of mzIdentML files
+#' Objects can be created using the \code{\link{mzID}} constructor, which 
+#' handles parsing of mzIdentML files
 #' 
-#' @section Slots:
-#' \describe{
-#'  \item{\code{parameters}:}{An instance of \code{\link{mzIDparameters-class}}. This object contains all information related to how the analysis was carried out.}
-#'  \item{\code{psm}:}{An instance of \code{\link{mzIDpsm-class}}. This object contains the meat of the analysis with all scans and their related PSMs recorded.}
-#'  \item{\code{peptides}:}{An instance of \code{\link{mzIDpeptides-class}}. This object contains a library of all peptides generated from the database along with possible modifications.}
-#'  \item{\code{evidence}:}{An instance of \code{\link{mzIDevidence-class}}. This object lists all peptides detected in the analysis with reference to the \code{mzIDpeptides} instance.}
-#'  \item{\code{database}:}{An instance of \code{\link{mzIDdatabase-class}}. This object contains information on the proteins in the database. As the full database is not recorded in mzIdentML files the actual protein sequence is not recorded but there is sufficient information to retrieve it from the database file.}
-#' }
 #' 
-#' @section Methods:
-#' \describe{
-#'  \item{\code{\link{length}}:}{Reports the number of PSMs in the object.}
-#'  \item{\code{\link{flatten}}:}{Flattens the mzID object to a tabular format}
-#'  \item{\code{\link{removeDecoy}}:}{Remove decoy related information from the mzID object, potentionally trimming the size down substantially}
-#'  \item{\code{\link{database}}:}{Returns a data frame with information pertaining to the database used during peptide search}
-#'  \item{\code{\link{evidence}}:}{Returns a data frame with information pertaining to the evidences (sequences from proteins) found during peptide search}
-#'  \item{\code{\link{peptides}}:}{Returns a data frame with information pertaining to the peptides detected during a peptide search. Peptides can link to several evidence if the same sequence is reoccuring in multiple proteins}
-#'  \item{\code{\link{modifications}}:}{Returns a list with information on the modification state of all peptides}
-#'  \item{\code{\link{id}}:}{Returns a data frame with information pertaining to identification of specific peptides}
-#'  \item{\code{\link{scans}}:}{Returns a data frame with references to the scans in the raw file that have returned a match}
-#'  \item{\code{\link{idScanMap}}:}{Returns a list linking scans with identification result}
-#' }
+#' @slot parameters An instance of \code{\link{mzIDparameters-class}}. This 
+#' object contains all information related to how the analysis was carried out.
 #' 
-#' @seealso \code{\link{mzID}} \code{\link{mzIDparameters-class}} \code{\link{mzIDpsm-class}} \code{\link{mzIDpeptides-class}} \code{\link{mzIDevidence-class}} \code{\link{mzIDdatabase-class}}
+#' @slot psm An instance of \code{\link{mzIDpsm-class}}. This object contains 
+#' the meat of the analysis with all scans and their related PSMs recorded.
+#' 
+#' @slot peptides An instance of \code{\link{mzIDpeptides-class}}. This object 
+#' contains a library of all peptides generated from the database along with 
+#' possible modifications.
+#' 
+#' @slot evidence An instance of \code{\link{mzIDevidence-class}}. This object 
+#' lists all peptides detected in the analysis with reference to the 
+#' \code{mzIDpeptides} instance.
+#' 
+#' @slot database An instance of \code{\link{mzIDdatabase-class}}. This object 
+#' contains information on the proteins in the database. As the full database is
+#' not recorded in mzIdentML files the actual protein sequence is not recorded 
+#' but there is sufficient information to retrieve it from the database file.
+#' 
+#' 
+#' @family mzID-classes
+#' @seealso \code{\link{mzID}}
 #' 
 #' @references \url{http://www.psidev.info/mzidentml}
-#' 
-#' @exportClass mzID
-#' @rdname mzID-class
 #' 
 setClass('mzID',
          slots = list(
@@ -64,17 +59,9 @@ setClass('mzID',
              database = mzIDdatabase())
 )
 
-#' Show method for mzID objects
-#' 
-#' This function reports general information on the mzID object. It is called automatically when an object is querried.
+#' @describeIn mzID Short summary of object content
 #' 
 #' @param object An mzID object
-#' 
-#' @return A description of the content of the mzID object
-#' 
-#' @seealso \code{\link{mzID-class}}
-#' 
-#' @noRd
 #' 
 setMethod('show', 'mzID',
           function(object) {
@@ -106,17 +93,9 @@ setMethod('show', 'mzID',
               }
           })
 
-#' Report the length of an mzID object
-#' 
-#' The length of an mzID object is defined as the number of PSMs. An empty object has a length of 0
+#' @describeIn mzID Get number of psm' in object
 #' 
 #' @param x An mzID object
-#' 
-#' @return A \code{numeric} giving the number of PSMs in the mzID object
-#' 
-#' @seealso \code{\link{mzID-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'length', 'mzID',
@@ -124,9 +103,7 @@ setMethod(
         length(x@psm)
     })
 
-#' see flatten
-#' 
-#' @noRd
+#' @describeIn flatten Flatten an mzID object with respect to psm'
 #' 
 setMethod(
     'flatten', 'mzID',
@@ -162,9 +139,7 @@ setMethod(
     }
 )
 
-#' See removeDecoy
-#' 
-#' @noRd
+#' @describeIn mzID Remove decoys from mzID object
 #' 
 setMethod(
     'removeDecoy', 'mzID',
@@ -204,9 +179,10 @@ setMethod(
 ## GETTER FUNCTIONS
 ###################
 
-#' See mzID-getters
+#' @describeIn mzID Get the database used for searching
 #' 
-#' @noRd
+#' @param safeNames Should column names be lowercased to ensure compatibility
+#' between v1.0 and v1.1 files?
 #' 
 setMethod(
     'database', 'mzID',
@@ -214,9 +190,7 @@ setMethod(
         database(object@database, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the evidence from the peptide search
 #' 
 setMethod(
     'evidence', 'mzID',
@@ -224,9 +198,7 @@ setMethod(
         evidence(object@evidence, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the parameters used for the search
 #' 
 setMethod(
     'parameters', 'mzID',
@@ -234,9 +206,7 @@ setMethod(
         parameters(object@parameters)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the software used to arrive at the results
 #' 
 setMethod(
     'software', 'mzID',
@@ -244,9 +214,7 @@ setMethod(
         software(object@parameters)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the data files used for the analysis
 #' 
 setMethod(
     'files', 'mzID',
@@ -254,9 +222,7 @@ setMethod(
         files(object@parameters)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the peptides identified.
 #' 
 setMethod(
     'peptides', 'mzID',
@@ -264,9 +230,7 @@ setMethod(
         peptides(object@peptides, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the modification on the identified peptides
 #' 
 setMethod(
     'modifications', 'mzID',
@@ -274,9 +238,7 @@ setMethod(
         modifications(object@peptides)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the identification results
 #' 
 setMethod(
     'id', 'mzID',
@@ -284,9 +246,7 @@ setMethod(
         id(object@psm, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the scans matched to peptides
 #' 
 setMethod(
     'scans', 'mzID',
@@ -294,9 +254,7 @@ setMethod(
         scans(object@psm, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzID Get the link between scans and identifications
 #' 
 setMethod(
     'idScanMap', 'mzID',

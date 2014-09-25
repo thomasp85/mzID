@@ -14,16 +14,15 @@ NULL
 #' Objects of this class is usually constructed be passing mulitple files to the
 #' mzID constructor, or by combining mulitple mzID objects.
 #' 
-#' @section Methods:
-#' mzIDCollections support the same methods as mzID object but will return the
-#' results for each mzID object as an entry in a list. Apart from this
-#' mzIDCollections support standard vector indexing and concatenation as 
-#' described in \code{\link{mzIDCollectionUtilities}}
 #' 
-#' @name mzIDCollection-class
+#' @slot data An environment that holds the individual mzID objects
 #' 
-#' @exportClass mzIDCollection
-#' @rdname mzIDCollection-class
+#' 
+#' @slot .lookup A matrix with indexing information for retriving the mzID 
+#' objects in the @@data slot.
+#' 
+#' @family mzID-classes
+#' @seealso \code{\link{mzID}} \code{\link{mzIDCollection}}
 #' 
 setClass('mzIDCollection',
          slots = list(
@@ -45,18 +44,9 @@ setClass('mzIDCollection',
          )
 )
 
-#' Show method for mzIDCollection objects
-#' 
-#' This function gives a very brief overview of the content of an mzIDCollection
-#' object.
+#' @describeIn mzIDCollection A short summary of the content of the object
 #' 
 #' @param object An mzIDCollection object
-#' 
-#' @return NULL
-#' 
-#' @seealso \code{\link{mzIDCollection-class}}
-#' 
-#' @noRd
 #' 
 setMethod('show', 'mzIDCollection',
           function(object) {
@@ -68,19 +58,9 @@ setMethod('show', 'mzIDCollection',
           }
 )
 
-#' Get the length of an mzIDCollection object
-#' 
-#' The length of an mzIDCollection object is defined as the number of mzID 
-#' objects it contain.
+#' @describeIn mzIDCollection Return the number of mzID object in the collection
 #' 
 #' @param x An mzIDCollection object
-#' 
-#' @return An integer giving the number of mzID objects contained in the 
-#' mzIDCollection
-#' 
-#' @seealso \code{\link{mzIDCollection-class}}
-#' 
-#' @noRd
 #' 
 setMethod('length', 'mzIDCollection',
           function(x) {
@@ -88,8 +68,6 @@ setMethod('length', 'mzIDCollection',
           }
 )
 
-#' Convert an mzIDCollection to a list of mzID object
-#' 
 #' @noRd
 #' 
 setAs('mzIDCollection', 'list',
@@ -100,11 +78,11 @@ setAs('mzIDCollection', 'list',
       }
     
 )
+#' @rdname mzIDCollection-class
+#' 
 as.list.mzIDCollection <- function(object) {as(object, 'list')}
 
-#' see mzIDCollection internals in generics.R
-#' 
-#' @noRd
+#' @describeIn increment Increment the counter in mzIDcollection objects
 #' 
 setMethod('increment', 'mzIDCollection',
           function(object) {
@@ -116,17 +94,18 @@ setMethod('increment', 'mzIDCollection',
               object@data$.counter
           }
 )
+#' @describeIn keyFor Get the key for sample in an mzIDCollection object
+#' 
 setMethod('keyFor', c('mzIDCollection', 'character'),
           function(object, name) {
               as.vector(object@.lookup[names(object) == name, 'key'])
           }
 )
 
-#' see flatten
+#' @describeIn flatten Flatten all mzID object in the collection into a list of
+#' data frames.
 #' 
 #' @importFrom plyr rbind.fill
-#' 
-#' @noRd
 #' 
 setMethod('flatten', 'mzIDCollection',
           function(object, safeNames=TRUE) {
@@ -134,9 +113,7 @@ setMethod('flatten', 'mzIDCollection',
           }
 )
 
-#' see removeDecoy
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Removes decoys in all mzID object in collection
 #' 
 setMethod('removeDecoy', 'mzIDCollection',
           function(object) {
@@ -174,16 +151,8 @@ mzIDCollection <- function(...) {
     }
     collection
 }
-#' Utility functions for mzIDCollection object
-#' 
-#' These functions provide list-like handling of mzIDCollection object. Their 
-#' behavior are fully in line with that of standard R lists.
-#' 
-#' @param x An mzIDCollection object
-#' 
-#' @rdname mzIDCollectionUtilities
-#' @docType methods
-#' @name Utilities
+#' @describeIn mzIDCollection Get the names of the mzID object stored in the
+#' collection
 #' 
 setMethod('names', 'mzIDCollection',
           function(x) {
@@ -191,23 +160,19 @@ setMethod('names', 'mzIDCollection',
           }
 )
 
-#' @rdname mzIDCollectionUtilities
+#' @describeIn mzIDCollection Set the names of the mzID object stored in the
+#' collection
 #' 
-#' @usage \S4method{names<-}{mzIDCollection}(x, value)
+#' @param value A character vector of desired names
 #' 
-#' @param value A string giving the name(s) to set
-#' 
-#' @name Utilities
-#' @docType methods
-#' 
-setReplaceMethod('names', c('mzIDCollection', 'character'),
+setMethod('names<-', c('mzIDCollection', 'character'),
                  function(x, value) {
                      x@.lookup[, 1] <- value
                      x
                  }
 )
 
-#' @rdname mzIDCollectionUtilities
+#' @describeIn mzIDCollection Extract an mzID object by index
 #' 
 #' @param i An integer or a string giving the index or the name respectively
 #' @param j ignored
@@ -221,7 +186,7 @@ setMethod('[[', c('mzIDCollection', 'numeric', 'missing'),
           }
 )
 
-#' @rdname mzIDCollectionUtilities
+#' @describeIn mzIDCollection Extract an mzID object by name
 #' 
 setMethod('[[', c('mzIDCollection', 'character', 'missing'),
           function(x, i, j, ...) {
@@ -232,9 +197,46 @@ setMethod('[[', c('mzIDCollection', 'character', 'missing'),
           }
 )
 
-#' @rdname mzIDCollectionUtilities
+#' @describeIn mzIDCollection Subset collection by index
+#' 
+#' @param drop ignored
+#' 
+setMethod('[', c('mzIDCollection', 'numeric', 'missing', 'missing'),
+          function(x, i, j, drop) {
+              if(all(i <= 0)) {
+                  i <- which(!1:length(x) %in% abs(i))
+              } else if(any(i < 0)) {
+                  stop('only 0\'s may be mixed with negative subscripts')
+              }
+              newLookup <- x@.lookup[i, ]
+              new('mzIDCollection', data=x@data, .lookup=newLookup)
+          }
+)
+#' @describeIn mzIDCollection Subset collection by name
+#' 
+setMethod('[', c('mzIDCollection', 'character', 'missing', 'missing'),
+          function(x, i, j, drop) {
+              i <- which(i %in% names(x))
+              x[i]
+          }
+)
+#' @describeIn mzIDCollection Subset collection by logical value
+#' 
+setMethod('[', c('mzIDCollection', 'logical', 'missing', 'missing'),
+          function(x, i, j, drop) {
+              i <- which(rep(i, length.out=length(x)))
+              x[i]
+          }
+)
+
+#' @describeIn mzID Combine mzID and mzIDCollection objects
 #' 
 #' @param y An mzID or mzIDCollection object
+#' 
+#' @param ... ignored
+#' 
+#' @param recursive ignored
+#' 
 setMethod('c', 'mzID', 
           function(x, y, ..., recursive=FALSE) {
               if(missing(y)) {
@@ -252,7 +254,11 @@ setMethod('c', 'mzID',
           }
 )
 
-#' @rdname mzIDCollectionUtilities
+#' @describeIn mzIDCollection Combine mzIDCollction and mzID objects
+#' 
+#' @param y An mzID or mzIDCollection object
+#' 
+#' @param recursive ignored
 #' 
 setMethod('c', 'mzIDCollection', 
           function(x, y, ..., recursive=FALSE) {
@@ -279,9 +285,10 @@ setMethod('c', 'mzIDCollection',
 ## GETTER FUNCTIONS
 ###################
 
-#' See mzID-getters
+#' @describeIn mzIDCollection Get the database used for searching
 #' 
-#' @noRd
+#' @param safeNames Should column names be lowercased to ensure compatibility
+#' between v1.0 and v1.1 files?
 #' 
 setMethod(
     'database', 'mzIDCollection',
@@ -289,9 +296,7 @@ setMethod(
         lapply(as.list(object), database, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the evidence from the peptide search
 #' 
 setMethod(
     'evidence', 'mzIDCollection',
@@ -299,9 +304,7 @@ setMethod(
         lapply(as.list(object), evidence, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the parameters used for the search
 #' 
 setMethod(
     'parameters', 'mzIDCollection',
@@ -309,9 +312,7 @@ setMethod(
         lapply(as.list(object), parameters)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the software used to arrive at the results
 #' 
 setMethod(
     'software', 'mzIDCollection',
@@ -319,9 +320,7 @@ setMethod(
         lapply(as.list(object), software)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the data files used for the analysis
 #' 
 setMethod(
     'files', 'mzIDCollection',
@@ -329,9 +328,7 @@ setMethod(
         lapply(as.list(object), files)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the peptides identified.
 #' 
 setMethod(
     'peptides', 'mzIDCollection',
@@ -339,9 +336,7 @@ setMethod(
         lapply(as.list(object), peptides, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the modification on the identified peptides
 #' 
 setMethod(
     'modifications', 'mzIDCollection',
@@ -349,9 +344,7 @@ setMethod(
         lapply(as.list(object), modifications)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the identification results
 #' 
 setMethod(
     'id', 'mzIDCollection',
@@ -359,9 +352,7 @@ setMethod(
         lapply(as.list(object), id, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the scans matched to peptides
 #' 
 setMethod(
     'scans', 'mzIDCollection',
@@ -369,9 +360,7 @@ setMethod(
         lapply(as.list(object), scans, safeNames=safeNames)
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDCollection Get the link between scans and identifications
 #' 
 setMethod(
     'idScanMap', 'mzIDCollection',

@@ -4,33 +4,34 @@ NULL
 
 #' A class to store psm information from an mzIdentML file
 #' 
-#' This class handles parsing and storage of scan info and the related psm's. This information resides in the
-#' /*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult node.
+#' This class handles parsing and storage of scan info and the related psm's. 
+#' This information resides in the
+#' /*/x:DataCollection/x:AnalysisData/x:SpectrumIdentificationList/x:SpectrumIdentificationResult
+#' node.
 #' 
-#' The content of the class is stored as two data frames: One containing a row for each scan in the results, and one
-#' containing all psm's in the results. Additionally a list containing indexing from scan to psm is stored.
-#' 
-#' @name mzIDpsm-class
+#' The content of the class is stored as two data frames: One containing a row 
+#' for each scan in the results, and one containing all psm's in the results. 
+#' Additionally a list containing indexing from scan to psm is stored.
 #' 
 #' @section Objects from the class:
-#' Objects of mzIDpsm are not meant to be created explicitly but as part of the \code{\link{mzID-class}}. Still
-#' object can be created with the constructor \code{\link{mzIDpsm}} (not exported).
+#' Objects of mzIDpsm are not meant to be created explicitly but as part of the 
+#' \code{\link{mzID-class}}. Still object can be created with the constructor 
+#' \code{\link{mzIDpsm}}.
 #' 
-#' @section Slots:
-#' \describe{
-#'  \item{\code{scans}:}{A data.frame containing all reference to all scans with at least one psm. The columns gives at least an ID, a spectrumID and a reference to the file used}
-#'  \item{\code{id}:}{A data.frame containing all psm's from the analysis. The columns depend on the file but at least id, chargeState, experimentalMassToCharge, passThreshold and rank must exist according to the mzIdentML specifications}
-#'  \item{\code{mapping}:}{A list with an entry for each row in @@scans. Each entry contains an integer vector pointing to the related rows in @@id}
-#' }
 #' 
-#' @section Methods:
-#' \describe{
-#'  \item{\code{length}:}{Reports the number of psm's}
-#' }
+#' @slot scans A data.frame containing all reference to all scans with at least 
+#' one psm. The columns gives at least an ID, a spectrumID and a reference to 
+#' the file used.
 #' 
-#' @seealso \code{\link{mzID-class}} \code{\link{mzIDpsm}}
+#' @slot id A data.frame containing all psm's from the analysis. The columns 
+#' depend on the file but at least id, chargeState, experimentalMassToCharge, 
+#' passThreshold and rank must exist according to the mzIdentML specifications.
 #' 
-#' @rdname mzIDpsm-class
+#' @slot mapping A list with an entry for each row in @@scans. Each entry 
+#' contains an integer vector pointing to the related rows in @@id.
+#' 
+#' @family mzID-classes
+#' @seealso \code{\link{mzIDpsm}}
 #' 
 setClass(
     'mzIDpsm',
@@ -41,7 +42,7 @@ setClass(
     ),
     validity=function(object){
         if(nrow(object@scans) != length(object@mapping) | sum(sapply(object@mapping, length)) != nrow(object@id)){
-            stop('Dimensions must match between elements')
+            return('Dimensions must match between elements')
         }
     },
     prototype=prototype(
@@ -51,17 +52,9 @@ setClass(
     )
 )
 
-#' Show method for mzIDpsm objects
-#' 
-#' This function reports general information on the mzIDpsm object. It is called automatically when an object is querried.
+#' @describeIn mzIDpsm A short summary of the content
 #' 
 #' @param object An mzIDpsm object
-#' 
-#' @return A description of the content of the mzIDpsm object
-#' 
-#' @seealso \code{\link{mzIDpsm-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'show', 'mzIDpsm',
@@ -74,17 +67,9 @@ setMethod(
     }
 )
 
-#' Report the length of an mzIDpsm object
-#' 
-#' The length of an mzIDpsm object is defined as the number of psm's. An empty object has a length of 0
+#' @describeIn mzIDpsm Get the number of psm'
 #' 
 #' @param x An mzIDpsm object
-#' 
-#' @return A \code{numeric} giving the number of psm's in the mzIDpsm object
-#' 
-#' @seealso \code{\link{mzIDpsm-class}}
-#' 
-#' @noRd
 #' 
 setMethod(
     'length', 'mzIDpsm',
@@ -93,9 +78,7 @@ setMethod(
     }
 )
 
-#' see flatten
-#' 
-#' @noRd
+#' @describeIn flatten Merge id and scans according to the mapping
 #' 
 setMethod(
     'flatten', 'mzIDpsm',
@@ -104,9 +87,10 @@ setMethod(
     }
 )
 
-#' See mzID-getters
+#' @describeIn mzIDpsm Get the identification results
 #' 
-#' @noRd
+#' @param safeNames Should column names be lowercased to ensure compatibility
+#' between v1.0 and v1.1 files?
 #' 
 setMethod(
     'id', 'mzIDpsm',
@@ -118,9 +102,7 @@ setMethod(
         }
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDpsm Get the scans matched to peptides
 #' 
 setMethod(
     'scans', 'mzIDpsm',
@@ -132,9 +114,7 @@ setMethod(
         }
     }
 )
-#' See mzID-getters
-#' 
-#' @noRd
+#' @describeIn mzIDpsm Get the link between scans and identifications
 #' 
 setMethod(
     'idScanMap', 'mzIDpsm',
@@ -145,16 +125,20 @@ setMethod(
 
 #' A constructor for the mzIDpsm class
 #' 
-#' This function handles parsing of data and construction of an mzIDpsm object. This function is not intended to be called
-#' explicitly but as part of an mzID construction. Thus, the function is not exported.
+#' This function handles parsing of data and construction of an mzIDpsm object. 
+#' This function is not intended to be called explicitly but as part of an mzID 
+#' construction. Thus, the function is not exported.
 #' 
-#' @param doc an \code{XMLInternalDocument} created using \code{\link[XML]{xmlInternalTreeParse}}
+#' @param doc an \code{XMLInternalDocument} created using 
+#' \code{\link[XML]{xmlInternalTreeParse}}
 #' 
-#' @param ns The appropriate namespace for the doc, as a named character vector with the namespace named x
+#' @param ns The appropriate namespace for the doc, as a named character vector 
+#' with the namespace named x.
 #' 
-#' @param addFinalizer \code{Logical} Sets whether reference counting should be turned on
+#' @param addFinalizer \code{Logical} Sets whether reference counting should be 
+#' turned on.
 #' 
-#' @param path If doc is missing the file specified here will be parsed
+#' @param path If doc is missing the file specified here will be parsed.
 #' 
 #' @return An \code{mzIDpsm} object
 #' 
