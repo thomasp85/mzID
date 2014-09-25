@@ -131,6 +131,7 @@ setMethod(
 setMethod(
     'flatten', 'mzID',
     function(object, safeNames=TRUE) {
+        if(length(object) == 0) return(data.frame())
         flatPSM <- flatten(object@psm, safeNames=safeNames)
         flatPSM <- flatPSM[, tolower(colnames(flatPSM)) != 'id']
         evi <- evidence(object, safeNames=safeNames)

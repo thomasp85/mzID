@@ -25,7 +25,8 @@ Imports:
     foreach,
     iterators
 Suggests:
-    knitr
+    knitr,
+    testthat
 Collate:
     'aaa.R'
     'generics.R'
