@@ -71,6 +71,7 @@ mzID <- function(file, verbose=TRUE) {
         nCores <- detectCores()
         nThreads <- ifelse(length(file) < nCores, length(file), nCores)
         cl <- makeCluster(nThreads, outfile=ifelse(verbose, '', NULL))
+        on.exit(stopCluster(cl))
         registerDoParallel(cl)
         res <- foreach( i=icount(length(file)), .packages=c("mzID"), .errorhandling='remove') %dopar% {
                 cat('reading ', basename(file[i]), '...\n', sep='')
@@ -79,7 +80,6 @@ mzID <- function(file, verbose=TRUE) {
                 gc()
                 ans
             }
-        stopCluster(cl)
         
         if(length(res) != length(file)) warning(length(file)-length(res), 'files could not be parsed')
         
