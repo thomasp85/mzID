@@ -51,7 +51,7 @@ setClass('mzIDCollection',
 setMethod('show', 'mzIDCollection',
           function(object) {
               if(length(object)) {
-                  cat('An mzIDCollection object containing', length(object), 'samples')
+                  cat('An mzIDCollection object containing', length(object), 'samples\n')
               } else {
                   cat('An empty mzIDCollection object\n')
               }
