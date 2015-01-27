@@ -23,7 +23,8 @@ NULL
 #' 
 #' @family mzID-classes
 #' @seealso \code{\link{mzID}} \code{\link{mzIDCollection}}
-#' 
+#' @exportClass mzIDCollection
+#'
 setClass('mzIDCollection',
          slots = list(
              data = 'environment',
