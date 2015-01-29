@@ -43,7 +43,8 @@ NULL
 #' @seealso \code{\link{mzID}}
 #' 
 #' @references \url{http://www.psidev.info/mzidentml}
-#' 
+#' @exportClass mzID
+#'
 setClass('mzID',
          slots = list(
              parameters = 'mzIDparameters',
