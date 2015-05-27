@@ -1,4 +1,5 @@
 # mzID
+![](http://bioconductor.org/shields/years-in-bioc/mzID.svg) ![](http://bioconductor.org/shields/downloads/mzID.svg) Release: ![](http://bioconductor.org/shields/build/release/bioc/mzID.svg) Devel: ![](http://bioconductor.org/shields/build/devel/bioc/mzID.svg)
 
 mzID is a package that allows parsing of mzIdentML files. The mzIdentML file format has been created by [HUPO](http://www.psidev.info/mzidentml) as a standardized format for collecting data from peptide identification analyses based on LC-MS type experiments. The parser is kept bare bone in order to make it as general as possible.
 
