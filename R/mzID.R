@@ -186,6 +186,8 @@ setMethod(
 #' @param safeNames Should column names be lowercased to ensure compatibility
 #' between v1.0 and v1.1 files?
 #' 
+#' @importFrom ProtGenerics database
+#' 
 setMethod(
     'database', 'mzID',
     function(object, safeNames=TRUE){
@@ -226,6 +228,8 @@ setMethod(
 )
 #' @describeIn mzID Get the peptides identified.
 #' 
+#' @importFrom ProtGenerics peptides
+#' 
 setMethod(
     'peptides', 'mzID',
     function(object, safeNames=TRUE){
@@ -233,6 +237,8 @@ setMethod(
     }
 )
 #' @describeIn mzID Get the modification on the identified peptides
+#' 
+#' @importFrom ProtGenerics modifications
 #' 
 setMethod(
     'modifications', 'mzID',
@@ -249,6 +255,8 @@ setMethod(
     }
 )
 #' @describeIn mzID Get the scans matched to peptides
+#' 
+#' @importFrom ProtGenerics scans
 #' 
 setMethod(
     'scans', 'mzID',

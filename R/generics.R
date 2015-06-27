@@ -73,14 +73,6 @@ NULL
 #' @export
 #' 
 setGeneric(
-    'database',
-    def=function(object, safeNames=TRUE){standardGeneric('database')}
-)
-#' @rdname mzID-getters
-#' 
-#' @export
-#' 
-setGeneric(
     'evidence',
     def=function(object, safeNames=TRUE){standardGeneric('evidence')}
 )
@@ -89,32 +81,8 @@ setGeneric(
 #' @export
 #' 
 setGeneric(
-    'peptides',
-    def=function(object, safeNames=TRUE){standardGeneric('peptides')}
-)
-#' @rdname mzID-getters
-#' 
-#' @export
-#' 
-setGeneric(
-    'modifications',
-    def=function(object){standardGeneric('modifications')}
-)
-#' @rdname mzID-getters
-#' 
-#' @export
-#' 
-setGeneric(
     'id',
     def=function(object, safeNames=TRUE){standardGeneric('id')}
-)
-#' @rdname mzID-getters
-#' 
-#' @export
-#' 
-setGeneric(
-    'scans',
-    def=function(object, safeNames=TRUE){standardGeneric('scans')}
 )
 #' @rdname mzID-getters
 #' 

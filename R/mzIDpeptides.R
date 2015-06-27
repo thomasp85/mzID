@@ -96,6 +96,8 @@ setMethod(
 #' @param safeNames Should column names be lowercased to ensure compatibility
 #' between v1.0 and v1.1 files?
 #' 
+#' @importFrom ProtGenerics peptides
+#' 
 setMethod(
     'peptides', 'mzIDpeptides',
     function(object, safeNames=TRUE){
@@ -107,6 +109,8 @@ setMethod(
     }
 )
 #' @describeIn mzIDpeptides Get the modification on the identified peptides
+#' 
+#' @importFrom ProtGenerics modifications
 #' 
 setMethod(
     'modifications', 'mzIDpeptides',

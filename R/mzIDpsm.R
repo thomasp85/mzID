@@ -104,6 +104,8 @@ setMethod(
 )
 #' @describeIn mzIDpsm Get the scans matched to peptides
 #' 
+#' @importFrom ProtGenerics scans
+#' 
 setMethod(
     'scans', 'mzIDpsm',
     function(object, safeNames=TRUE){

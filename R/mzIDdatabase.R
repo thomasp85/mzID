@@ -66,6 +66,8 @@ setMethod(
 #' @param safeNames Should column names be lowercased to ensure compatibility
 #' between v1.0 and v1.1 files?
 #' 
+#' @importFrom ProtGenerics database
+#' 
 setMethod(
     'database', 'mzIDdatabase',
     function(object, safeNames=TRUE){

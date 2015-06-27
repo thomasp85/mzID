@@ -23,7 +23,8 @@ Imports:
     parallel,
     doParallel,
     foreach,
-    iterators
+    iterators,
+    ProtGenerics
 Suggests:
     knitr,
     testthat
