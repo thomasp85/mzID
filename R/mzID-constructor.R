@@ -29,30 +29,28 @@ NULL
 #' @examples
 #' 
 #' # Parsing of the example files provided by HUPO:
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_tandem.mzid")
+#' exampleFiles <- list.files(system.file('extdata', package = 'mzID'), 
+#'                            pattern = '*.mzid', full.names = TRUE)
+#' mzID(exampleFiles[1])
 #' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_omssa.mzid")
+#' mzID(exampleFiles[2])
 #' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Sequest_example_ver1.1.mzid")
+#' mzID(exampleFiles[3])
 #' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_NA_example.mzid")
+#' mzID(exampleFiles[4])
 #' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_top_down_example.mzid")
+#' mzID(exampleFiles[5])
 #' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/MPC_example_Multiple_search_engines.mzid")
+#' mzID(exampleFiles[6])
 #' 
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/mascot_pmf_example.mzid")
+#' mzID(exampleFiles[7])
 #'
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid")
+#' mzID(exampleFiles[8])
 #'
-#' mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_0examples/Mascot_MSMS_example.mzid")
+#' mzID(exampleFiles[9])
 #' 
 #' # Parsing into an mzIDCollection
-#' collection <- mzID(c(
-#'     "http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_tandem.mzid",
-#'     "http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_omssa.mzid",
-#'     "http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_MSMS_example.mzid"
-#' ))
+#' collection <- mzID(exampleFiles[1:3])
 #' names(collection)
 #' 
 #' @export

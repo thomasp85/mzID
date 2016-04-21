@@ -27,7 +27,9 @@ mzID is designed to be applicable to all instances of mzIdentML files. As there 
 The meat of the mzID package is the mzID function which takes in a single path to an mzIdentML and reads it into an object of class mzID:
 
 <<parsing, tidy=TRUE>>=
-mzResults <- mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/Mascot_NA_example.mzid")
+exampleFiles <- list.files(system.file('extdata', package = 'mzID'), 
+                           pattern = '*.mzid', full.names = TRUE)
+mzResults <- mzID(exampleFiles[5])
 mzResults
 
 @

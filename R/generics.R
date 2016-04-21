@@ -18,7 +18,8 @@
 #' @export
 #' 
 #' @examples
-#' mzResults <- mzID("http://psi-pi.googlecode.com/svn/trunk/examples/1_1examples/55merge_tandem.mzid")
+#' exampleFile <- system.file('extdata', '55merge_tandem.mzid', package = 'mzID')
+#' mzResults <- mzID(exampleFile)
 #' head(flatten(mzResults))
 #' 
 setGeneric(

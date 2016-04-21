@@ -1,3 +1,7 @@
+Version 1.9.1
+________________________________________________________________________________
+* Move example files into package to avoid spurious check errors in windows
+
 Version 1.7.1
 ________________________________________________________________________________
 * Imports generics from ProtGenerics
