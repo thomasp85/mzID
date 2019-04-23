@@ -1,11 +1,17 @@
 Package: mzID
 Type: Package
 Title: An mzIdentML parser for R
-Version: 1.21.1
-Date: 2016-04-21
-Author: Thomas Lin Pedersen, Vladislav A Petyuk with contributions from
-    Laurent Gatto and Sebastian Gibb.
-Maintainer: Thomas Lin Pedersen <thomasp85@gmail.com>
+Version: 1.21.2
+Authors@R: c(person(given = "Laurent", family = "Gatto",
+		    email = "laurent.gatto@uclouvain.be",
+		    comment = c(ORCID = "0000-0002-1520-2268"),
+		    role = c("ctb", "cre")),
+	     person(given = "Thomas", family = "Pedersen",
+		    email = "thomasp85@gmail.com",
+		    role = c("aut"),
+		    comment = c(ORCID = "0000-0002-6977-7147")),
+	     person(given = "Vladislav", family = "Petyuk",
+		    role = c("ctb")))
 Description: A parser for mzIdentML files implemented using the XML package.
     The parser tries to be general and able to handle all types of mzIdentML
     files with the drawback of having less 'pretty' output than a vendor
