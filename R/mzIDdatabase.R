@@ -118,20 +118,22 @@ mzIDdatabase <- function(doc, ns, addFinalizer=FALSE, path){
                           paste0(.path, '/x:SequenceCollection/x:DBSequence/x:cvParam/@name'),
                           namespaces = ns,
                           addFinalizer=addFinalizer)
-    if(length(dbnames) > 0){
+    if(length(dbnames) > 0) {
         dbnames1 <- unlist(getNodeSet(doc,
                                       paste0(.path, '/x:SequenceCollection/x:DBSequence/x:cvParam/@value'),
                                       namespaces=ns,
                                       addFinalizer=addFinalizer))[dbnames == 'protein description']
-        hasName <- countChildren(doc, ns,
-                                 path=paste0(.path, '/x:SequenceCollection/x:DBSequence'),
-                                 'cvParam', 'name', addFinalizer=addFinalizer)
-        hasRightName <- as.logical(hasName)
-        hasRightName[hasRightName] <-
-            sapply(split(dbnames == 'protein description', rep(seq(along=hasName), hasName)), any)
-        dbnames1 <- mapply(sub, paste('^\\Q',database$accession[hasRightName], '\\E', ' ', sep=''), '', dbnames1)
-        database$description <- NA
-        database$description[hasRightName] <- dbnames1
+        if (!is.null(dbnames1)) {
+            hasName <- countChildren(doc, ns,
+                                     path=paste0(.path, '/x:SequenceCollection/x:DBSequence'),
+                                     'cvParam', 'name', addFinalizer=addFinalizer)
+            hasRightName <- as.logical(hasName)
+            hasRightName[hasRightName] <-
+                sapply(split(dbnames == 'protein description', rep(seq(along=hasName), hasName)), any)
+            dbnames1 <- mapply(sub, paste('^\\Q',database$accession[hasRightName], '\\E', ' ', sep=''), '', dbnames1)
+            database$description <- NA
+            database$description[hasRightName] <- dbnames1
+        }
     }
     dbseq <- getNodeSet(doc, paste0(.path, '/x:SequenceCollection/x:DBSequence/x:Seq'), namespaces = ns, addFinalizer=addFinalizer)
     if (length(dbseq) > 0) {
